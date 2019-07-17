@@ -4,7 +4,7 @@ const ioBack = require("socket.io");
 
 const socketHandler = require("../socket/socket");
 
-let socket;
+let client;
 let httpServer;
 let httpServerAddr;
 let ioServer;
@@ -43,12 +43,12 @@ afterAll(done => {
 /**
  * Run before each test
  */
-// beforeEach(done => {
-//   socket = io.connect(mockHostURL, options);
-//   socket.on("connect", () => {
-//     done();
-//   });
-// });
+beforeEach(done => {
+  client = io.connect(mockHostURL, options);
+  client.on("connect", () => {
+    done();
+  });
+});
 
 /**
  * Run after each test
@@ -58,6 +58,9 @@ afterEach(done => {
   if (ioServer.connected) {
     ioServer.close();
   }
+  if (client.connected) {
+    client.disconnect();
+  }
   done();
 });
 
@@ -66,85 +69,70 @@ describe("Sockets vanilla JS", () => {
 
   it("should send and recieve a message from server", done => {
     // once connected, emit Hello World
-    let client1, client2, client3;
 
-    client1 = io.connect(mockHostURL, options);
-    client1.on("connect", () => {
-      ioServer.emit("echo", "Hello World");
-      client1.on("echo", message => {
-        // Check that the message matches
-        expect(message).toBe("Hello World");
-        client1.disconnect();
-        done();
-      });
-      ioServer.on("connection", mySocket => {
-        expect(mySocket).toBeDefined();
-      });
+    ioServer.emit("echo", "Hello World");
+    client.on("echo", message => {
+      // Check that the message matches
+      expect(message).toBe("Hello World");
+      done();
+    });
+    ioServer.on("connection", mySocket => {
+      expect(mySocket).toBeDefined();
     });
   });
 
   it("should send and recieve a message", function(done) {
-    let client1, client2;
-
-    client1 = io.connect(mockHostURL, options);
+    let client2;
 
     //set up event listener. this is the actual test we're running
-    client1.on("message", function(msg) {
+    client.on("message", function(msg) {
       expect(msg).toBe("test");
-      client1.disconnect();
       client2.disconnect();
       done();
     });
 
-    client1.on("connect", () => {
-      client1.emit("join room", room);
+    client.emit("join room", room);
 
-      // Set up client2 connection
-      client2 = io.connect(mockHostURL, options);
+    // Set up client2 connection
+    client2 = io.connect(mockHostURL, options);
 
-      client2.on("connect", () => {
-        client2.emit("join room", room);
-        client2.emit("message", "test");
-      });
+    client2.on("connect", () => {
+      client2.emit("join room", room);
+      client2.emit("message", "test");
     });
   });
 
-  it("should send and receive a message only to users in the same room", function(done) {
-    let client1, client2, client3;
+  it("should send and receive a message only to users in the same room, shortened", function(done) {
+    let client2, client3;
 
     client2CallCount = 0;
     client3CallCount = 0;
 
-    client1 = io.connect(mockHostURL, options);
+    client.emit("join room", room);
 
-    client1.on("connect", function() {
-      client1.emit("join room", room);
+    client2 = io.connect(mockHostURL, options);
+    client2.emit("join room", room);
 
-      client2 = io.connect(mockHostURL, options);
-      client2.emit("join room", room);
+    client2.on("connect", function() {
+      client3 = io.connect(mockHostURL, options);
+      client3.emit("join room", "test");
 
-      client2.on("connect", function() {
-        client3 = io.connect(mockHostURL, options);
-        client3.emit("join room", "test");
-
-        client3.on("connect", function() {
-          client1.emit("message", "test");
-        });
-
-        client3.on("message", function() {
-          client3CallCount++;
-        });
+      client3.on("connect", function() {
+        client.emit("message", "test");
       });
 
-      client2.on("message", function() {
-        client2CallCount++;
+      client3.on("message", function() {
+        client3CallCount++;
       });
+    });
+
+    client2.on("message", function() {
+      client2CallCount++;
     });
 
     setTimeout(function() {
       expect(client2CallCount).toBe(1);
       expect(client3CallCount).toBe(0);
-      client1.disconnect();
       client2.disconnect();
       client3.disconnect();
       done();
