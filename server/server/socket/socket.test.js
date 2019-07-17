@@ -10,6 +10,7 @@ let httpServerAddr;
 let ioServer;
 let mockHostURL;
 let options;
+let clients = [];
 
 /**
  * Setup WS & HTTP servers
@@ -26,6 +27,7 @@ beforeAll(done => {
     "force new connection": true,
     transports: ["websocket"]
   };
+
   done();
 });
 
@@ -42,8 +44,6 @@ afterAll(done => {
  * Run before each test
  */
 // beforeEach(done => {
-//   // Setup
-//   // Do not hardcode server port and address, square brackets are used for IPv6
 //   socket = io.connect(mockHostURL, options);
 //   socket.on("connect", () => {
 //     done();
@@ -53,19 +53,39 @@ afterAll(done => {
 /**
  * Run after each test
  */
-// afterEach(done => {
-//   // Cleanup
-//   if (socket.connected) {
-//     socket.disconnect();
-//   }
-//   done();
-// });
+afterEach(done => {
+  // Cleanup
+  if (ioServer.connected) {
+    ioServer.close();
+  }
+  done();
+});
 
-describe("Sockets", () => {
-  let client1, client2, client3;
+describe("Sockets vanilla JS", () => {
   const room = "lobby";
 
+  it("should send and recieve a message from server", done => {
+    // once connected, emit Hello World
+    let client1, client2, client3;
+
+    client1 = io.connect(mockHostURL, options);
+    client1.on("connect", () => {
+      ioServer.emit("echo", "Hello World");
+      client1.on("echo", message => {
+        // Check that the message matches
+        expect(message).toBe("Hello World");
+        client1.disconnect();
+        done();
+      });
+      ioServer.on("connection", mySocket => {
+        expect(mySocket).toBeDefined();
+      });
+    });
+  });
+
   it("should send and recieve a message", function(done) {
+    let client1, client2;
+
     client1 = io.connect(mockHostURL, options);
 
     //set up event listener. this is the actual test we're running
@@ -90,6 +110,8 @@ describe("Sockets", () => {
   });
 
   it("should send and receive a message only to users in the same room", function(done) {
+    let client1, client2, client3;
+
     client2CallCount = 0;
     client3CallCount = 0;
 
