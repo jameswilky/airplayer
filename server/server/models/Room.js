@@ -6,4 +6,4 @@ const roomSchema = new Schema({
   currentSong: { playing: Boolean, trackId: String }
 });
 
-mongoose.model("rooms", roomSchema);
+module.exports = mongoose.model("rooms", roomSchema);

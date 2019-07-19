@@ -10,7 +10,7 @@ require("./server/server.js")(app, express, io);
 var port = process.env.PORT || 3000;
 
 http.listen(port, function() {
-  console.log("Making Digital Magic on " + port);
+  console.log("Running Server on " + port);
 });
 
 module.exports = app;

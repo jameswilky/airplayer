@@ -6,4 +6,4 @@ const userSchema = new Schema({
   scopes: { host: Boolean, client: Boolean }
 });
 
-mongoose.model("users", userSchema);
+module.exports = mongoose.model("users", userSchema);

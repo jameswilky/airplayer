@@ -1,14 +1,17 @@
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const socketConfig = require("./socket/socket");
-require("./models/User");
-require("./models/Room");
+const keys = require("./config/keys");
 
 module.exports = function(app, express, io) {
   // Connect to DB
-  mongoose.connect(keys.mongoURI, {
+  const db = mongoose.connect(keys.mongoURI, {
     useNewUrlParser: true
   });
+
+  // Set Up Models
+  const users = require("./models/User");
+  const rooms = require("./models/Room");
 
   // Handle Sockets
   socketConfig(io);
