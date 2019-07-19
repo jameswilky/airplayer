@@ -118,7 +118,7 @@ describe("Socket functionality", () => {
       expect(message).toBe("Message to Room 1");
       expect(client3CallCount).toBe(0);
       done();
-    }, 25);
+    }, 200);
   });
 });
 

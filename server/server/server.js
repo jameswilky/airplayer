@@ -1,24 +1,28 @@
-var bodyParser = require("body-parser");
-var path = require("path");
-
-var socketConfig = require("./socket/socket");
+const bodyParser = require("body-parser");
+const mongoose = require("mongoose");
+const socketConfig = require("./socket/socket");
+require("./models/User");
+require("./models/Room");
 
 module.exports = function(app, express, io) {
-  // var router = express.Router();
+  // Connect to DB
+  mongoose.connect(keys.mongoURI, {
+    useNewUrlParser: true
+  });
 
+  // Handle Sockets
+  socketConfig(io);
+
+  // Connect middleware
   app.use(
     bodyParser.urlencoded({
       extended: true
     })
   );
-
-  socketConfig(io);
-
   app.use(bodyParser.json());
 
-  // app.use(express.static(path.join(__dirname, "../client")));
-
-  // app.use("/api", router);
-
-  // require("./routes/router")(router);
+  // Connect Routes
+  const router = express.Router();
+  app.use("/api", router);
+  require("./routes/router")(router);
 };

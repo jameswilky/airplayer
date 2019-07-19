@@ -6,7 +6,7 @@ module.exports = function(io) {
     });
 
     socket.on("message", function(msg) {
-      io.to(socket.roomname).emit("message", msg);
+      socket.to(socket.roomname).emit("message", msg);
     });
   });
 };
