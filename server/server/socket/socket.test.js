@@ -93,33 +93,33 @@ describe("Socket functionality", () => {
     client2.emit("message", "test");
   });
 
-  it("should send and receive a message only to users in the same room", function(done) {
-    let client2CallCount = 0;
-    let client3CallCount = 0;
-    let message;
+  // it("should send and receive a message only to users in the same room", function(done) {
+  //   let client2CallCount = 0;
+  //   let client3CallCount = 0;
+  //   let message;
 
-    client.emit("join room", "room1");
-    client2.emit("join room", "room1");
-    client3.emit("join room", "room2");
+  //   client.emit("join room", "room1");
+  //   client2.emit("join room", "room1");
+  //   client3.emit("join room", "room2");
 
-    client.emit("message", "Message to Room 1");
+  //   client.emit("message", "Message to Room 1");
 
-    client3.on("message", function() {
-      client3CallCount++;
-    });
+  //   client3.on("message", function() {
+  //     client3CallCount++;
+  //   });
 
-    client2.on("message", function(msg) {
-      message = msg;
-      client2CallCount++;
-    });
+  //   client2.on("message", function(msg) {
+  //     message = msg;
+  //     client2CallCount++;
+  //   });
 
-    setTimeout(function() {
-      expect(client2CallCount).toBe(1);
-      expect(message).toBe("Message to Room 1");
-      expect(client3CallCount).toBe(0);
-      done();
-    }, 200);
-  });
+  //   setTimeout(function() {
+  //     expect(client2CallCount).toBe(1);
+  //     expect(message).toBe("Message to Room 1");
+  //     expect(client3CallCount).toBe(0);
+  //     done();
+  //   }, 200);
+  // });
 });
 
 /* 
