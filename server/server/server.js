@@ -9,20 +9,15 @@ module.exports = function(app, express, io) {
     useNewUrlParser: true
   });
 
-  // Set Up Models
-  const users = require("./models/User");
-  const rooms = require("./models/Room");
-
   // Handle Sockets
-  socketConfig(io);
+  // socketConfig(io);
 
   // Connect middleware
-  app.use(
-    bodyParser.urlencoded({
-      extended: true
-    })
-  );
+  //parse application/json and look for raw text
   app.use(bodyParser.json());
+  app.use(bodyParser.urlencoded({ extended: true }));
+  app.use(bodyParser.text());
+  app.use(bodyParser.json({ type: "application/json" }));
 
   // Connect Routes
   const router = express.Router();

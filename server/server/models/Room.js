@@ -1,9 +1,20 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
-const roomSchema = new Schema({
+const RoomSchema = new Schema({
+  name: String,
   playlist: [{ trackId: String }],
-  currentSong: { playing: Boolean, trackId: String }
+  currentSong: { playing: Boolean, trackId: String },
+  createdAt: { type: Date, default: Date.now },
+  subscribers: [{ type: Schema.Types.ObjectId, ref: "users" }]
 });
 
-module.exports = mongoose.model("rooms", roomSchema);
+RoomSchema.pre("save", next => {
+  now = new Date();
+  if (!this.createdAt) {
+    this.createdAt = now;
+  }
+  next();
+});
+
+module.exports = mongoose.model("rooms", RoomSchema);

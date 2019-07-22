@@ -1,6 +1,15 @@
 const httpMocks = require("node-mocks-http");
-
 httpMocks.createResponse({ eventEmitter: require("events").EventEmitter });
+
+/* 
+  This function creates a mock http request and returns a promise object that 
+  resolve to an error and send object.
+
+  Reference:
+
+  https://github.com/howardabrams/node-mocks-http/issues/159
+
+*/
 
 module.exports = (reqParams, resParams) => {
   let errResolver;
