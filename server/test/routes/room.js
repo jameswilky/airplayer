@@ -104,4 +104,30 @@ describe("Room route handlers", () => {
       res.body.message.should.eql("Room updated");
     });
   });
+
+  describe("/DELETE/:id", () => {
+    it("should DELETE a room given the id", async () => {
+      let room, err, res;
+      // Create test room
+      const newRoom = new Room({
+        name: "room1",
+        playlist: [{ trackId: "123" }, { trackId: "456" }],
+        currentSong: { playing: true, trackId: "123" },
+        createdAt: new Date()
+      });
+
+      [err, room] = await to(newRoom.save());
+
+      //Delete room
+      [err, res] = await to(
+        chai.request(server).delete(`/api/room/${room.id}`)
+      );
+
+      res.should.have.status(200);
+      res.body.should.be.a("object");
+      res.body.should.have.property("message").eql("Room deleted");
+      res.body.result.should.have.property("ok").eql(1);
+      res.body.result.should.have.property("n").eql(1);
+    });
+  });
 });

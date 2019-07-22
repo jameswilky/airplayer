@@ -26,5 +26,9 @@ module.exports = {
       [err, room] = await to(Object.assign(room, req.body).save());
       err ? res.send(err) : res.json({ message: "Room updated", room });
     }
+  },
+  deleteRoom: async (req, res) => {
+    const [err, result] = await to(Room.deleteOne({ _id: req.params.id }));
+    err ? res.send(err) : res.json({ message: "Room deleted", result });
   }
 };
