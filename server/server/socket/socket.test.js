@@ -81,17 +81,7 @@ describe("Socket functionality", () => {
     });
   });
 
-  it("should send and recieve a message", function(done) {
-    //set up event listener. this is the actual test we're running
-    client.on("message", function(msg) {
-      expect(msg).toBe("test");
-      done();
-    });
-
-    client.emit("join room", "room1");
-    client2.emit("join room", "room1");
-    client2.emit("message", "test");
-  });
+  z;
 
   // it("should send and receive a message only to users in the same room", function(done) {
   //   let client2CallCount = 0;
@@ -124,6 +114,8 @@ describe("Socket functionality", () => {
 
 /* 
 References
+
+http://codereform.com/blog/post/socket-io-integration-tests-with-chai-and-mocha/
 https://medium.com/@tozwierz/testing-socket-io-with-jest-on-backend-node-js-f71f7ec7010f
 
 https://alexzywiak.github.io/testing-socket-io-with-mocha-and-chai/index.html

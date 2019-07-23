@@ -10,7 +10,7 @@ module.exports = function(app, express, io) {
   });
 
   // Handle Sockets
-  // socketConfig(io);
+  socketConfig(io);
 
   // Connect middleware
   //parse application/json and look for raw text
