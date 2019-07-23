@@ -3,6 +3,7 @@ const { Schema } = mongoose;
 
 const RoomSchema = new Schema({
   name: String,
+  location: String,
   playlist: [{ trackId: String }],
   currentSong: { playing: Boolean, trackId: String },
   createdAt: { type: Date, default: Date.now },

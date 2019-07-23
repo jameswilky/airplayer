@@ -2,7 +2,7 @@ const io = require("socket.io-client");
 const http = require("http");
 const ioBack = require("socket.io");
 
-const socketHandler = require("../socket/socket");
+const socketHandler = require("./socket");
 
 let httpServer;
 let httpServerAddr;
