@@ -13,4 +13,4 @@ const track = { trackId: 50 };
 setTimeout(() => {
   console.log("Adding Track...");
   socket.emit("ADD_TRACK", { track });
-}, 2000);
+}, 1000);
