@@ -8,11 +8,15 @@ module.exports = {
     const [err, room] = await to(Room.findById(targetRoom.id));
     return err ? null : room;
   },
-  addTrack: async (targetRoom, track) => {
-    const [err, room] = await to(Room.findById({ _id: targetRoom.id }));
-    if (err) return [err, null];
+  updateRoom: async (room, func) => {
+    let err, result;
+    [err, room] = await to(Room.findById({ _id: room.id }));
+    if (err) return null;
     else {
-      return await to(room.playlist.push(track).save());
+      // const updatedRoom = func(room, payload);
+      const updatedRoom = room.playlist.push(track);
+      [err, result] = await to(Object.assign(room, updatedRoom).save());
+      return err ? null : result;
     }
   },
   removeTrack: (room, track) => {},
