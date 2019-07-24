@@ -16,6 +16,8 @@ const dispatch = (room, { type, payload }) => {
   }
 };
 const setState = (prev, next) => {
+  // All state changes to should invoked with this function
+  // do not use state = newState
   Object.assign(prev, next);
 };
 
@@ -28,31 +30,25 @@ module.exports = function(io) {
        * @param {obj} roomToJoin {_id,name,playlist,subscribers,currentSong}
        */
       //
-      state.room = await getRoom(room);
-      if (!state.room) {
+      const nextState = { room: await getRoom(room) };
+      if (!nextState) {
         socket.emit("ERROR", `join attempt failed, room not found`);
       } else {
+        setState(state, nextState);
         socket.join(state.room._id);
         io.in(state.room._id).emit("ROOM_UPDATED", state.room);
       }
     });
-    // socket.on("ADD_TRACK", async ({ room, track }) => {
-    //   room = await addTrack(room, track);
-    //   !room
-    //     ? socket.emit("ERROR", "failed to add track")
-    //     : io.in(room._id).emit("ROOM_UPDATED", room);
-    // });
 
     events.forEach(event => {
       socket.on(event, data => {
         // Update state based on event type
-
-        const nextRoomState = dispatch(state.room, {
-          type: event,
-          payload: data
-        });
-
-        const nextState = { room: nextRoomState };
+        const nextState = {
+          room: dispatch(state.room, {
+            type: event,
+            payload: data
+          })
+        };
         setState(state, nextState);
         // After each update, send updated room to each socket in room
         io.in(state.room._id).emit("ROOM_UPDATED", state.room);
