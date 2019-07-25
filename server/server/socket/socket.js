@@ -1,5 +1,6 @@
 const { getRoom, updateRoom } = require("./roomDao");
 const diff = require("../helpers/diff");
+const isEmpty = require("../helpers/isEmpty");
 const Room = require("../models/Room");
 
 const events = [
@@ -15,9 +16,11 @@ const dispatch = (state, { type, payload }) => {
   // todo add validation
   switch (type) {
     case "ADD_TRACK":
-      const newState = state;
-      newState.playlist.push(payload.track);
-      return newState;
+      // const newState = state;
+      // newState.playlist.push(payload.track);
+      // return newState;
+
+      return { ...state, playlist: [...state.playlist, payload.track] };
 
     default:
       return state;
@@ -67,7 +70,8 @@ module.exports = function(io) {
       // Every X seconds check if state has changed.
       // If it has, sync socket state with database and update all clients
 
-      if (diff(state, prevState)) {
+      if (!isEmpty(diff(state, prevState))) {
+        console.log(diff(state, prevState));
         const room = await updateRoom(state);
         if (!room) console.log("Error Updating Room");
         else {
