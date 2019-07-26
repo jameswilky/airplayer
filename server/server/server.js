@@ -5,12 +5,12 @@ const keys = require("./config/keys");
 
 module.exports = function(app, express, io) {
   // Connect to DB
-  const db = mongoose.connect(keys.mongoURI, {
+  mongoose.connect(keys.mongoURI, {
     useNewUrlParser: true
   });
 
   // Handle Sockets
-  socketConfig(io);
+  socketConfig(io, 3000);
 
   // Connect middleware
   //parse application/json and look for raw text
