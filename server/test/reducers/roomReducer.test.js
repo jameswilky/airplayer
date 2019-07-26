@@ -69,7 +69,7 @@ describe("Room Reducer", () => {
       const result = dispatch(birthday, action);
 
       expect(result.currentSong.playing).to.eql(false);
-      console.log(result);
+      expect(result.currentSong.trackId).to.be.a("string");
     });
   });
 

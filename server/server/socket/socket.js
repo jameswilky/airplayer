@@ -1,24 +1,23 @@
 const { getRoom, updateRoom } = require("../daos/roomDao");
 const diff = require("../helpers/diff");
 const isEmpty = require("../helpers/isEmpty");
-const setState = require("../helpers/setState");
 const events = require("../actions/actions");
 const dispatch = require("../reducers/roomReducer");
 
-module.exports = function(io, interval) {
+module.exports = function(io, interval = null) {
   io.on("connection", function(socket) {
     const state = {};
 
-    socket.on("JOIN_ROOM", async room => {
+    socket.on("JOIN_ROOM", async id => {
       /**
        * @param {obj} room {id,name,playlist,subscribers,currentSong}
        */
-      const nextState = await getRoom(room.id);
-      console.log(nextState);
+      // todo add check to validate input is a room object
+      const nextState = await getRoom(id);
       if (!nextState) {
         socket.emit("ERROR", `join attempt failed, room not found`);
       } else {
-        setState(state, nextState);
+        Object.assign(state, nextState);
 
         socket.join(state.id);
         io.in(state.id).emit("ROOM_UPDATED", state);
@@ -32,26 +31,28 @@ module.exports = function(io, interval) {
           type: event,
           payload: data
         });
-        setState(state, nextState);
+        Object.assign(state, nextState);
         // After each update, send updated room to each socket in room
         io.in(state.id).emit("ROOM_UPDATED", state);
       });
     });
 
-    let prevState = {};
-    setInterval(async () => {
-      // Every X seconds check if state has changed.
-      // If it has, sync socket state with database and update all clients
-      if (!isEmpty(diff(state, prevState))) {
-        const room = await updateRoom(state);
-        if (!room) console.log("Error Updating Room");
-        else {
-          setState(state, room);
-          setState(prevState, state);
-          io.in(state.id).emit("ROOM_UPDATED", state);
+    if (interval) {
+      let prevState = {};
+      setInterval(async () => {
+        // Every X seconds check if state has changed.
+        // If it has, sync socket state with database and update all clients
+        if (!isEmpty(diff(state, prevState))) {
+          const room = await updateRoom(state);
+          if (!room) console.log("Error Updating Room");
+          else {
+            Object.assign(state, room);
+            Object.assign(prevState, state);
+            io.in(state.id).emit("ROOM_UPDATED", state);
+          }
         }
-      }
-    }, interval);
+      }, interval);
+    }
   });
 };
 
