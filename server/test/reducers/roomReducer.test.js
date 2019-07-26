@@ -50,10 +50,16 @@ describe("Room Reducer", () => {
 
   describe("PLAY", () => {
     it("should set currentTrack.playing to true", () => {
-      const action = { type: PLAY, payload: null };
+      const action = { type: PLAY, payload: "123" };
       const result = dispatch(birthday, action);
 
       expect(result.currentSong.playing).to.eql(true);
+    });
+
+    it("should set the currentTrack.trackId to the given trackid", () => {
+      const action = { type: PLAY, payload: "123" };
+      const result = dispatch(birthday, action);
+      expect(result.currentSong.trackId).to.eql(action.payload);
     });
   });
 
@@ -63,6 +69,7 @@ describe("Room Reducer", () => {
       const result = dispatch(birthday, action);
 
       expect(result.currentSong.playing).to.eql(false);
+      console.log(result);
     });
   });
 

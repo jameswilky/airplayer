@@ -23,13 +23,13 @@ const dispatch = (state, { type, payload }) => {
     case PLAY:
       return {
         ...state,
-        currentSong: { playing: true }
+        currentSong: { playing: true, trackId: payload }
       };
 
     case PAUSE:
       return {
         ...state,
-        currentSong: { playing: false }
+        currentSong: { playing: false, trackId: state.currentSong.trackId }
       };
 
     case UPDATE_PLAYLIST:
@@ -37,6 +37,7 @@ const dispatch = (state, { type, payload }) => {
         ...state,
         playlist: payload
       };
+
     default:
       return state;
   }
