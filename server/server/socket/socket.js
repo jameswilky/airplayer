@@ -27,9 +27,9 @@ const dispatch = (state, { type, payload }) => {
   }
 };
 const setState = (prev, next) => {
-  if (next instanceof Room) {
-    next = JSON.parse(JSON.stringify(next));
-  }
+  // if (next instanceof Room) {
+  //   next = JSON.parse(JSON.stringify(next));
+  // }
   Object.assign(prev, next);
 };
 
