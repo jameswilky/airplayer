@@ -35,9 +35,8 @@ describe("Room Reducer", () => {
   describe("REMOVE_TRACK", () => {
     it("removes a track if it exists in the playlist", () => {
       const action = { type: REMOVE_TRACK, payload: { trackId: "123" } };
-      console.log(action);
       const result = dispatch(birthday, action);
-      console.log(birthday, result);
+
       expect(result.playlist.length).to.eql(1);
       expect(result.playlist[0].trackId).to.eql("456");
     });
@@ -46,6 +45,41 @@ describe("Room Reducer", () => {
       const result = dispatch(birthday, action);
 
       expect(diff(birthday, result)).to.be.deep.eql({});
+    });
+  });
+
+  describe("PLAY", () => {
+    it("should set currentTrack.playing to true", () => {
+      const action = { type: PLAY, payload: null };
+      const result = dispatch(birthday, action);
+
+      expect(result.currentSong.playing).to.eql(true);
+    });
+  });
+
+  describe("PAUSE", () => {
+    it("should set currentTrack.playing to false", () => {
+      const action = { type: PAUSE, payload: null };
+      const result = dispatch(birthday, action);
+
+      expect(result.currentSong.playing).to.eql(false);
+    });
+  });
+
+  describe("UPDATE_PLAYLIST", () => {
+    it("should replace the old playlist with a new playlist", () => {
+      const newPlaylist = [
+        { trackId: "3245" },
+        { trackId: "0983" },
+        { trackId: "12390" },
+        { trackId: "90182" }
+      ];
+      const action = { type: UPDATE_PLAYLIST, payload: newPlaylist };
+      const result = dispatch(birthday, action);
+
+      expect(result.playlist.length).to.eql(4);
+      expect(result.playlist[0].trackId).to.eql("3245");
+      expect(result.playlist[3].trackId).to.eql("90182");
     });
   });
 });

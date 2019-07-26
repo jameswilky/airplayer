@@ -19,6 +19,24 @@ const dispatch = (state, { type, payload }) => {
           return track.trackId !== payload.trackId;
         })
       };
+
+    case PLAY:
+      return {
+        ...state,
+        currentSong: { playing: true }
+      };
+
+    case PAUSE:
+      return {
+        ...state,
+        currentSong: { playing: false }
+      };
+
+    case UPDATE_PLAYLIST:
+      return {
+        ...state,
+        playlist: payload
+      };
     default:
       return state;
   }
