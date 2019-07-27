@@ -10,6 +10,15 @@ const RoomSchema = new Schema({
   subscribers: [{ type: Schema.Types.ObjectId, ref: "users" }]
 });
 
+RoomSchema.method("toClient", function() {
+  var obj = this.toObject();
+
+  //Rename fields
+  obj.id = obj._id;
+  delete obj._id;
+
+  return obj;
+});
 RoomSchema.pre("save", next => {
   now = new Date();
   if (!this.createdAt) {

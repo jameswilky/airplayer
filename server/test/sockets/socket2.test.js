@@ -10,7 +10,6 @@ const expect = require("chai").expect;
 const diff = require("../../server/helpers/diff");
 const to = require("../../server/helpers/to");
 const createMockRoom = require("../../server/helpers/createMockRoom");
-const objectify = require("../../server/helpers/objectify");
 
 // Test subject
 const config = require("../../server/socket/socket");
@@ -72,19 +71,19 @@ describe("Sockets backend", () => {
     );
   });
   it("should join room if room exists", async () => {
-    const room = objectify(await createMockRoom(birthday));
+    const room = await createMockRoom(birthday);
     const john = io.connect(url, options);
 
     john.emit("JOIN_ROOM", room.id);
     john.on("ROOM_UPDATED", state => {
-      expect(state.id).to.eql(room.id.toString());
+      expect(state.id).to.eql(room.id);
       expect(state.name).to.eql(birthday.name);
     });
   });
   it("should update the state of the room for all users in that room after an action", async () => {
     // Set up Rooms
-    const birthdayRoom = objectify(await createMockRoom(birthday));
-    const weddingRoom = objectify(await createMockRoom(wedding));
+    const birthdayRoom = await createMockRoom(birthday);
+    const weddingRoom = await createMockRoom(wedding);
 
     // Set up Clients
     const john = io.connect(url, options);

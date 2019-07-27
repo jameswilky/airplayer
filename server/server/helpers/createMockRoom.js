@@ -14,7 +14,7 @@ module.exports = async ({ name, playlist, currentSong }) => {
     [err, room] = await to(newRoom.save());
     if (err)
       throw "failed to create mock room : Error saving new room to database";
-    return room;
+    return room.toClient();
   } catch (e) {
     console.log(e);
   }

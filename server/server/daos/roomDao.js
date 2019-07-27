@@ -10,7 +10,7 @@ module.exports = {
     let err, roomModel;
     [err, roomModel] = await to(Room.findById(id));
     // todo add validation
-    return err || roomModel === null ? null : objectify(roomModel);
+    return err || roomModel === null ? null : roomModel.toClient();
   },
   updateRoom: async nextRoom => {
     let err, updatedRoomModel, roomModel;
@@ -20,7 +20,7 @@ module.exports = {
       [err, updatedRoomModel] = await to(
         Object.assign(roomModel, nextRoom).save()
       );
-      return err || roomModel === null ? null : objectify(updatedRoomModel);
+      return err || roomModel === null ? null : roomModel.toClient();
     }
   }
 };

@@ -6,7 +6,6 @@ const expect = require("chai").expect;
 // Helpers
 const createMockRoom = require("../../server/helpers/createMockRoom");
 const to = require("../../server/helpers/to");
-const objectify = require("../../server/helpers/objectify");
 
 // Test subject
 const { getRoom, updateRoom } = require("../../server/daos/roomDao");
@@ -27,9 +26,9 @@ describe("Room Data Access Object", () => {
   describe("getRoom", () => {
     it("should return a room object matching the given id", async () => {
       const room = await createMockRoom(birthday);
-      const res = await getRoom(room._id);
+      const res = await getRoom(room.id);
       expect(res).to.be.a("object");
-      expect(res.id).to.eql(room._id);
+      expect(res.id).to.eql(room.id);
       expect(res).to.have.property("playlist");
       expect(res).to.have.property("currentSong");
       expect(res).to.have.property("id");
@@ -43,7 +42,7 @@ describe("Room Data Access Object", () => {
 
   describe("updateRoom", () => {
     it("should return a copy of the newly updated room on success", async () => {
-      const room = objectify(await createMockRoom(birthday));
+      const room = await createMockRoom(birthday);
       room.name = "wedding";
       room.playlist.push({ trackId: "789" });
       const res = await updateRoom(room);
@@ -55,7 +54,7 @@ describe("Room Data Access Object", () => {
       expect(res.playlist.length).to.eql(3);
     });
     it("should return null if id is not found in the database", async () => {
-      const room = objectify(await createMockRoom(birthday));
+      const room = await createMockRoom(birthday);
       room.id = 25;
       const res = await updateRoom(room);
       expect(res).to.eql(null);
