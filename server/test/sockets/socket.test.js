@@ -68,99 +68,133 @@ describe("Sockets backend", () => {
     const [err, res] = await to(Room.deleteMany({}));
     if (err) throw "Failed to delete all from Database";
   });
-  describe("JOIN_ROOM", () => {
-    it("Should return an error if room does not exist", async () => {
-      const room = await createMockRoom(birthday);
 
-      const john = io.connect(url, options);
-      let error;
-      john.emit("JOIN_ROOM", "0");
-      john.on("ERROR", msg => (error = msg));
+  // describe("JOIN_ROOM", () => {
+  //   it("Should return an error if room does not exist", async () => {
+  //     const room = await createMockRoom(birthday);
 
-      await waitFor(50);
-      expect(error).to.eql("join attempt failed, room not found");
-    });
-    it("should join room if room exists", async () => {
-      const room = await createMockRoom(birthday);
-      const john = io.connect(url, options);
-      let johnState;
-      john.emit("JOIN_ROOM", room.id);
-      john.on("ROOM_UPDATED", state => {
-        johnState = state;
-      });
+  //     const john = io.connect(url, options);
+  //     let error;
+  //     john.emit("JOIN_ROOM", "0");
+  //     john.on("ERROR", msg => (error = msg));
 
-      await waitFor(50);
-      expect(johnState.id.toString()).to.eql(room.id.toString()); // TODO use different assertion
-      expect(johnState.name).to.eql(birthday.name);
-    });
-  });
-
-  describe("ADD_TRACK", () => {
-    it("TODO: Returns an error if not in a room", () => {}); // TODO add after authorization
-    it("updates the state for the sender after emiting ADD_TRACK", async () => {
-      const room = await createMockRoom(birthday);
-      const john = io.connect(url, options);
-      let johnState;
-      john.emit("JOIN_ROOM", room.id);
-      john.on("ROOM_UPDATED", state => {
-        johnState = state;
-      });
-
-      await waitFor(50);
-      john.emit("ADD_TRACK", { trackId: "newSong" });
-
-      await waitFor(50);
-      expect(johnState.playlist.length).to.eql(3);
-      expect(johnState.playlist[2].trackId).to.eql("newSong");
-    });
-  });
-
-  // it("should update the state of the room for all users in that room after an action", async () => {
-  //   // Set up Rooms
-  //   const birthdayRoom = await createMockRoom(birthday);
-  //   const weddingRoom = await createMockRoom(wedding);
-
-  //   // Set up Clients
-  //   const john = io.connect(url, options);
-  //   const alice = io.connect(url, options);
-  //   const mary = io.connect(url, options);
-
-  //   let johnState;
-  //   let aliceState;
-  //   let maryState;
-
-  //   john.emit("JOIN_ROOM", birthdayRoom.id);
-  //   john.on("ROOM_UPDATED", state => {
-  //     johnState = state;
+  //     await waitFor(50);
+  //     expect(error).to.eql("join attempt failed, room not found");
   //   });
+  //   it("should join room if room exists", async () => {
+  //     const room = await createMockRoom(birthday);
+  //     const john = io.connect(url, options);
+  //     let johnState;
+  //     john.emit("JOIN_ROOM", room.id);
+  //     john.on("ROOM_UPDATED", state => {
+  //       johnState = state;
+  //     });
 
-  //   alice.emit("JOIN_ROOM", birthdayRoom.id);
-  //   alice.on("ROOM_UPDATED", state => {
-  //     aliceState = state;
+  //     await waitFor(10);
+  //     expect(johnState.id.toString()).to.eql(room.id.toString()); // TODO use different assertion
+  //     expect(johnState.name).to.eql(birthday.name);
   //   });
-
-  //   mary.emit("JOIN_ROOM", weddingRoom.id);
-  //   mary.on("ROOM_UPDATED", state => {
-  //     maryState = state;
-  //   });
-
-  //   // Add Track and update birthday Room
-  //   setTimeout(() => {
-  //     john.emit("ADD_TRACK", { trackId: "test" });
-  //     // john.on("ROOM_UPDATED", state => {
-  //     //   johnState = state;
-  //     // });
-  //     // alice.on("ROOM_UPDATED", state => {
-  //     //   aliceState = state;
-  //     // });
-  //     // mary.on("ROOM_UPDATED", state => {
-  //     //   maryState = state;
-  //     // });
-  //   });
-
-  //   // Check final states
-  //   setTimeout(() => {
-  //     console.log(maryState.playlist, johnState.playlist, aliceState.playlist);
-  //   }, 2000);
   // });
+
+  // describe("ADD_TRACK", () => {
+  //   it("TODO: Returns an error if not in a room", () => {}); // TODO add after authorization
+  //   it("updates the state for the sender after emiting ADD_TRACK", async () => {
+  //     const room = await createMockRoom(birthday);
+  //     const john = io.connect(url, options);
+  //     let johnState;
+
+  //     john.emit("JOIN_ROOM", room.id);
+  //     john.on("ROOM_UPDATED", state => {
+  //       johnState = state;
+  //     });
+
+  //     await waitFor(10);
+  //     john.emit("ADD_TRACK", { trackId: "newSong" });
+
+  //     await waitFor(10);
+  //     expect(johnState.playlist.length).to.eql(3);
+  //     expect(johnState.playlist[2].trackId).to.eql("newSong");
+  //   });
+  // });
+
+  it("should update the state of the room for all users in that room after an action", async () => {
+    // Set up Rooms
+    const birthdayRoom = await createMockRoom(birthday);
+    const weddingRoom = await createMockRoom(wedding);
+
+    // Set up Clients
+    let john, alice, mary;
+
+    let johnMessage, aliceMessage, maryMessage;
+
+    // john = io.connect(url, options);
+    // john.on("connect", () => {
+    //   johnMessage = "connected";
+    //   alice = io.connect(url, options);
+    //   alice.on("connect", () => {
+    //     aliceMessage = "connected";
+    //   });
+    // });
+
+    const connectClients = () => {
+      return new Promise(resolve => {
+        john = io.connect(url, options);
+        john.on("connect", () => {
+          johnMessage = "connected";
+          alice = io.connect(url, options);
+          alice.on("connect", () => {
+            aliceMessage = "connected";
+            resolve();
+          });
+        });
+      });
+    };
+
+    await connectClients();
+    console.log(aliceMessage, johnMessage);
+
+    // TODO fix this
+    // await waitFor(100);
+
+    // let johnState;
+    // let aliceState;
+    // let maryState;
+
+    // let msg;
+    // john.on("ROOM_UPDATED", state => {
+    //   console.log("john updated");
+    //   johnState = state;
+    // });
+
+    // alice.on("ROOM_UPDATED", state => {
+    //   console.log("alice updated");
+    //   aliceState = state;
+    // });
+
+    // mary.on("ROOM_UPDATED", state => {
+    //   console.log("mary updated");
+    //   maryState = state;
+    // });
+
+    // john.emit("JOIN_ROOM", birthdayRoom.id);
+    // alice.emit("JOIN_ROOM", birthdayRoom.id);
+    // mary.emit("JOIN_ROOM", weddingRoom.id);
+
+    // let johnError, aliceError, maryError;
+    // john.on("ERROR", msg => (johnError = msg));
+    // alice.on("ERROR", msg => (aliceError = msg));
+    // mary.on("ERROR", msg => (maryError = msg));
+
+    // // Add Track and update birthday Room
+    // await waitFor(300);
+    // // console.log(maryState);
+
+    // john.emit("ADD_TRACK", { trackId: "test" });
+
+    // // Check final states
+    // await waitFor(400);
+    // console.log(msg);
+    // console.log(maryState, johnState, aliceState);
+    // console.log(maryError, johnError, aliceError);
+  });
 });
