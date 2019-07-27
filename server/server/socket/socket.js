@@ -6,7 +6,12 @@ const dispatch = require("../reducers/roomReducer");
 
 module.exports = function(io, interval = null) {
   io.on("connection", function(socket) {
-    const state = {};
+    const state = {
+      name: null,
+      id: null,
+      playlist: [],
+      currentSong: null
+    };
 
     socket.on("JOIN_ROOM", async id => {
       /**
@@ -25,6 +30,7 @@ module.exports = function(io, interval = null) {
     });
 
     Object.keys(events).forEach(event => {
+      // TODO ensure no events can be used unless in a room
       socket.on(event, data => {
         // Update state based on event type
         const nextState = dispatch(state, {

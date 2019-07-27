@@ -9,7 +9,7 @@ module.exports = {
   getRoom: async id => {
     let err, roomModel;
     [err, roomModel] = await to(Room.findById(id));
-    // todo add validation
+    // TODO add validation and write test to check value of roomModel and err
     return err || roomModel === null ? null : roomModel.toClient();
   },
   updateRoom: async nextRoom => {

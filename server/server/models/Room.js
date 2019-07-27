@@ -11,11 +11,14 @@ const RoomSchema = new Schema({
 });
 
 RoomSchema.method("toClient", function() {
-  var obj = this.toObject();
+  const obj = this.toObject();
 
-  //Rename fields
   obj.id = obj._id;
   delete obj._id;
+
+  obj.playlist.forEach(track => {
+    delete track._id;
+  });
 
   return obj;
 });
