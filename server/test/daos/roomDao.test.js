@@ -27,7 +27,7 @@ describe("Room Data Access Object", () => {
   describe("getRoom", () => {
     it("should return a room object matching the given id", async () => {
       const room = await createMockRoom(birthday);
-      const res = await getRoom(room.id);
+      const res = await getRoom(room._id);
       expect(res).to.be.a("object");
       expect(res.id).to.eql(room._id);
       expect(res).to.have.property("playlist");

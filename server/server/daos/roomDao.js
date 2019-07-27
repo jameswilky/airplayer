@@ -9,7 +9,8 @@ module.exports = {
   getRoom: async id => {
     let err, roomModel;
     [err, roomModel] = await to(Room.findById(id));
-    return err ? null : objectify(roomModel);
+    // todo add validation
+    return err || roomModel === null ? null : objectify(roomModel);
   },
   updateRoom: async nextRoom => {
     let err, updatedRoomModel, roomModel;
@@ -19,7 +20,7 @@ module.exports = {
       [err, updatedRoomModel] = await to(
         Object.assign(roomModel, nextRoom).save()
       );
-      return err ? null : objectify(updatedRoomModel);
+      return err || roomModel === null ? null : objectify(updatedRoomModel);
     }
   }
 };
