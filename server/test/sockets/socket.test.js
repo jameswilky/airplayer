@@ -1,10 +1,8 @@
 // Dependencies
 const mongoose = require("mongoose");
 const Room = require("../../server/models/Room");
-const http = require("http");
-const ioBack = require("socket.io");
-const io = require("socket.io-client");
 const expect = require("chai").expect;
+const io = require("socket.io-client");
 
 // Helpers
 const diff = require("../../server/helpers/diff");
@@ -16,6 +14,12 @@ const Mocket = require("../../server/helpers/mocket");
 const config = require("../../server/socket/socket");
 
 let host, url;
+let options = {
+  "reconnection delay": 0,
+  "reopen delay": 0,
+  "force new connection": true,
+  transports: ["websocket"]
+};
 
 // Mock Data
 const birthday = {
@@ -31,12 +35,7 @@ const wedding = {
 
 // Set up host server
 beforeEach(done => {
-  // [host, url] = Mocket.connectHost();
-
-  httpServer = http.createServer().listen();
-  httpServerAddr = httpServer.listen().address();
-  url = `http://[${httpServerAddr.address}]:${httpServerAddr.port}`;
-  host = ioBack(httpServer);
+  [host, url] = Mocket.connectHost();
   config(host);
   done();
 });
@@ -111,50 +110,92 @@ describe("Sockets backend", () => {
     const birthdayRoom = await createMockRoom(birthday);
     const weddingRoom = await createMockRoom(wedding);
 
-    // console.log(aliceMessage, johnMessage);
+    const [john, alice, mary] = await Mocket.connectClients(3, url);
 
-    // TODO fix this
+    // const alice = await Mocket.connectClient(url);
+    // const mary = await Mocket.connectClient(url);
+    // const john = await Mocket.connectClient(url);
+
+    let johnState;
+    let aliceState;
+    let maryState;
+
+    john.on("ROOM_UPDATED", state => {
+      johnState = state;
+    });
+
+    alice.on("ROOM_UPDATED", state => {
+      aliceState = state;
+    });
+
+    mary.on("ROOM_UPDATED", state => {
+      maryState = state;
+    });
+
+    alice.emit("JOIN_ROOM", birthdayRoom.id);
+    mary.emit("JOIN_ROOM", weddingRoom.id);
+    john.emit("JOIN_ROOM", birthdayRoom.id);
     // await waitFor(100);
-
-    // let johnState;
-    // let aliceState;
-    // let maryState;
-
-    // let msg;
-    // john.on("ROOM_UPDATED", state => {
-    //   console.log("john updated");
-    //   johnState = state;
-    // });
-
-    // alice.on("ROOM_UPDATED", state => {
-    //   console.log("alice updated");
-    //   aliceState = state;
-    // });
-
-    // mary.on("ROOM_UPDATED", state => {
-    //   console.log("mary updated");
-    //   maryState = state;
-    // });
-
-    // john.emit("JOIN_ROOM", birthdayRoom.id);
-    // alice.emit("JOIN_ROOM", birthdayRoom.id);
-    // mary.emit("JOIN_ROOM", weddingRoom.id);
 
     // let johnError, aliceError, maryError;
     // john.on("ERROR", msg => (johnError = msg));
     // alice.on("ERROR", msg => (aliceError = msg));
     // mary.on("ERROR", msg => (maryError = msg));
 
-    // // Add Track and update birthday Room
-    // await waitFor(300);
-    // // console.log(maryState);
+    // Add Track and update birthday Room
+    // console.log(maryError, johnError, aliceError);
 
     // john.emit("ADD_TRACK", { trackId: "test" });
 
-    // // Check final states
+    // Check final states
     // await waitFor(400);
     // console.log(msg);
-    // console.log(maryState, johnState, aliceState);
+    // console.log(aliceState, maryState, johnState);
     // console.log(maryError, johnError, aliceError);
+  });
+
+  it("should send and receive a message only to users in the same room", async () => {
+    let john, alice, mary;
+    let johnState, aliceState, maryState;
+
+    const birthdayRoom = await createMockRoom(birthday);
+    const weddingRoom = await createMockRoom(wedding);
+
+    john = io.connect(url, options);
+
+    john.on("connect", function() {
+      john.emit("JOIN_ROOM", birthdayRoom.id);
+
+      alice = io.connect(url, options);
+      alice.emit("JOIN_ROOM", birthdayRoom.id);
+
+      alice.on("connect", function() {
+        mary = io.connect(url, options);
+        mary.emit("JOIN_ROOM", weddingRoom.id);
+
+        mary.on("connect", function() {
+          john.emit("ADD_TRACK", { trackId: "test" });
+        });
+
+        mary.on("ROOM_UPDATED", state => {
+          maryState = state;
+        });
+      });
+
+      alice.on("ROOM_UPDATED", state => {
+        aliceState = state;
+      });
+      john.on("ROOM_UPDATED", state => {
+        johnState = state;
+      });
+    });
+
+    await waitFor(50);
+    console.log(johnState.playlist);
+    console.log(aliceState.playlist);
+    console.log(maryState.playlist);
+    john.disconnect();
+    alice.disconnect();
+    mary.disconnect();
   });
 });

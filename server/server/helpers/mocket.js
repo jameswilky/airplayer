@@ -29,9 +29,8 @@ const Mocket = {
       transports: ["websocket"]
     }
   ) => {
-    let client;
+    const client = io.connect(url, options);
     await new Promise(resolve => {
-      client = io.connect(url, options);
       client.on("connect", () => {
         resolve();
       });
@@ -72,6 +71,12 @@ const Mocket = {
       if (client.connected) {
         client.disconnect();
       }
+    });
+  },
+
+  waitFor: ms => {
+    return new Promise(resolve => {
+      setTimeout(resolve, ms);
     });
   }
 };
