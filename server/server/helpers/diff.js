@@ -1,4 +1,4 @@
-/*
+/**
  * Find the differences between two objects and push to a new object
  * @param  {Object} obj1 The original object
  * @param  {Object} obj2 The object to compare against it

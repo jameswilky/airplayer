@@ -135,9 +135,10 @@ describe("Sockets backend", () => {
     });
 
     await waitFor(100);
-    console.log(johnState.playlist);
-    console.log(aliceState.playlist);
-    console.log(maryState.playlist);
+    expect(JSON.stringify(johnState)).to.eql(JSON.stringify(aliceState));
+    expect(JSON.stringify(johnState)).to.not.eql(JSON.stringify(maryState));
+    expect(johnState.playlist[2].trackId).to.eql("test");
+    expect(maryState.playlist[2].trackId).to.eql("baodiu");
     john.disconnect();
     alice.disconnect();
     mary.disconnect();
