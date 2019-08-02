@@ -54,7 +54,7 @@ module.exports = function(io, interval = null) {
         if (socket.id === state.host.socketId) {
           handleEvent(event, data);
         } else {
-          socket.emit("ERROR", `${event} failed, Not Authorizated`);
+          socket.emit("ERROR", `${event} failed, Not Authorized`);
         }
       });
     });

@@ -31,12 +31,15 @@ const birthday = {
 const wedding = {
   name: "wedding",
   playlist: [{ trackId: "098" }, { trackId: "4as" }, { trackId: "baodiu" }],
-  currentSong: { playing: false, trackId: "4as" }
+  currentSong: { playing: false, trackId: "4as" },
+  host: { socketId: null }
 };
 
+// used to wait an arbitrary amount of time for all events to fire on a socket
 const waitFor = ms => {
+  const mult = 1; // modify this value to increase the amount of time all waitFor statements in the test suite
   return new Promise(resolve => {
-    setTimeout(resolve, ms);
+    setTimeout(resolve, ms * mult);
   });
 };
 
@@ -99,15 +102,12 @@ describe("Sockets backend", () => {
     });
   });
 
-  it("should allow hosts to execute host actions", async () => {
+  it("should disallow clients from executing host actions", async () => {
+    const birthdayRoom = await createMockRoom(birthday);
     const john = io.connect(url, options);
-    let msg = null;
-    let johnState = null;
-    john.on("connect", async function() {
-      birthday.host.socketId = john.io.engine.id;
+    let johnState, error;
 
-      const birthdayRoom = await createMockRoom(birthday);
-      console.log(birthdayRoom);
+    john.on("connect", async () => {
       john.emit("JOIN_ROOM", birthdayRoom.id);
       john.on("ROOM_UPDATED", state => {
         johnState = state;
@@ -118,7 +118,30 @@ describe("Sockets backend", () => {
       john.on("ERROR", msg => (error = msg));
     });
 
-    await waitFor(100);
+    await waitFor(50);
+    expect(johnState.currentSong.playing).to.eql(true);
+    expect(error).to.eql("PAUSE failed, Not Authorized");
+  });
+
+  it("should allow hosts to execute host actions", async () => {
+    const john = io.connect(url, options);
+    let msg = null;
+    let johnState = null;
+    john.on("connect", async function() {
+      birthday.host.socketId = john.io.engine.id;
+
+      const birthdayRoom = await createMockRoom(birthday);
+      john.emit("JOIN_ROOM", birthdayRoom.id);
+      john.on("ROOM_UPDATED", state => {
+        johnState = state;
+      });
+
+      await waitFor(10);
+      john.emit("PAUSE", null);
+      john.on("ERROR", msg => (error = msg));
+    });
+
+    await waitFor(50);
     expect(msg).to.eql(null);
     expect(johnState.currentSong.playing).to.eql(false);
     expect(johnState.host.socketId).to.eql(john.io.engine.id);
