@@ -7,7 +7,8 @@ const RoomSchema = new Schema({
   playlist: [{ trackId: String }],
   currentSong: { playing: Boolean, trackId: String },
   createdAt: { type: Date, default: Date.now },
-  subscribers: [{ type: Schema.Types.ObjectId, ref: "users" }]
+  subscribers: [{ type: Schema.Types.ObjectId, ref: "users" }],
+  host: { socketId: String }
 });
 
 RoomSchema.method("toClient", function() {

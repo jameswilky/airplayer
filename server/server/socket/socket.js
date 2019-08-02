@@ -10,20 +10,19 @@ module.exports = function(io, interval = null) {
       name: null,
       id: null,
       playlist: [],
-      currentSong: null
+      currentSong: null,
+      host: { socketId: null }
     };
 
-    const handleEvent = event => {
-      socket.on(event, data => {
-        // Update state based on event type
-        const nextState = dispatch(state, {
-          type: event,
-          payload: data
-        });
-        Object.assign(state, nextState);
-        // After each update, send updated room to each socket in room
-        io.in(state.id).emit("ROOM_UPDATED", state);
+    const handleEvent = (event, data) => {
+      // Update state based on event type
+      const nextState = dispatch(state, {
+        type: event,
+        payload: data
       });
+      Object.assign(state, nextState);
+      // After each update, send updated room to each socket in room
+      io.in(state.id).emit("ROOM_UPDATED", state);
     };
 
     socket.on("JOIN_ROOM", async id => {
@@ -44,13 +43,20 @@ module.exports = function(io, interval = null) {
 
     // Handles events that Clients and Hosts can use
     Object.keys(ALL).forEach(event => {
-      handleEvent(event, state);
+      socket.on(event, data => {
+        handleEvent(event, data);
+      });
     });
 
     // Handles events that only hosts can use
     Object.keys(HOST).forEach(event => {
-      // todo Validate that the event was emmited by a host
-      handleEvent(event, state);
+      socket.on(event, data => {
+        if (socket.id === state.host.socketId) {
+          handleEvent(event, data);
+        } else {
+          socket.emit("ERROR", `${event} failed, Not Authorizated`);
+        }
+      });
     });
 
     if (interval) {

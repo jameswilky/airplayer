@@ -25,7 +25,8 @@ let options = {
 const birthday = {
   name: "birthday",
   playlist: [{ trackId: "123" }, { trackId: "456" }],
-  currentSong: { playing: true, trackId: "123" }
+  currentSong: { playing: true, trackId: "123" },
+  host: { socketId: null }
 };
 const wedding = {
   name: "wedding",
@@ -96,6 +97,31 @@ describe("Sockets backend", () => {
       expect(johnState.playlist.length).to.eql(3);
       expect(johnState.playlist[2].trackId).to.eql("newSong");
     });
+  });
+
+  it("should allow hosts to execute host actions", async () => {
+    const john = io.connect(url, options);
+    let msg = null;
+    let johnState = null;
+    john.on("connect", async function() {
+      birthday.host.socketId = john.io.engine.id;
+
+      const birthdayRoom = await createMockRoom(birthday);
+      console.log(birthdayRoom);
+      john.emit("JOIN_ROOM", birthdayRoom.id);
+      john.on("ROOM_UPDATED", state => {
+        johnState = state;
+      });
+
+      await waitFor(10);
+      john.emit("PAUSE", null);
+      john.on("ERROR", msg => (error = msg));
+    });
+
+    await waitFor(100);
+    expect(msg).to.eql(null);
+    expect(johnState.currentSong.playing).to.eql(false);
+    expect(johnState.host.socketId).to.eql(john.io.engine.id);
   });
 
   it("should update the state of the room for all users in that room after an action", async () => {
