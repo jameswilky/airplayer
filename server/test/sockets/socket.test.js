@@ -82,7 +82,24 @@ describe("Sockets backend", () => {
   });
 
   describe("ADD_TRACK", () => {
-    it("TODO: Returns an error if not in a room", () => {}); // TODO add after authorization
+    it("TODO: Returns an error if not in a room", async () => {
+      let johnState, error;
+      const john = io.connect(url, options);
+
+      john.on("connect", () => {
+        john.emit("ADD_TRACK", { trackId: "newSong" });
+        john.on("ROOM_UPDATED", state => {
+          johnState = state;
+        });
+        john.on("ERROR", msg => {
+          error = msg;
+        });
+      });
+
+      await waitFor(50);
+      expect(error).to.eql("ADD_TRACK failed, can only be used inside a room");
+      expect(johnState).to.eql(undefined);
+    }); // TODO add after authorization
     it("updates the state for the sender after emiting ADD_TRACK", async () => {
       const room = await createMockRoom(birthday);
       const john = await Mocket.connectClient(url);
