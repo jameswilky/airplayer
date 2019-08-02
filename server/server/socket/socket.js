@@ -1,7 +1,7 @@
 const { getRoom, updateRoom } = require("../daos/roomDao");
 const diff = require("../helpers/diff");
 const isEmpty = require("../helpers/isEmpty");
-const events = require("../actions/actions");
+const { ALL, HOST } = require("../actions/scopes");
 const dispatch = require("../reducers/roomReducer");
 
 module.exports = function(io, interval = null) {
@@ -11,6 +11,19 @@ module.exports = function(io, interval = null) {
       id: null,
       playlist: [],
       currentSong: null
+    };
+
+    const handleEvent = event => {
+      socket.on(event, data => {
+        // Update state based on event type
+        const nextState = dispatch(state, {
+          type: event,
+          payload: data
+        });
+        Object.assign(state, nextState);
+        // After each update, send updated room to each socket in room
+        io.in(state.id).emit("ROOM_UPDATED", state);
+      });
     };
 
     socket.on("JOIN_ROOM", async id => {
@@ -29,18 +42,15 @@ module.exports = function(io, interval = null) {
       }
     });
 
-    Object.keys(events).forEach(event => {
-      // TODO ensure no events can be used unless in a room
-      socket.on(event, data => {
-        // Update state based on event type
-        const nextState = dispatch(state, {
-          type: event,
-          payload: data
-        });
-        Object.assign(state, nextState);
-        // After each update, send updated room to each socket in room
-        io.in(state.id).emit("ROOM_UPDATED", state);
-      });
+    // Handles events that Clients and Hosts can use
+    Object.keys(ALL).forEach(event => {
+      handleEvent(event, state);
+    });
+
+    // Handles events that only hosts can use
+    Object.keys(HOST).forEach(event => {
+      // todo Validate that the event was emmited by a host
+      handleEvent(event, state);
     });
 
     if (interval) {
