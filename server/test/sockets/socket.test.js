@@ -93,10 +93,10 @@ describe("Sockets backend", () => {
         johnState = state;
       });
 
-      await waitFor(10);
+      await waitFor(25);
       john.emit("ADD_TRACK", { trackId: "newSong" });
 
-      await waitFor(10);
+      await waitFor(25);
       expect(johnState.playlist.length).to.eql(3);
       expect(johnState.playlist[2].trackId).to.eql("newSong");
     });
@@ -120,7 +120,7 @@ describe("Sockets backend", () => {
 
     await waitFor(50);
     expect(johnState.currentSong.playing).to.eql(true);
-    expect(error).to.eql("PAUSE failed, Not Authorized");
+    expect(error).to.eql("PAUSE failed, not authorized");
   });
 
   it("should allow hosts to execute host actions", async () => {
