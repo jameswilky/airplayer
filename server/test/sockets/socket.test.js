@@ -58,7 +58,7 @@ describe("Sockets backend", () => {
     it("Should return an error if room does not exist", async () => {
       const john = await Mocket.connectClient(url);
       let error;
-      john.emit("JOIN_ROOM", "0");
+      john.emit("JOIN_ROOM", { id: "0" });
       john.on("ERROR", msg => (error = msg));
 
       await waitFor(50);
@@ -68,7 +68,7 @@ describe("Sockets backend", () => {
       const room = await createMockRoom(birthday);
       const john = await Mocket.connectClient(url);
       let johnState;
-      john.emit("JOIN_ROOM", room.id);
+      john.emit("JOIN_ROOM", { id: room.id });
       john.on("ROOM_UPDATED", state => {
         johnState = state;
       });
@@ -103,7 +103,7 @@ describe("Sockets backend", () => {
       const john = await Mocket.connectClient(url);
       let johnState;
 
-      john.emit("JOIN_ROOM", room.id);
+      john.emit("JOIN_ROOM", { id: room.id });
       john.on("ROOM_UPDATED", state => {
         johnState = state;
       });
@@ -146,7 +146,7 @@ describe("Sockets backend", () => {
       let johnState, error;
 
       john.on("connect", async () => {
-        john.emit("JOIN_ROOM", birthdayRoom.id);
+        john.emit("JOIN_ROOM", { id: birthdayRoom.id });
         john.on("ROOM_UPDATED", state => {
           johnState = state;
         });
@@ -168,7 +168,7 @@ describe("Sockets backend", () => {
       john.emit("CREATE_ROOM", "test");
       john.on("ROOM_CREATED", payload => {
         token = payload.token;
-        john.emit("JOIN_ROOM", payload.roomId);
+        john.emit("JOIN_ROOM", { id: payload.roomId });
       });
 
       john.on("ROOM_UPDATED", state => {
@@ -196,14 +196,14 @@ describe("Sockets backend", () => {
       john = io.connect(url, options);
 
       john.on("connect", function() {
-        john.emit("JOIN_ROOM", birthdayRoom.id);
+        john.emit("JOIN_ROOM", { id: birthdayRoom.id });
 
         alice = io.connect(url, options);
-        alice.emit("JOIN_ROOM", birthdayRoom.id);
+        alice.emit("JOIN_ROOM", { id: birthdayRoom.id });
 
         alice.on("connect", function() {
           mary = io.connect(url, options);
-          mary.emit("JOIN_ROOM", weddingRoom.id);
+          mary.emit("JOIN_ROOM", { id: weddingRoom.id });
 
           mary.on("connect", function() {
             john.emit("ADD_TRACK", { trackId: "test" });

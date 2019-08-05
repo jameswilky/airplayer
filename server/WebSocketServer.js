@@ -1,10 +1,5 @@
 const io = require("socket.io-client");
 
-let room = {
-  id: "5d36dd9eabc31f47282ea820",
-  playlist: []
-};
-
 const WebSocketServer = url => {
   return {
     isConnected: false,
@@ -25,6 +20,14 @@ const WebSocketServer = url => {
 
       this.socket.on("disconnect", () => {
         this.isConnected = false;
+        this.interval = setInterval(() => {
+          if (this.isConnected) {
+            clearInterval(this.interval);
+            this.interval = null;
+            return;
+          }
+          WebSocketServer.connect();
+        }, 5000);
         onDisconnect(this.socket);
       });
 
@@ -37,30 +40,15 @@ const WebSocketServer = url => {
     }
   };
 };
-const url = "http://localhost:3000";
+// const url = "http://localhost:3000";
 
-const onConnect = socket => {
-  console.log("connected to socket : " + socket.id);
-};
+// const onConnect = socket => {
+//   console.log("connected to socket : " + socket.id);
+// };
 
-const onDisconnect = socket => {
-  console.log("disconnected");
-};
+// const onDisconnect = socket => {
+//   console.log("disconnected");
+// };
 
-const config = { onConnect, onDisconnect };
-const socket = WebSocketServer(url).connect(config);
-setTimeout(() => {
-  socket.disconnect();
-}, 1000);
-
-setTimeout(() => {
-  socket.connect();
-}, 2000);
-
-setTimeout(() => {
-  socket.disconnect();
-}, 3000);
-
-setTimeout(() => {
-  socket.connect();
-}, 4000);
+// const config = { onConnect, onDisconnect };
+module.exports = WebSocketServer;

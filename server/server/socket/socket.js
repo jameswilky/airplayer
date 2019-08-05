@@ -50,7 +50,7 @@ module.exports = function(io, interval = null) {
       // Once created, client should emit a join room request with the new room id
     });
 
-    socket.on("JOIN_ROOM", async id => {
+    socket.on("JOIN_ROOM", async ({ id, token = null }) => {
       /**
        * @param {obj} room {id,name,playlist,subscribers,currentSong}
        */
@@ -62,6 +62,10 @@ module.exports = function(io, interval = null) {
         Object.assign(state, nextState);
 
         socket.join(state.id);
+        // TODO If a token is passed, attempt to validate and make socket the host
+        // if (token === host.token) {
+        //   Object.assign(host, { socketId: socket.id, token: token });
+        // }
         io.in(state.id).emit("ROOM_UPDATED", state);
       }
     });
