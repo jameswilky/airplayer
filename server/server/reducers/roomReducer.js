@@ -7,7 +7,7 @@ const {
 } = require("../actions/actions");
 
 const dispatch = (state, { type, payload }) => {
-  // todo add validation
+  // TODO add validation
   switch (type) {
     case ADD_TRACK:
       return { ...state, playlist: [...state.playlist, payload] };

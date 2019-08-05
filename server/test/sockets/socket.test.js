@@ -139,114 +139,97 @@ describe("Sockets backend", () => {
     });
   });
 
-  it("should disallow clients from executing host actions", async () => {
-    const birthdayRoom = await createMockRoom(birthday);
-    const john = io.connect(url, options);
-    let johnState, error;
+  describe("Room Scopes", () => {
+    it("should disallow clients from executing host actions", async () => {
+      const birthdayRoom = await createMockRoom(birthday);
+      const john = io.connect(url, options);
+      let johnState, error;
 
-    john.on("connect", async () => {
-      john.emit("JOIN_ROOM", birthdayRoom.id);
+      john.on("connect", async () => {
+        john.emit("JOIN_ROOM", birthdayRoom.id);
+        john.on("ROOM_UPDATED", state => {
+          johnState = state;
+        });
+
+        await waitFor(10);
+        john.emit("PAUSE", null);
+        john.on("ERROR", msg => (error = msg));
+      });
+
+      await waitFor(50);
+      expect(johnState.currentSong.playing).to.eql(true);
+      expect(error).to.eql("PAUSE failed, not authorized");
+    });
+
+    it("should allow hosts to execute host actions", async () => {
+      const john = io.connect(url, options);
+      let token,
+        johnState = null;
+      john.emit("CREATE_ROOM", "test");
+      john.on("ROOM_CREATED", payload => {
+        token = payload.token;
+        john.emit("JOIN_ROOM", payload.roomId);
+      });
+
       john.on("ROOM_UPDATED", state => {
         johnState = state;
       });
+      await waitFor(20);
 
-      await waitFor(10);
-      john.emit("PAUSE", null);
-      john.on("ERROR", msg => (error = msg));
+      john.emit("PLAY", "123");
+      await waitFor(20);
+
+      expect(token).to.be.a("string");
+      expect(johnState).to.be.a("object");
+      expect(johnState.currentSong.trackId).to.eql("123");
+      expect(johnState.currentSong.playing).to.eql(true);
+      expect(token).to.be.a("string");
     });
 
-    await waitFor(50);
-    expect(johnState.currentSong.playing).to.eql(true);
-    expect(error).to.eql("PAUSE failed, not authorized");
-  });
+    it("should update the state of the room for all users in that room after an action", async () => {
+      let john, alice, mary;
+      let johnState, aliceState, maryState;
 
-  it("should allow hosts to execute host actions", async () => {
-    const john = io.connect(url, options);
-    let token,
-      johnState = null;
-    john.emit("CREATE_ROOM", "test");
-    john.on("ROOM_CREATED", payload => {
-      token = payload.token;
-      john.emit("JOIN_ROOM", payload.roomId);
-    });
+      const birthdayRoom = await createMockRoom(birthday);
+      const weddingRoom = await createMockRoom(wedding);
 
-    john.on("ROOM_UPDATED", state => {
-      johnState = state;
-    });
-    await waitFor(20);
+      john = io.connect(url, options);
 
-    john.emit("ADD_TRACK", { trackId: "123" });
-    await waitFor(20);
+      john.on("connect", function() {
+        john.emit("JOIN_ROOM", birthdayRoom.id);
 
-    expect(token).to.be.a("string");
-    expect(johnState).to.be.a("object");
-    expect(johnState.playlist[0].trackId).to.eql("123");
-    expect(token).to.be.a("string");
+        alice = io.connect(url, options);
+        alice.emit("JOIN_ROOM", birthdayRoom.id);
 
-    // const john = io.connect(url, options);
-    // let msg = null;
-    // let johnState = null;
-    // const host = { socketId: null };
-    // john.on("connect", async function() {
-    //   host.socketId = john.io.engine.id;
-    //   const birthdayRoom = await createRoom(birthday);
-    //   john.emit("JOIN_ROOM", birthdayRoom.id);
-    //   john.on("ROOM_UPDATED", state => {
-    //     johnState = state;
-    //   });
-    //   await waitFor(10);
-    //   john.emit("PAUSE", null);
-    //   john.on("ERROR", msg => (error = msg));
-    // });
-    // await waitFor(50);
-    // expect(msg).to.eql(null);
-    // expect(johnState.currentSong.playing).to.eql(false);
-    // expect(host.socketId).to.eql(john.io.engine.id);
-  });
+        alice.on("connect", function() {
+          mary = io.connect(url, options);
+          mary.emit("JOIN_ROOM", weddingRoom.id);
 
-  it("should update the state of the room for all users in that room after an action", async () => {
-    let john, alice, mary;
-    let johnState, aliceState, maryState;
+          mary.on("connect", function() {
+            john.emit("ADD_TRACK", { trackId: "test" });
+          });
 
-    const birthdayRoom = await createMockRoom(birthday);
-    const weddingRoom = await createMockRoom(wedding);
-
-    john = io.connect(url, options);
-
-    john.on("connect", function() {
-      john.emit("JOIN_ROOM", birthdayRoom.id);
-
-      alice = io.connect(url, options);
-      alice.emit("JOIN_ROOM", birthdayRoom.id);
-
-      alice.on("connect", function() {
-        mary = io.connect(url, options);
-        mary.emit("JOIN_ROOM", weddingRoom.id);
-
-        mary.on("connect", function() {
-          john.emit("ADD_TRACK", { trackId: "test" });
+          mary.on("ROOM_UPDATED", state => {
+            maryState = state;
+          });
         });
 
-        mary.on("ROOM_UPDATED", state => {
-          maryState = state;
+        alice.on("ROOM_UPDATED", state => {
+          aliceState = state;
+        });
+        john.on("ROOM_UPDATED", state => {
+          johnState = state;
         });
       });
 
-      alice.on("ROOM_UPDATED", state => {
-        aliceState = state;
-      });
-      john.on("ROOM_UPDATED", state => {
-        johnState = state;
-      });
+      await waitFor(100);
+      expect(JSON.stringify(johnState)).to.eql(JSON.stringify(aliceState));
+      expect(JSON.stringify(johnState)).to.not.eql(JSON.stringify(maryState));
+      expect(johnState.playlist[2].trackId).to.eql("test");
+      expect(maryState.playlist[2].trackId).to.eql("baodiu");
+      john.disconnect();
+      alice.disconnect();
+      mary.disconnect();
     });
-
-    await waitFor(100);
-    expect(JSON.stringify(johnState)).to.eql(JSON.stringify(aliceState));
-    expect(JSON.stringify(johnState)).to.not.eql(JSON.stringify(maryState));
-    expect(johnState.playlist[2].trackId).to.eql("test");
-    expect(maryState.playlist[2].trackId).to.eql("baodiu");
-    john.disconnect();
-    alice.disconnect();
-    mary.disconnect();
   });
 });

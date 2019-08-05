@@ -21,7 +21,7 @@ module.exports = function(io, interval = null) {
       currentSong: null
     };
 
-    const host = { socketId: null };
+    const host = { socketId: null, token: null };
 
     const handleEvent = (event, data) => {
       // Update state based on event type
@@ -41,9 +41,10 @@ module.exports = function(io, interval = null) {
       if (!nextState) {
         socket.emit("ERROR", "room creation attempt failed");
       } else {
-        Object.assign(host, { socketId: socket.id });
+        Object.assign(host, { socketId: socket.id, token: "test" });
         Object.assign(state, nextState);
-        const payload = { token: "test", roomId: state.id };
+        // TODO create entry in database
+        const payload = { token: host.token, roomId: state.id };
         socket.emit("ROOM_CREATED", payload);
       }
       // Once created, client should emit a join room request with the new room id
@@ -102,7 +103,7 @@ module.exports = function(io, interval = null) {
       });
     });
 
-    if (interval) {
+    if (interval && inARoom(socket)) {
       let prevState = {};
       setInterval(async () => {
         // Every X seconds check if state has changed.
