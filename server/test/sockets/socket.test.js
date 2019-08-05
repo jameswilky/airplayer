@@ -160,31 +160,49 @@ describe("Sockets backend", () => {
     expect(error).to.eql("PAUSE failed, not authorized");
   });
 
-  // it("should allow hosts to execute host actions", async () => {
-  //   const john = io.connect(url, options);
-  //   let msg = null;
-  //   let johnState = null;
-  //   const host = { socketId: null };
-  //   john.on("connect", async function() {
-  //     host.socketId = john.io.engine.id;
+  it("should allow hosts to execute host actions", async () => {
+    const john = io.connect(url, options);
+    let token,
+      johnState = null;
+    john.emit("CREATE_ROOM", "test");
+    john.on("ROOM_CREATED", payload => {
+      token = payload.token;
+      john.emit("JOIN_ROOM", payload.roomId);
+    });
 
-  //     const birthdayRoom = await createMockRoom(birthday);
-  //     john.emit("JOIN_ROOM", birthdayRoom.id);
-  //     john.on("ROOM_UPDATED", state => {
-  //       johnState = state;
-  //     });
+    john.on("ROOM_UPDATED", state => {
+      johnState = state;
+    });
+    await waitFor(20);
 
-  //     await waitFor(10);
-  //     john.emit("PAUSE", null);
-  //     john.on("ERROR", msg => (error = msg));
-  //   });
+    john.emit("ADD_TRACK", { trackId: "123" });
+    await waitFor(20);
 
-  //   await waitFor(50);
-  //   // expect(msg).to.eql(null);
-  //   // expect(johnState.currentSong.playing).to.eql(false);
-  //   console.log(msg);
-  //   // expect(host.socketId).to.eql(john.io.engine.id);
-  // });
+    expect(token).to.be.a("string");
+    expect(johnState).to.be.a("object");
+    expect(johnState.playlist[0].trackId).to.eql("123");
+    expect(token).to.be.a("string");
+
+    // const john = io.connect(url, options);
+    // let msg = null;
+    // let johnState = null;
+    // const host = { socketId: null };
+    // john.on("connect", async function() {
+    //   host.socketId = john.io.engine.id;
+    //   const birthdayRoom = await createRoom(birthday);
+    //   john.emit("JOIN_ROOM", birthdayRoom.id);
+    //   john.on("ROOM_UPDATED", state => {
+    //     johnState = state;
+    //   });
+    //   await waitFor(10);
+    //   john.emit("PAUSE", null);
+    //   john.on("ERROR", msg => (error = msg));
+    // });
+    // await waitFor(50);
+    // expect(msg).to.eql(null);
+    // expect(johnState.currentSong.playing).to.eql(false);
+    // expect(host.socketId).to.eql(john.io.engine.id);
+  });
 
   it("should update the state of the room for all users in that room after an action", async () => {
     let john, alice, mary;

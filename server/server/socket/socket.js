@@ -4,6 +4,8 @@ const isEmpty = require("../helpers/isEmpty");
 const { ALL, HOST } = require("../actions/scopes");
 const dispatch = require("../reducers/roomReducer");
 
+// TODO refactor host actions to require a access token for each request
+
 const inARoom = socket => {
   // A socket always has 1 room attached as a room is naturally created on connection
   // So a socket should have 2 rooms if it has joined a user-created room
@@ -80,6 +82,7 @@ module.exports = function(io, interval = null) {
     //Handles events that only hosts can use
     Object.keys(HOST).forEach(event => {
       socket.on(event, data => {
+        // Authenticate a socket once then use socket id to check if it is a host
         const isAHost = socket.id === host.socketId;
 
         if (inARoom(socket)) {
