@@ -1,4 +1,4 @@
-const { getRoom, updateRoom } = require("../daos/roomDao");
+const { getRoom, updateRoom, createRoom } = require("../daos/roomDao");
 const diff = require("../helpers/diff");
 const isEmpty = require("../helpers/isEmpty");
 const { ALL, HOST } = require("../actions/scopes");
@@ -16,9 +16,10 @@ module.exports = function(io, interval = null) {
       name: null,
       id: null,
       playlist: [],
-      currentSong: null,
-      host: { socketId: null }
+      currentSong: null
     };
+
+    const host = { socketId: null };
 
     const handleEvent = (event, data) => {
       // Update state based on event type
@@ -31,10 +32,19 @@ module.exports = function(io, interval = null) {
       io.in(state.id).emit("ROOM_UPDATED", state);
     };
 
-    socket.on("CREATE_ROOM", async () => {
-      // Create a room instance in the database
-      // emit a room creation event that will send a token to the host
-      //
+    socket.on("CREATE_ROOM", async name => {
+      // bind the socket id of the host to the room object
+      // TODO Create a room instance in the database
+      const nextState = await createRoom(name);
+      if (!nextState) {
+        socket.emit("ERROR", "room creation attempt failed");
+      } else {
+        Object.assign(host, { socketId: socket.id });
+        Object.assign(state, nextState);
+        const payload = { token: "test", roomId: state.id };
+        socket.emit("ROOM_CREATED", payload);
+      }
+      // Once created, client should emit a join room request with the new room id
     });
 
     socket.on("JOIN_ROOM", async id => {
@@ -70,10 +80,14 @@ module.exports = function(io, interval = null) {
     //Handles events that only hosts can use
     Object.keys(HOST).forEach(event => {
       socket.on(event, data => {
+        const isAHost = socket.id === host.socketId;
+
         if (inARoom(socket)) {
-          if (socket.id === state.host.socketId) {
+          if (isAHost) {
             handleEvent(event, data);
-          } else {
+          }
+          // TODO on client side, make sure host will attempt a reconnect after reciving this error
+          else {
             socket.emit("ERROR", `${event} failed, not authorized`);
           }
         } else {

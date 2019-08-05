@@ -8,7 +8,11 @@ const createMockRoom = require("../../server/helpers/createMockRoom");
 const to = require("../../server/helpers/to");
 
 // Test subject
-const { getRoom, updateRoom } = require("../../server/daos/roomDao");
+const {
+  getRoom,
+  updateRoom,
+  createRoom
+} = require("../../server/daos/roomDao");
 
 // Mock Data
 const birthday = {
@@ -21,6 +25,15 @@ describe("Room Data Access Object", () => {
   beforeEach(async () => {
     const [err, res] = await to(Room.deleteMany({}));
     if (err) throw "Failed to delete all from Database";
+  });
+
+  describe("createRoom", () => {
+    it("should create a new object matching the specified the host and name given to the function", async () => {
+      const room = await createRoom("test");
+      expect(room).to.be.a("object");
+      expect(room.name).to.eql("test");
+      expect(room.playlist.length).to.eql(0);
+    });
   });
 
   describe("getRoom", () => {

@@ -8,8 +8,7 @@ module.exports = async ({ name, playlist, currentSong, host }) => {
       name: name,
       playlist: playlist,
       currentSong: currentSong,
-      createdAt: new Date(),
-      host: host
+      createdAt: new Date()
     });
 
     [err, room] = await to(newRoom.save());
