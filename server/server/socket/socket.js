@@ -43,6 +43,7 @@ module.exports = function(io, interval = null) {
       } else {
         Object.assign(host, { socketId: socket.id, token: "test" });
         Object.assign(state, nextState);
+
         // TODO create entry in database
         const payload = { token: host.token, roomId: state.id };
         socket.emit("ROOM_CREATED", payload);
