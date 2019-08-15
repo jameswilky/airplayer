@@ -1,4 +1,5 @@
 const { getRoom, updateRoom, createRoom } = require("../daos/roomDao");
+const { createHost } = require("../daos/hostDao");
 const diff = require("../helpers/diff");
 const isEmpty = require("../helpers/isEmpty");
 const { ALL, HOST } = require("../actions/scopes");
@@ -21,7 +22,20 @@ module.exports = function(io, interval = null) {
       currentSong: null
     };
 
-    const host = { socketId: null, token: null };
+    const host = { token: null };
+    // Authentication is handled as follows:
+    // On Room creation, the client sends their spotifyId
+    // This token is stored on the browser as a cookie and in the host schema
+    // The Host schema associates the token with the spotify ID and the room id
+    // When a host action, the payload will be inspected to find a token property
+    // If that token matches host.token, then its a valid action
+    // If the token provided does not match host.token then the action can not be performed
+    // This will trigger a client side event that will attempt to reconnect the host
+    // On reconnection, a new token is created and given to the client, which will also be assigned
+    // to the corresponding host schema and host.token
+    // The reason we are using authentication against the host value in Ram instead of validating the user
+    // on each request with the database, is to take advantage of the speed of websockets and not cause
+    // a delay for the users actions
 
     const handleEvent = (event, data) => {
       // Update state based on event type
@@ -34,17 +48,18 @@ module.exports = function(io, interval = null) {
       io.in(state.id).emit("ROOM_UPDATED", state);
     };
 
-    socket.on("CREATE_ROOM", async name => {
-      // bind the socket id of the host to the room object
-      // TODO Create a room instance in the database
+    socket.on("CREATE_ROOM", async ({ name, spotifyUserId }) => {
       const nextState = await createRoom(name);
       if (!nextState) {
         socket.emit("ERROR", "room creation attempt failed");
       } else {
-        // TODO create entry in database
+        const { token } = await createHost({
+          spotifyUserId: spotifyUserId,
+          roomId: nextState.roomId
+        });
         // On Room Creation, we create a Host entry in the database
         // This will require a spotify user ID and will return a token that will be assigned to the host
-        Object.assign(host, { socketId: socket.id, token: "test" });
+        Object.assign(host, { token: token });
         Object.assign(state, nextState);
 
         const payload = { token: host.token, roomId: state.id };
@@ -53,7 +68,7 @@ module.exports = function(io, interval = null) {
       // Once created, client should emit a join room request with the new room id
     });
 
-    socket.on("JOIN_ROOM", async ({ id, token = null }) => {
+    socket.on("JOIN_ROOM", async ({ id }) => {
       /**
        * @param {obj} room {id,name,playlist,subscribers,currentSong}
        */
@@ -65,11 +80,6 @@ module.exports = function(io, interval = null) {
         Object.assign(state, nextState);
 
         socket.join(state.id);
-        // TODO If a token is passed, attempt to validate and make socket the host
-        // This assumes that the host was disconnected and needs to rejoin the room
-        // if (token === host.token) {
-        //   Object.assign(host, { socketId: socket.id, token: token });
-        // }
         io.in(state.id).emit("ROOM_UPDATED", state);
       }
     });
@@ -91,8 +101,14 @@ module.exports = function(io, interval = null) {
     //Handles events that only hosts can use
     Object.keys(HOST).forEach(event => {
       socket.on(event, data => {
-        // Authenticate a socket once then use socket id to check if it is a host
-        const isAHost = socket.id === host.socketId;
+        if (!data || !data.hasOwnProperty("token")) {
+          socket.emit(
+            "ERROR",
+            `${event} requires authorization, please provide a token.`
+          );
+          return;
+        }
+        const isAHost = data.token === host.token;
 
         if (inARoom(socket)) {
           if (isAHost) {

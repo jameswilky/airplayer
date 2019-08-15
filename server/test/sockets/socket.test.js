@@ -123,7 +123,7 @@ describe("Sockets backend", () => {
       let token,
         roomId,
         err = null;
-      john.emit("CREATE_ROOM", "test");
+      john.emit("CREATE_ROOM", "testToken");
       john.on("ROOM_CREATED", payload => {
         token = payload.token;
         roomId = payload.roomId;
@@ -140,7 +140,46 @@ describe("Sockets backend", () => {
   });
 
   describe("Room Scopes", () => {
-    it("should disallow clients from executing host actions", async () => {
+    it("should require a token to perform host actions", async () => {
+      const birthdayRoom = await createMockRoom(birthday);
+      const john = io.connect(url, options);
+      let johnState;
+      let errors = [];
+
+      john.on("connect", async () => {
+        john.emit("JOIN_ROOM", { id: birthdayRoom.id });
+        john.on("ROOM_UPDATED", state => {
+          johnState = state;
+        });
+
+        await waitFor(10);
+        john.emit("PAUSE", null);
+
+        john.emit("PLAY", { trackId: "789" });
+
+        john.emit("UPDATE_PLAYLIST", [{ trackId: "101112" }]);
+
+        john.emit("REMOVE_TRACK", { trackId: "123" });
+        john.on("ERROR", msg => errors.push(msg));
+      });
+
+      await waitFor(50);
+      expect(johnState.currentSong.playing).to.eql(true);
+      expect(errors.length).to.eql(4);
+      expect(errors).to.include(
+        "PAUSE requires authorization, please provide a token."
+      );
+      expect(errors).to.include(
+        "PLAY requires authorization, please provide a token."
+      );
+      expect(errors).to.include(
+        "UPDATE_PLAYLIST requires authorization, please provide a token."
+      );
+      expect(errors).to.include(
+        "REMOVE_TRACK requires authorization, please provide a token."
+      );
+    });
+    it("should should require a valid token to perform host actions", async () => {
       const birthdayRoom = await createMockRoom(birthday);
       const john = io.connect(url, options);
       let johnState, error;
@@ -152,7 +191,7 @@ describe("Sockets backend", () => {
         });
 
         await waitFor(10);
-        john.emit("PAUSE", null);
+        john.emit("PAUSE", { token: "badToken" });
         john.on("ERROR", msg => (error = msg));
       });
 
@@ -160,12 +199,11 @@ describe("Sockets backend", () => {
       expect(johnState.currentSong.playing).to.eql(true);
       expect(error).to.eql("PAUSE failed, not authorized");
     });
-
     it("should allow hosts to execute host actions", async () => {
       const john = io.connect(url, options);
       let token,
         johnState = null;
-      john.emit("CREATE_ROOM", "test");
+      john.emit("CREATE_ROOM", { name: "testRoom", spotifyUserId: "testUser" });
       john.on("ROOM_CREATED", payload => {
         token = payload.token;
         john.emit("JOIN_ROOM", { id: payload.roomId });
@@ -176,7 +214,7 @@ describe("Sockets backend", () => {
       });
       await waitFor(20);
 
-      john.emit("PLAY", "123");
+      john.emit("PLAY", { token: token, trackId: "123" });
       await waitFor(20);
 
       expect(token).to.be.a("string");

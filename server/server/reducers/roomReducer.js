@@ -23,7 +23,7 @@ const dispatch = (state, { type, payload }) => {
     case PLAY:
       return {
         ...state,
-        currentSong: { playing: true, trackId: payload }
+        currentSong: { playing: true, trackId: payload.trackId }
       };
 
     case PAUSE:
