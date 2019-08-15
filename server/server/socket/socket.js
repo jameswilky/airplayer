@@ -41,10 +41,12 @@ module.exports = function(io, interval = null) {
       if (!nextState) {
         socket.emit("ERROR", "room creation attempt failed");
       } else {
+        // TODO create entry in database
+        // On Room Creation, we create a Host entry in the database
+        // This will require a spotify user ID and will return a token that will be assigned to the host
         Object.assign(host, { socketId: socket.id, token: "test" });
         Object.assign(state, nextState);
 
-        // TODO create entry in database
         const payload = { token: host.token, roomId: state.id };
         socket.emit("ROOM_CREATED", payload);
       }
@@ -64,6 +66,7 @@ module.exports = function(io, interval = null) {
 
         socket.join(state.id);
         // TODO If a token is passed, attempt to validate and make socket the host
+        // This assumes that the host was disconnected and needs to rejoin the room
         // if (token === host.token) {
         //   Object.assign(host, { socketId: socket.id, token: token });
         // }
