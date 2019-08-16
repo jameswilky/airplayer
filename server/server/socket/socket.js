@@ -78,9 +78,16 @@ module.exports = function(io, interval = null) {
        */
       // todo add check to validate input is a room object
       const nextState = await getRoom(id);
+
       if (!nextState) {
         socket.emit("ERROR", `join attempt failed, room not found`);
-      } else if (passwordDoesMatch({ roomId: nextState.id, password })) {
+        return;
+      }
+      const authorized = await passwordDoesMatch({
+        roomId: nextState.id,
+        password
+      });
+      if (authorized) {
         Object.assign(state, nextState);
         socket.join(state.id);
         io.in(state.id).emit("ROOM_UPDATED", state);

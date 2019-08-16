@@ -7,7 +7,6 @@ const io = require("socket.io-client");
 // Helpers
 const diff = require("../../server/helpers/diff");
 const to = require("../../server/helpers/to");
-const createMockRoom = require("../../server/helpers/createMockRoom");
 const { createRoom } = require("../../server/daos/roomDao");
 const Mocket = require("../../server/helpers/mocket");
 
@@ -58,15 +57,19 @@ describe("Sockets backend", () => {
   describe("JOIN_ROOM", () => {
     it("Should return an error if room does not exist", async () => {
       const john = await Mocket.connectClient(url);
-      let error;
+      let error, johnState;
       john.emit("JOIN_ROOM", { id: "0" });
+      john.on("ROOM_UPDATED", state => {
+        johnState = state;
+      });
       john.on("ERROR", msg => (error = msg));
 
       await waitFor(50);
       expect(error).to.eql("join attempt failed, room not found");
+      expect(johnState).to.eql(undefined);
     });
-    it("should join room if room exists", async () => {
-      const room = await createMockRoom(birthday);
+    it("should join room if the room exists", async () => {
+      const room = await createRoom(birthday);
       const john = await Mocket.connectClient(url);
       let johnState;
       john.emit("JOIN_ROOM", { id: room.id });
@@ -81,7 +84,7 @@ describe("Sockets backend", () => {
     it("should only allow users to join a room that requires a password if the password given is correct", async () => {
       const privateBirthday = Object.assign({}, birthday);
       privateBirthday.password = "secret";
-      const room = await createMockRoom(privateBirthday);
+      const room = await createRoom(privateBirthday);
       const john = await Mocket.connectClient(url);
       let johnState;
       john.emit("JOIN_ROOM", { id: room.id, password: "secret" });
@@ -108,7 +111,8 @@ describe("Sockets backend", () => {
       });
 
       await waitFor(50);
-      console.log(err, johnState);
+      expect(johnState).to.eql(undefined);
+      expect(err).to.eql("join attempt failed, invalid password");
     });
   });
 
@@ -132,7 +136,7 @@ describe("Sockets backend", () => {
       expect(johnState).to.eql(undefined);
     }); // TODO add after authorization
     it("updates the state for the sender after emiting ADD_TRACK", async () => {
-      const room = await createMockRoom(birthday);
+      const room = await createRoom(birthday);
       const john = await Mocket.connectClient(url);
       let johnState;
 
@@ -174,7 +178,7 @@ describe("Sockets backend", () => {
 
   describe("Room Scopes", () => {
     it("should require a token to perform host actions", async () => {
-      const birthdayRoom = await createMockRoom(birthday);
+      const birthdayRoom = await createRoom(birthday);
       const john = io.connect(url, options);
       let johnState;
       let errors = [];
@@ -213,7 +217,7 @@ describe("Sockets backend", () => {
       );
     });
     it("should should require a valid token to perform host actions", async () => {
-      const birthdayRoom = await createMockRoom(birthday);
+      const birthdayRoom = await createRoom(birthday);
       const john = io.connect(url, options);
       let johnState, error;
 
@@ -259,10 +263,10 @@ describe("Sockets backend", () => {
 
     it("should update the state of the room for all users in that room after an action", async () => {
       let john, alice, mary;
-      let johnState, aliceState, maryState;
+      let johnState, aliceState, maryState, err;
 
-      const birthdayRoom = await createMockRoom(birthday);
-      const weddingRoom = await createMockRoom(wedding);
+      const birthdayRoom = await createRoom(birthday);
+      const weddingRoom = await createRoom(wedding);
 
       john = io.connect(url, options);
 
@@ -276,7 +280,8 @@ describe("Sockets backend", () => {
           mary = io.connect(url, options);
           mary.emit("JOIN_ROOM", { id: weddingRoom.id });
 
-          mary.on("connect", function() {
+          mary.on("connect", async function() {
+            await waitFor(50);
             john.emit("ADD_TRACK", { trackId: "test" });
           });
 
@@ -294,6 +299,7 @@ describe("Sockets backend", () => {
       });
 
       await waitFor(100);
+
       expect(JSON.stringify(johnState)).to.eql(JSON.stringify(aliceState));
       expect(JSON.stringify(johnState)).to.not.eql(JSON.stringify(maryState));
       expect(johnState.playlist[2].trackId).to.eql("test");

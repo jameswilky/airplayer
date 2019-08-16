@@ -21,7 +21,7 @@ module.exports = {
     const [err, room] = await to(newRoom.save());
     return err || room === null ? null : room.toClient();
   },
-  passwordDoesMatch: async ({ roomId, password }) => {
+  passwordDoesMatch: async ({ roomId, password = null }) => {
     const [err, room] = await to(Room.findById(roomId));
     return err || room === null
       ? null // If room found return null

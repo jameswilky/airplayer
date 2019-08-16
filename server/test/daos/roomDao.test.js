@@ -86,6 +86,13 @@ describe("Room Data Access Object", () => {
       });
       expect(result).to.eql(true);
     });
+    it("should return true if no password is passed, when the room does not require a password", async () => {
+      const room = await createRoom(birthday);
+      const result = await passwordDoesMatch({
+        roomId: room.id
+      });
+      expect(result).to.eql(true);
+    });
     it("should return false if the password does not match the room password specified by the room id", async () => {
       const privateBirthday = Object.assign({}, birthday);
       privateBirthday.password = "secret";
