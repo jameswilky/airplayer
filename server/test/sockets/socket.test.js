@@ -300,7 +300,6 @@ describe("Sockets backend", () => {
       });
 
       await waitFor(100);
-      console.log(johnState);
       expect(JSON.stringify(johnState)).to.eql(JSON.stringify(aliceState));
       expect(JSON.stringify(johnState)).to.not.eql(JSON.stringify(maryState));
       expect(johnState.playlist[2].trackId).to.eql("test");
