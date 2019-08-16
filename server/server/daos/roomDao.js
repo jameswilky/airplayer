@@ -15,7 +15,8 @@ module.exports = {
       playlist: playlist,
       currentSong: currentSong,
       createdAt: new Date(),
-      password: password
+      password: password,
+      requiresPassword: password === null ? false : true
     });
 
     const [err, room] = await to(newRoom.save());

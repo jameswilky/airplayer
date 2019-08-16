@@ -22,7 +22,8 @@ module.exports = function(io, interval = null) {
       name: null,
       id: null,
       playlist: [],
-      currentSong: null
+      currentSong: null,
+      requiresPassword: false
     };
 
     const host = { token: null };

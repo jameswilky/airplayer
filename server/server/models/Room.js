@@ -22,7 +22,10 @@ RoomSchema.method("toClient", function() {
     delete track._id;
   });
 
-  delete obj.password;
+  if (obj.password) {
+    delete obj.password;
+    obj.requiresPassword = true;
+  }
 
   return obj;
 });

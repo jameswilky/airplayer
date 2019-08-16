@@ -4,7 +4,6 @@ const Room = require("../../server/models/Room");
 const expect = require("chai").expect;
 
 // Helpers
-const createMockRoom = require("../../server/helpers/createMockRoom");
 const to = require("../../server/helpers/to");
 
 // Test subject
@@ -40,7 +39,7 @@ describe("Room Data Access Object", () => {
 
   describe("getRoom", () => {
     it("should return a room object matching the given id", async () => {
-      const room = await createMockRoom(birthday);
+      const room = await createRoom(birthday);
       const res = await getRoom(room.id);
       expect(res).to.be.a("object");
       expect(res.id).to.eql(room.id);
@@ -57,7 +56,7 @@ describe("Room Data Access Object", () => {
 
   describe("updateRoom", () => {
     it("should return a copy of the newly updated room on success", async () => {
-      const room = await createMockRoom(birthday);
+      const room = await createRoom(birthday);
       room.name = "wedding";
       room.playlist.push({ trackId: "789" });
       const res = await updateRoom(room);
@@ -69,7 +68,7 @@ describe("Room Data Access Object", () => {
       expect(res.playlist.length).to.eql(3);
     });
     it("should return null if id is not found in the database", async () => {
-      const room = await createMockRoom(birthday);
+      const room = await createRoom(birthday);
       room.id = 25;
       const res = await updateRoom(room);
       expect(res).to.eql(null);

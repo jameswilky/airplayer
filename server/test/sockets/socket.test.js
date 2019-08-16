@@ -95,6 +95,7 @@ describe("Sockets backend", () => {
       await waitFor(50);
       expect(johnState.id.toString()).to.eql(room.id.toString()); // TODO use different assertion
       expect(johnState.name).to.eql(birthday.name);
+      expect(johnState.requiresPassword).to.eql(true);
     });
     it("should prevent users from joining a room that requires a password when no password is given", async () => {
       const privateBirthday = Object.assign({}, birthday);
@@ -177,7 +178,7 @@ describe("Sockets backend", () => {
   });
 
   describe("Room Scopes", () => {
-    it("should require a token to perform host actions", async () => {
+    it("should return an error if no token is provided when attemptning to  perform host actions", async () => {
       const birthdayRoom = await createRoom(birthday);
       const john = io.connect(url, options);
       let johnState;
@@ -236,7 +237,7 @@ describe("Sockets backend", () => {
       expect(johnState.currentSong.playing).to.eql(true);
       expect(error).to.eql("PAUSE failed, not authorized");
     });
-    it("should allow hosts to execute host actions", async () => {
+    it("should allow hosts that provide valid tokens to emit host actions", async () => {
       const john = io.connect(url, options);
       let token,
         johnState = null;
@@ -263,7 +264,7 @@ describe("Sockets backend", () => {
 
     it("should update the state of the room for all users in that room after an action", async () => {
       let john, alice, mary;
-      let johnState, aliceState, maryState, err;
+      let johnState, aliceState, maryState;
 
       const birthdayRoom = await createRoom(birthday);
       const weddingRoom = await createRoom(wedding);
@@ -299,7 +300,7 @@ describe("Sockets backend", () => {
       });
 
       await waitFor(100);
-
+      console.log(johnState);
       expect(JSON.stringify(johnState)).to.eql(JSON.stringify(aliceState));
       expect(JSON.stringify(johnState)).to.not.eql(JSON.stringify(maryState));
       expect(johnState.playlist[2].trackId).to.eql("test");
