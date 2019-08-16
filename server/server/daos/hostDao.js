@@ -20,6 +20,7 @@ module.exports = {
     return err || host === null ? null : host.toClient();
   },
   getHostBySpotifyUserId: async spotifyUserId => {
+    // TODO add room ID to makesure that if a spotify user somehow has 2 rooms the correct one is returned
     const [err, host] = await to(Host.findOne({ spotifyUserId }));
     return err || host === null ? null : host.toClient();
   }

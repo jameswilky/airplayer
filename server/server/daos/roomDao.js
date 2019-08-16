@@ -4,21 +4,32 @@ const Room = require("../models/Room");
 const to = require("../helpers/to");
 
 module.exports = {
-  createRoom: async (
+  createRoom: async ({
     name,
     playlist = [],
-    currentSong = { playing: false, trackId: null }
-  ) => {
+    currentSong = { playing: false, trackId: null },
+    password = null
+  }) => {
     const newRoom = new Room({
       name: name,
       playlist: playlist,
       currentSong: currentSong,
-      createdAt: new Date()
+      createdAt: new Date(),
+      password: password
     });
 
     const [err, room] = await to(newRoom.save());
     return err || room === null ? null : room.toClient();
   },
+  passwordDoesMatch: async ({ roomId, password }) => {
+    const [err, room] = await to(Room.findById(roomId));
+    return err || room === null
+      ? null // If room found return null
+      : room.password === password
+      ? true // If password matches return true
+      : false; // if doesn't match return false
+  },
+
   getRoom: async id => {
     let err, roomModel;
     [err, roomModel] = await to(Room.findById(id));
@@ -30,10 +41,15 @@ module.exports = {
     [err, roomModel] = await to(Room.findById({ _id: nextRoom.id }));
     if (err) return null;
     else {
+      // Ensure password is not overwritten
+      nextRoom.password = roomModel.password;
+
       [err, updatedRoomModel] = await to(
         Object.assign(roomModel, nextRoom).save()
       );
-      return err || roomModel === null ? null : roomModel.toClient();
+      return err || updatedRoomModel === null
+        ? null
+        : updatedRoomModel.toClient();
     }
   }
 };

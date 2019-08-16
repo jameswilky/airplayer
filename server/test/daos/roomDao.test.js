@@ -11,7 +11,8 @@ const to = require("../../server/helpers/to");
 const {
   getRoom,
   updateRoom,
-  createRoom
+  createRoom,
+  passwordDoesMatch
 } = require("../../server/daos/roomDao");
 
 // Mock Data
@@ -29,11 +30,12 @@ describe("Room Data Access Object", () => {
 
   describe("createRoom", () => {
     it("should create a new object matching the specified the host and name given to the function", async () => {
-      const room = await createRoom("test");
+      const room = await createRoom({ name: "test" });
       expect(room).to.be.a("object");
       expect(room.name).to.eql("test");
       expect(room.playlist.length).to.eql(0);
     });
+    // TODO create password protected room
   });
 
   describe("getRoom", () => {
@@ -71,6 +73,38 @@ describe("Room Data Access Object", () => {
       room.id = 25;
       const res = await updateRoom(room);
       expect(res).to.eql(null);
+    });
+  });
+  describe("passwordDoesMatch", () => {
+    it("should return true if the password matches the room password specified by the room id", async () => {
+      const privateBirthday = Object.assign({}, birthday);
+      privateBirthday.password = "secret";
+      const room = await createRoom(privateBirthday);
+      const result = await passwordDoesMatch({
+        roomId: room.id,
+        password: "secret"
+      });
+      expect(result).to.eql(true);
+    });
+    it("should return false if the password does not match the room password specified by the room id", async () => {
+      const privateBirthday = Object.assign({}, birthday);
+      privateBirthday.password = "secret";
+      const room = await createRoom(privateBirthday);
+      const result = await passwordDoesMatch({
+        roomId: room.id,
+        password: "wrongsecret"
+      });
+      expect(result).to.eql(false);
+    });
+    it("should return null if an invalid room id is passed", async () => {
+      const privateBirthday = Object.assign({}, birthday);
+      privateBirthday.password = "secret";
+      const room = await createRoom(privateBirthday);
+      const result = await passwordDoesMatch({
+        roomId: "wrongID",
+        password: "secret"
+      });
+      expect(result).to.eql(null);
     });
   });
 });

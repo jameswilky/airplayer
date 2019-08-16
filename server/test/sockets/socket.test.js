@@ -8,6 +8,7 @@ const io = require("socket.io-client");
 const diff = require("../../server/helpers/diff");
 const to = require("../../server/helpers/to");
 const createMockRoom = require("../../server/helpers/createMockRoom");
+const { createRoom } = require("../../server/daos/roomDao");
 const Mocket = require("../../server/helpers/mocket");
 
 // Test subject
@@ -76,6 +77,38 @@ describe("Sockets backend", () => {
       await waitFor(50);
       expect(johnState.id.toString()).to.eql(room.id.toString()); // TODO use different assertion
       expect(johnState.name).to.eql(birthday.name);
+    });
+    it("should only allow users to join a room that requires a password if the password given is correct", async () => {
+      const privateBirthday = Object.assign({}, birthday);
+      privateBirthday.password = "secret";
+      const room = await createMockRoom(privateBirthday);
+      const john = await Mocket.connectClient(url);
+      let johnState;
+      john.emit("JOIN_ROOM", { id: room.id, password: "secret" });
+      john.on("ROOM_UPDATED", state => {
+        johnState = state;
+      });
+
+      await waitFor(50);
+      expect(johnState.id.toString()).to.eql(room.id.toString()); // TODO use different assertion
+      expect(johnState.name).to.eql(birthday.name);
+    });
+    it("should prevent users from joining a room that requires a password when no password is given", async () => {
+      const privateBirthday = Object.assign({}, birthday);
+      privateBirthday.password = "secret";
+      const room = await createRoom(privateBirthday);
+      const john = await Mocket.connectClient(url);
+      let johnState, err;
+      john.emit("JOIN_ROOM", { id: room.id, password: "wrongSecret" });
+      john.on("ROOM_UPDATED", state => {
+        johnState = state;
+      });
+      john.on("ERROR", msg => {
+        err = msg;
+      });
+
+      await waitFor(50);
+      console.log(err, johnState);
     });
   });
 

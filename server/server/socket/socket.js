@@ -1,11 +1,14 @@
-const { getRoom, updateRoom, createRoom } = require("../daos/roomDao");
+const {
+  getRoom,
+  updateRoom,
+  createRoom,
+  passwordDoesMatch
+} = require("../daos/roomDao");
 const { createHost } = require("../daos/hostDao");
 const diff = require("../helpers/diff");
 const isEmpty = require("../helpers/isEmpty");
 const { ALL, HOST } = require("../actions/scopes");
 const dispatch = require("../reducers/roomReducer");
-
-// TODO refactor host actions to require a access token for each request
 
 const inARoom = socket => {
   // A socket always has 1 room attached as a room is naturally created on connection
@@ -24,18 +27,16 @@ module.exports = function(io, interval = null) {
 
     const host = { token: null };
     // Authentication is handled as follows:
-    // On Room creation, the client sends their spotifyId
+    // On Room creation, the client sends their spotifyUserId, and then a token is created
     // This token is stored on the browser as a cookie and in the host schema
     // The Host schema associates the token with the spotify ID and the room id
-    // When a host action, the payload will be inspected to find a token property
+    // When a host action is requested, the payload will be inspected to find a token property
     // If that token matches host.token, then its a valid action
     // If the token provided does not match host.token then the action can not be performed
-    // This will trigger a client side event that will attempt to reconnect the host
-    // On reconnection, a new token is created and given to the client, which will also be assigned
-    // to the corresponding host schema and host.token
     // The reason we are using authentication against the host value in Ram instead of validating the user
     // on each request with the database, is to take advantage of the speed of websockets and not cause
     // a delay for the users actions
+    // The down side is, if the user deletes the token they wont be able to reconnect as host
 
     const handleEvent = (event, data) => {
       // Update state based on event type
@@ -48,27 +49,30 @@ module.exports = function(io, interval = null) {
       io.in(state.id).emit("ROOM_UPDATED", state);
     };
 
-    socket.on("CREATE_ROOM", async ({ name, spotifyUserId }) => {
-      const nextState = await createRoom(name);
-      if (!nextState) {
-        socket.emit("ERROR", "room creation attempt failed");
-      } else {
-        const { token } = await createHost({
-          spotifyUserId: spotifyUserId,
-          roomId: nextState.roomId
-        });
-        // On Room Creation, we create a Host entry in the database
-        // This will require a spotify user ID and will return a token that will be assigned to the host
-        Object.assign(host, { token: token });
-        Object.assign(state, nextState);
+    socket.on(
+      "CREATE_ROOM",
+      async ({ name, spotifyUserId, password = null }) => {
+        const nextState = await createRoom({ name, password });
+        if (!nextState) {
+          socket.emit("ERROR", "room creation attempt failed");
+        } else {
+          const { token } = await createHost({
+            spotifyUserId: spotifyUserId,
+            roomId: nextState.roomId
+          });
+          // On Room Creation, we create a Host entry in the database
+          // This will require a spotify user ID and will return a token that will be assigned to the host
+          Object.assign(host, { token: token });
+          Object.assign(state, nextState);
 
-        const payload = { token: host.token, roomId: state.id };
-        socket.emit("ROOM_CREATED", payload);
+          const payload = { token: host.token, roomId: state.id };
+          socket.emit("ROOM_CREATED", payload);
+        }
+        // Once created, client should emit a join room request with the new room id
       }
-      // Once created, client should emit a join room request with the new room id
-    });
+    );
 
-    socket.on("JOIN_ROOM", async ({ id }) => {
+    socket.on("JOIN_ROOM", async ({ id, password = null }) => {
       /**
        * @param {obj} room {id,name,playlist,subscribers,currentSong}
        */
@@ -76,11 +80,12 @@ module.exports = function(io, interval = null) {
       const nextState = await getRoom(id);
       if (!nextState) {
         socket.emit("ERROR", `join attempt failed, room not found`);
-      } else {
+      } else if (passwordDoesMatch({ roomId: nextState.id, password })) {
         Object.assign(state, nextState);
-
         socket.join(state.id);
         io.in(state.id).emit("ROOM_UPDATED", state);
+      } else {
+        socket.emit("ERROR", `join attempt failed, invalid password`);
       }
     });
 

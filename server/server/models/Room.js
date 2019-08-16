@@ -8,7 +8,8 @@ const RoomSchema = new Schema({
   currentSong: { playing: Boolean, trackId: String },
   createdAt: { type: Date, default: Date.now },
   subscribers: [{ type: Schema.Types.ObjectId, ref: "users" }],
-  host: { socketId: String }
+  host: { socketId: String },
+  password: String
 });
 
 RoomSchema.method("toClient", function() {
@@ -20,6 +21,8 @@ RoomSchema.method("toClient", function() {
   obj.playlist.forEach(track => {
     delete track._id;
   });
+
+  delete obj.password;
 
   return obj;
 });
