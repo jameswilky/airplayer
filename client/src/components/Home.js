@@ -8,12 +8,16 @@ export default function Home() {
       <input type="text" placeholder="enter a party name" />
       in
       <input type="text" placeholder="enter your location" />
+      <button>
+        {" "}
+        <Link to="/roomsearch">Search</Link>{" "}
+      </button>
       <br />
       or
       <br />
       <button>
         {" "}
-        <Link to="/roomsearch">Create your own</Link>{" "}
+        <Link to="/createroom">Create your own</Link>{" "}
       </button>
     </>
   );
