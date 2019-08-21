@@ -1,5 +1,6 @@
 import React from "react";
 import styled, { css } from "styled-components";
+import { Link } from "react-router-dom";
 
 const Row = css`
   width: 100%;
@@ -26,9 +27,10 @@ const Container = styled.div`
   height: 50px;
   width: 100%;
   position: relative;
+  & i {
+    color: whitesmoke;
+  }
 `;
-
-const Button = styled.div``;
 
 export default function Footer() {
   return (
@@ -39,15 +41,15 @@ export default function Footer() {
           <span>|</span>
           <span>|</span>
         </Underlay>
-        <Button>
-          <i class="fas fa-music" />
-        </Button>
-        <Button>
-          <i class="fas fa-search" />
-        </Button>
-        <Button>
-          <i class="fas fa-heart" />
-        </Button>
+        <Link>
+          <i className="fas fa-music" />
+        </Link>
+        <Link>
+          <i className="fas fa-search" />
+        </Link>
+        <Link>
+          <i className="fas fa-heart" />
+        </Link>
       </Body>
     </Container>
   );
