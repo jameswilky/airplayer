@@ -1,0 +1,11 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: "Rubik", sans-serif;
+}
+
+:root {
+  --black: "slateblack";
+  --white: "whitesmoke";
+}
