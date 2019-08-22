@@ -22,5 +22,6 @@ module.exports = function(app, express, io) {
   // Connect Routes
   const router = express.Router();
   app.use("/api", router);
+
   require("./routes/router")(router);
 };

@@ -1,7 +1,7 @@
 // Room route handlers
 const mongoose = require("mongoose");
-const Room = require("../../models/Room");
-const to = require("../../helpers/to");
+const Room = require("../models/Room");
+const to = require("../helpers/to");
 
 module.exports = {
   getRooms: async (req, res) => {
