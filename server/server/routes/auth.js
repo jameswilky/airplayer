@@ -44,7 +44,7 @@ module.exports = {
     if (state === null || state !== storedState) {
       res.redirect(
         FRONTEND_URI +
-          `/#` +
+          `/auth/callback` +
           querystring.stringify({
             error: "state_mismatch"
           })
@@ -84,9 +84,15 @@ module.exports = {
           // });
 
           // we can also pass the token to the browser to make requests from there
+
+          // res.send({
+          //   access_token: access_token,
+          //   refresh_token: refresh_token
+          // });
           res.redirect(
             FRONTEND_URI +
-              `/#` +
+              `/auth/callback/` +
+              "/#" +
               querystring.stringify({
                 access_token: access_token,
                 refresh_token: refresh_token
@@ -95,7 +101,7 @@ module.exports = {
         } else {
           res.redirect(
             FRONTEND_URI +
-              `/#` +
+              `/auth/callback` +
               querystring.stringify({
                 error: "invalid_token"
               })

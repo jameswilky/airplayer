@@ -1,9 +1,12 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import getHashParams from "./helpers/getHashParams";
+import { useSelector, useDispatch } from "react-redux";
 
 export default function Home() {
-  const getParams = () => console.log(getHashParams());
+  const auth = useSelector(state => state.auth);
+  const dispatch = useDispatch();
+  console.log(auth);
+  const login = () => dispatch({ type: "LOG_IN" });
   return (
     <>
       <h2>Search for parties in your area</h2>
@@ -21,8 +24,8 @@ export default function Home() {
         {" "}
         <Link to="/createroom">Create your own</Link>{" "}
       </button>
-      <button onClick={getParams}>getParams</button>
-      <a href="http://localhost:8888/login">Log in</a>
+      {/* <button onClick={login}>Login</button> */}
+      <a href="http://localhost:8888/auth/login">Log in</a>
     </>
   );
 }

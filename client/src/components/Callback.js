@@ -1,3 +1,4 @@
+import React from "react";
 const getHashParams = () => {
   let hashParams = {};
   let e,
@@ -10,5 +11,8 @@ const getHashParams = () => {
   }
   return hashParams;
 };
+console.log(getHashParams());
 
-export default getHashParams;
+export default function Callback() {
+  return <div>Worked</div>;
+}
