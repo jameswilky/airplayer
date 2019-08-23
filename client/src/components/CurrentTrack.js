@@ -1,6 +1,7 @@
 import React from "react";
-import { gameOvaImg } from "../images";
 import styled from "styled-components";
+
+// TODO https://styled-icons.js.org/?s=search
 
 const Container = styled.div`
   /* background-color: "black"; */
@@ -26,7 +27,7 @@ const ImageWrapper = styled.div`
       rgba(20, 20, 20, 0)
     );
     position: absolute;
-    height: 37.5%; /* based on image height*/
+    height: 37%; /* based on image height*/
     right: 0;
     bottom: 0;
     left: 0;
@@ -47,6 +48,7 @@ const Overlay = styled.div`
   /* Container to position Song info*/
 
   position: absolute;
+  min-height: 200px;
   height: calc(100vh - 50px - 320px); /* Determined by input picture*/
   width: 100%;
   bottom: 0px;
@@ -76,8 +78,8 @@ const SongInfoContainer = styled.div`
 
 const Chevron = styled.span`
   position: absolute;
-  right: calc(50% - 7.5px);
   bottom: 10px;
+  left: calc(50% - 7.5px);
   opacity: 0.7;
   &:before {
     border-style: solid;
@@ -94,20 +96,23 @@ const Chevron = styled.span`
 `;
 
 export default function CurrentTrack(props) {
-  const { AudioVisualizer } = props;
+  const { AudioVisualizer, title, artist, nextTrack, image } = props;
   return (
     <Container>
       <ImageContainer>
         <ImageWrapper>
-          <Image src={gameOvaImg} />
+          <Image src={image} />
         </ImageWrapper>
       </ImageContainer>
       <Overlay>
         <SongInfoContainer>
           <AudioVisualizer />
-          <h1>Game Ova</h1>
-          <h5>Tobi Lou</h5>
-          <p> Up next Darude - Sandstorm</p>
+          <h1>{title}</h1>
+          <h5>{artist}</h5>
+          <p>
+            {" "}
+            Up next {nextTrack.artist} : {nextTrack.title}
+          </p>
         </SongInfoContainer>
       </Overlay>
       <Chevron />

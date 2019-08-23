@@ -41,13 +41,13 @@ export default function Footer() {
           <span>|</span>
           <span>|</span>
         </Underlay>
-        <Link>
+        <Link to="/room1">
           <i className="fas fa-music" />
         </Link>
-        <Link>
+        <Link to="/room1/search">
           <i className="fas fa-search" />
         </Link>
-        <Link>
+        <Link to="/room1/likes">
           <i className="fas fa-heart" />
         </Link>
       </Body>

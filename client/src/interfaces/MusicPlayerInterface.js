@@ -4,6 +4,7 @@ import Playlist from "../components/Playlist";
 import Footer from "../components/Footer";
 import AudioVisualizer from "../components/AudioVisualizer";
 import styled from "styled-components";
+import { gameOvaImg } from "../images";
 
 const Container = styled.div`
   color: whitesmoke;
@@ -14,7 +15,13 @@ const Container = styled.div`
 export default function MusicPlayer() {
   return (
     <Container>
-      <CurrentTrack AudioVisualizer={AudioVisualizer} />
+      <CurrentTrack
+        AudioVisualizer={AudioVisualizer}
+        title="Game Ova"
+        artist="Tobi Lou"
+        image={gameOvaImg}
+        nextTrack={{ artist: "Darude", title: "Sandstorm" }}
+      />
       <Playlist />
       <Footer />
     </Container>
