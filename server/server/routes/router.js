@@ -4,13 +4,14 @@ const cors = require("cors");
 
 module.exports = function(app) {
   // Room api
-  app.get("/rooms", room.getRooms);
-  app.post("/rooms", room.createRoom);
-  app.get("/room/:id", room.getRoom);
-  app.delete("/room/:id", room.deleteRoom);
-  app.put("/room/:id", room.updateRoom);
+  app.get("/api/rooms", room.getRooms);
+  app.post("/api/rooms", room.createRoom);
+  app.get("/api/room/:id", room.getRoom);
+  app.delete("/api/room/:id", room.deleteRoom);
+  app.put("/api/room/:id", room.updateRoom);
 
-  app.get("/login", auth.login);
-  app.get("/callback", auth.callback);
-  app.get("/refreshToken", auth.refreshToken);
+  // Authentication
+  app.get("/auth/login", auth.login);
+  app.get("/auth/callback", auth.callback);
+  app.get("/auth/refreshToken", auth.refreshToken);
 };
