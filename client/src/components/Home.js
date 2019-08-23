@@ -1,12 +1,12 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
+import Auth from "../modules/Auth";
+import { useSelector } from "react-redux";
 
-export default function Home() {
-  const auth = useSelector(state => state.auth);
-  const dispatch = useDispatch();
-  console.log(auth);
-  const login = () => dispatch({ type: "LOG_IN" });
+export default function Home(props) {
+  const { login, logout } = Auth;
+  const poo = useSelector(state => state.auth);
+  console.log(poo);
   return (
     <>
       <h2>Search for parties in your area</h2>
@@ -24,8 +24,8 @@ export default function Home() {
         {" "}
         <Link to="/createroom">Create your own</Link>{" "}
       </button>
-      {/* <button onClick={login}>Login</button> */}
-      <a href="http://localhost:8888/auth/login">Log in</a>
+      <button onClick={logout}>Log out</button>
+      <button onClick={login}>Log in</button>
     </>
   );
 }

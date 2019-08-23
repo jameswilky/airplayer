@@ -14,8 +14,6 @@ const stateKey = "spotify_auth_state";
 
 module.exports = {
   login: (req, res) => {
-    console.log("login");
-
     const state = generateRandomString(16);
     res.cookie(stateKey, state);
 
@@ -35,7 +33,6 @@ module.exports = {
   callback: (req, res) => {
     // Application requests refresh and access tokens
     // after checking the state parameter
-    console.log("callback");
 
     const code = req.query.code || null;
     const state = req.query.state || null;
@@ -72,23 +69,6 @@ module.exports = {
         if (!error && response.statusCode === 200) {
           const access_token = body.access_token,
             refresh_token = body.refresh_token;
-
-          // const options = {
-          //   url: "https://api.spotify.com/v1/me",
-          //   headers: { Authorization: "Bearer " + access_token },
-          //   json: true
-          // };
-          // // use the access token to access the Spotify Web API
-          // request.get(options, function(error, response, body) {
-          //   console.log(body);
-          // });
-
-          // we can also pass the token to the browser to make requests from there
-
-          // res.send({
-          //   access_token: access_token,
-          //   refresh_token: refresh_token
-          // });
           res.redirect(
             FRONTEND_URI +
               `/auth/callback/` +

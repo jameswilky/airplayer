@@ -1,18 +1,15 @@
-import React from "react";
-const getHashParams = () => {
-  let hashParams = {};
-  let e,
-    r = /([^&;=]+)=?([^&;]*)/g,
-    q = window.location.hash.substring(1);
-  e = r.exec(q);
-  while (e) {
-    hashParams[e[1]] = decodeURIComponent(e[2]);
-    e = r.exec(q);
-  }
-  return hashParams;
-};
-console.log(getHashParams());
+import React, { useEffect } from "react";
+import Auth from "../modules/Auth";
+import { useDispatch } from "react-redux";
 
-export default function Callback() {
-  return <div>Worked</div>;
+export default function Callback(props) {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch({ type: "SET_ACCESS_TOKEN", payload: Auth.setAccessToken() });
+    dispatch({ type: "SET_REFRESH_TOKEN", payload: Auth.setRefreshToken() });
+
+    props.history.goBack();
+  });
+
+  return <div />;
 }

@@ -10,7 +10,15 @@ import authReducer from "./reducers/authReducer";
 import { createStore } from "redux";
 import { Provider } from "react-redux";
 
-const INITIAL_STATE = { auth: "test" };
+import Auth from "./modules/Auth";
+
+const INITIAL_STATE = {
+  auth: {
+    refreshToken: Auth.getRefreshToken(),
+    accessToken: Auth.getAccessToken(),
+    isAuthenticated: Auth.isAuthenticated()
+  }
+};
 const store = createStore(authReducer, INITIAL_STATE);
 
 function App() {
