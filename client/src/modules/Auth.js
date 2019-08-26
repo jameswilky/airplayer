@@ -65,10 +65,13 @@ export default (() => {
     return localStorage.setItem("refreshToken", getHashParams().refresh_token);
   };
 
-  const getAccessToken = async () => {
-    tokenHasExpired()
-      ? await refreshAccessToken(getRefreshToken(), setAccessToken)
-      : localStorage.getItem("accessToken");
+  const getAccessToken = () => {
+    // tokenHasExpired()
+    //   ? refreshAccessToken(getRefreshToken(), setAccessToken)
+    //   : localStorage.getItem("accessToken");
+    //TODO find a way to do this asynchronously
+
+    return localStorage.getItem("accessToken");
   };
 
   const getRefreshToken = () => localStorage.getItem("refreshToken");

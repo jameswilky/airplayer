@@ -7,6 +7,8 @@ import styled from "styled-components";
 import { gameOvaImg } from "../images";
 import { useSelector, useDispatch } from "react-redux";
 
+import Spotify from "../modules/Spotify";
+
 const Container = styled.div`
   color: whitesmoke;
   background-color: rgba(20, 20, 20, 1);
@@ -14,7 +16,10 @@ const Container = styled.div`
 `;
 
 export default function MusicPlayer() {
-  const auth = useSelector(state => state.auth);
+  const { accessToken, isAuthenticated } = useSelector(state => state.auth);
+  const spotify = Spotify(accessToken);
+
+  console.log(spotify);
 
   return (
     <Container>
