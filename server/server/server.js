@@ -22,6 +22,7 @@ module.exports = function(app, express, io) {
   app.use(bodyParser.text());
   app.use(bodyParser.json({ type: "application/json" }));
   app.use(cookieParser());
+  app.use(cors());
   // Add headers
   app.use(function(req, res, next) {
     // Website you wish to allow to connect

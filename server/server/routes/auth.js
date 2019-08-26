@@ -91,6 +91,7 @@ module.exports = {
     }
   },
   refreshToken: (req, res) => {
+    console.log(req.query);
     // takes in a refresh token to return a new access token
     // This will allow us to maintain access to spotify web api,
     // without requiring user to relog in
@@ -100,7 +101,9 @@ module.exports = {
       headers: {
         Authorization:
           "Basic " +
-          new Buffer(client_id + ":" + client_secret).toString("base64")
+          new Buffer(SPOTIFY_CLIENT_ID + ":" + SPOTIFY_CLIENT_SECRET).toString(
+            "base64"
+          )
       },
       form: {
         grant_type: "refresh_token",
@@ -111,6 +114,7 @@ module.exports = {
 
     request.post(authOptions, function(error, response, body) {
       if (!error && response.statusCode === 200) {
+        console.log("worked");
         const access_token = body.access_token;
         res.send({
           access_token: access_token

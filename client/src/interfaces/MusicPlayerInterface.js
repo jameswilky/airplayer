@@ -5,6 +5,7 @@ import Footer from "../components/Footer";
 import AudioVisualizer from "../components/AudioVisualizer";
 import styled from "styled-components";
 import { gameOvaImg } from "../images";
+import { useSelector, useDispatch } from "react-redux";
 
 const Container = styled.div`
   color: whitesmoke;
@@ -13,6 +14,8 @@ const Container = styled.div`
 `;
 
 export default function MusicPlayer() {
+  const auth = useSelector(state => state.auth);
+
   return (
     <Container>
       <CurrentTrack
