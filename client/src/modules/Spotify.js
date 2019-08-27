@@ -11,10 +11,23 @@ const Spotify = token => {
   // replace spaces to encodings
   const parse = q => q.replace(" ", "%20");
 
-  const Query = prefix => {
+  // const Query = prefix => {
+  //   // Recursively adds conditions and values to a url
+  //   return {
+  //     where: (condition, value) => Query(`${prefix}&${condition}=${value}`),
+  //     and: (condition, value) => Query(`${prefix}&${condition}=${value}`),
+  //     exec: () => get(parse(prefix)),
+  //     return: () => parse(prefix)
+  //   };
+  // };
+
+  const Conditions = prefix => {
+    const concatMap = obj =>
+      Object.entries(obj)
+        .map(([k, v]) => `&${k}=${v}`)
+        .join("");
     return {
-      where: (condition, value) => Query(`${prefix}&${condition}=${value}`),
-      run: () => get(prefix)
+      where: conditions => parse(prefix + concatMap(conditions))
     };
   };
 
@@ -26,7 +39,8 @@ const Spotify = token => {
     personalization: () => {},
     player: () => {},
     playlists: () => {},
-    search: q => Query(`search?q=${q}`),
+    // search: q => Query(`search?q=${q}`),
+    search: q => Conditions(`search?q=${q}`),
     tracks: () => {}
   };
 };
