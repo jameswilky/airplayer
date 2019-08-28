@@ -1,35 +1,34 @@
-const Spotify = token => {
+const Spotify = (token, send = true) => {
   const api = "https://api.spotify.com/v1/";
   const get = q =>
-    fetch(`${api}${q}`, {
+    fetch(encodeURI(`${api}${q}`), {
       headers: new Headers({
         Authorization: `Bearer ${token}`,
         "Content-type": "application/json"
       })
     }).then(res => res.json());
 
-  // replace spaces to encodings
-  const parse = q => q.replace(" ", "%20");
-
-  // const Query = prefix => {
-  //   // Recursively adds conditions and values to a url
-  //   return {
-  //     where: (condition, value) => Query(`${prefix}&${condition}=${value}`),
-  //     and: (condition, value) => Query(`${prefix}&${condition}=${value}`),
-  //     exec: () => get(parse(prefix)),
-  //     return: () => parse(prefix)
-  //   };
-  // };
-
-  const Conditions = prefix => {
-    const concatMap = obj =>
-      Object.entries(obj)
-        .map(([k, v]) => `&${k}=${v}`)
-        .join("");
-    return {
-      where: conditions => parse(prefix + concatMap(conditions))
-    };
+  /*
+    Example
+     obj : {a:1,a:2} 
+     template : (k,v) => `{k}={v}` 
+     returns "a=1b=2"
+    */
+  const merge = (obj, template) => {
+    return Object.entries(obj)
+      .map(([k, v]) => template(k, v))
+      .join(",");
   };
+
+  const appendOptions = options =>
+    merge(options, (k, v) => (v === "" ? "" : `&${k}=${v}`)).replaceAll(
+      ",",
+      ""
+    );
+  const appendConditons = condititions =>
+    merge(condititions, (k, v) => `${k}:${v}`).replaceAll(",", " ");
+
+  const containsSpaces = str => str.split(" ").length < 2;
 
   return {
     albums: () => {},
@@ -39,10 +38,42 @@ const Spotify = token => {
     personalization: () => {},
     player: () => {},
     playlists: () => {},
-    // search: q => Query(`search?q=${q}`),
-    search: q => Conditions(`search?q=${q}`),
+    search: ({
+      query = "",
+      type = "",
+      offset = "",
+      limit = "",
+      market = "",
+      wildcard = false
+    }) => {
+      const buildQuery = () =>
+        typeof query === "string"
+          ? containsSpaces(query) && type === "playlist"
+            ? `'${query}'${wildcard ? "*" : ""}`
+            : `${query}${wildcard ? "*" : ""}`
+          : typeof query === "object"
+          ? appendConditons(query)
+          : "";
+
+      const queryString = encodeURI(
+        `search?q=${buildQuery()}${appendOptions({
+          type,
+          limit,
+          offset,
+          market
+        })}`
+      );
+
+      return send ? get(queryString) : queryString;
+    },
+
     tracks: () => {}
   };
+};
+
+String.prototype.replaceAll = function(search, replacement) {
+  const target = this;
+  return target.split(search).join(replacement);
 };
 
 export default Spotify;
