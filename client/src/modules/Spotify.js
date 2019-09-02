@@ -135,10 +135,10 @@ const Spotify = (token, send = true) => {
       return send ? get(queryString) : queryString;
     },
 
-    browse: () => {},
+    browse: query => (send ? get(parseQuery) : parseQuery(query)),
 
     // albums,artists, tracks
-    find: query => parseQuery(query),
+    find: query => (send ? get(parseQuery) : parseQuery(query)),
 
     // library, follow , personalization , playlists, users profile
     user: () => {},
