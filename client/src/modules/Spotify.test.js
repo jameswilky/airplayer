@@ -70,59 +70,59 @@ describe("Spotify Web API Module", () => {
   describe("find", () => {
     it("should create a query that finds the tracks of an album matching the given id", () => {
       const query = spotify.find({
-        tracks: { where: { album: { id: "6akEvsycLGftJxYudPjmqK" } } }
+        tracks: { where: { albums: { id: "6akEvsycLGftJxYudPjmqK" } } }
       });
       expect(query).toBe("albums/6akEvsycLGftJxYudPjmqK/tracks");
     });
-    // it("should create a query that finds the topTracks of an artist matching the given id", () => {
-    //   const query = spotify.find({
-    //     topTracks: { where: { artist: { id: "43ZHCT0cAZBISjO8DG9PnE" } } }
-    //   });
-    //   expect(query).toBe("artists/43ZHCT0cAZBISjO8DG9PnE/top-tracks");
-    // });
-    // it("should create a query that finds the related artists of a given artist ids", () => {
-    //   const query = spotify.find({
-    //     relatedArtists: { where: { artist: { id: "43ZHCT0cAZBISjO8DG9PnE" } } }
-    //   });
-    //   expect(query).toBe("artists/43ZHCT0cAZBISjO8DG9PnE/related-artists");
-    // });
-    // it("should create a query that finds several atists matching the given ids", () => {
-    //   const query = spotify.find({
-    //     artists: {
-    //       where: { ids: ["0oSGxfWSnnOXhD2fKuz2Gy", "3dBVyJ7JuOMt4GE9607Qin"] }
-    //     }
-    //   });
-    //   expect(query).toBe(
-    //     "artists?ids=0oSGxfWSnnOXhD2fKuz2Gy,3dBVyJ7JuOMt4GE9607Qin"
-    //   );
-    // });
+    it("should create a query that finds the topTracks of an artist matching the given id", () => {
+      const query = spotify.find({
+        topTracks: { where: { artist: { id: "43ZHCT0cAZBISjO8DG9PnE" } } }
+      });
+      expect(query).toBe("artists/43ZHCT0cAZBISjO8DG9PnE/top-tracks");
+    });
+    it("should create a query that finds the related artists of a given artist ids", () => {
+      const query = spotify.find({
+        relatedArtists: { where: { artist: { id: "43ZHCT0cAZBISjO8DG9PnE" } } }
+      });
+      expect(query).toBe("artists/43ZHCT0cAZBISjO8DG9PnE/related-artists");
+    });
+    it("should create a query that finds several atists matching the given ids", () => {
+      const query = spotify.find({
+        artists: {
+          where: { ids: ["0oSGxfWSnnOXhD2fKuz2Gy", "3dBVyJ7JuOMt4GE9607Qin"] }
+        }
+      });
+      expect(query).toBe(
+        "artists?ids=0oSGxfWSnnOXhD2fKuz2Gy,3dBVyJ7JuOMt4GE9607Qin"
+      );
+    });
 
-    // it("should create a query that finds several tracks matching the given ids", () => {
-    //   const query = spotify.find({
-    //     tracks: {
-    //       where: {
-    //         ids: [
-    //           "11dFghVXANMlKmJXsNCbNl",
-    //           "20I6sIOMTCkB6w7ryavxtO",
-    //           "7xGfFoTpQ2E7fRF5lN10tr"
-    //         ]
-    //       }
-    //     }
-    //   });
+    it("should create a query that finds several tracks matching the given ids", () => {
+      const query = spotify.find({
+        tracks: {
+          where: {
+            ids: [
+              "11dFghVXANMlKmJXsNCbNl",
+              "20I6sIOMTCkB6w7ryavxtO",
+              "7xGfFoTpQ2E7fRF5lN10tr"
+            ]
+          }
+        }
+      });
 
-    //   expect(query).toBe(
-    //     "tracks/?ids=11dFghVXANMlKmJXsNCbNl,20I6sIOMTCkB6w7ryavxtO,7xGfFoTpQ2E7fRF5lN10tr"
-    //   );
-    // });
-    // it("should create a query that finds a single track matching the given id", () => {
-    //   const query = spotify.find({
-    //     tracks: {
-    //       where: {
-    //         id: "11dFghVXANMlKmJXsNCbNl"
-    //       }
-    //     }
-    //   });
-    //   expect(query).toBe("tracks/11dFghVXANMlKmJXsNCbNl");
-    // });
+      expect(query).toBe(
+        "tracks?ids=11dFghVXANMlKmJXsNCbNl,20I6sIOMTCkB6w7ryavxtO,7xGfFoTpQ2E7fRF5lN10tr"
+      );
+    });
+    it("should create a query that finds a single track matching the given id", () => {
+      const query = spotify.find({
+        tracks: {
+          where: {
+            id: "11dFghVXANMlKmJXsNCbNl"
+          }
+        }
+      });
+      expect(query).toBe("tracks/11dFghVXANMlKmJXsNCbNl");
+    });
   });
 });
