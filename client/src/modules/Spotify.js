@@ -1,3 +1,20 @@
+String.prototype.replaceAll = function(search, replacement) {
+  const target = this;
+  return target.split(search).join(replacement);
+};
+
+if (Object.fromEntries === undefined) {
+  Object.fromEntries = arr =>
+    Object.assign({}, ...Array.from(arr, ([k, v]) => ({ [k]: v })));
+}
+
+function isEmpty(obj) {
+  for (var key in obj) {
+    if (obj.hasOwnProperty(key)) return false;
+  }
+  return true;
+}
+
 const Spotify = (token, send = true) => {
   const api = "https://api.spotify.com/v1/";
   const get = q =>
@@ -52,45 +69,43 @@ const Spotify = (token, send = true) => {
     }, {});
   };
 
-  const hasMultipleIds = query => Object.keys(innerKeys(query)).length > 1;
+  const multiSearch = query =>
+    Object.keys(innerKeys(query))[0] === "0" && depthOf(query) === 4;
 
-  const isSingleTrackSearch = query =>
-    query.hasOwnProperty("tracks") &&
-    query.tracks.hasOwnProperty("where") &&
-    query.tracks.where.hasOwnProperty("id") &&
-    typeof query.tracks.where.id === "string";
+  const singleSearch = query =>
+    Object.keys(innerKeys(query))[0] === "id" && depthOf(query) === 3;
 
+  const conditionBased = query =>
+    Object.keys(innerKeys(query))[0] === "id" && depthOf(query) === 4;
+
+  const parseOptions = (query, target) =>
+    Object.fromEntries(
+      Object.entries(query[target]).filter(option => option[0] !== "where")
+    );
   const parseQuery = query => {
-    let domain, ids, result, id, target;
+    if (conditionBased(query)) {
+      const target = Object.keys(query)[0];
+      const condition = Object.keys(query[target].where)[0];
+      const id = query[target].where[condition].id;
 
-    if (hasMultipleIds(query)) {
-      domain = Object.keys(query)[0];
-      ids = Object.values(innerKeys(query));
-      result = `${pluralize(hyphenize(domain))}?ids=${ids}`;
-    } else {
-      target = Object.keys(query)[0];
-      domain = Object.keys(query[target].where)[0];
-      id = query[target].where[domain].id;
-      result = `${pluralize(domain)}/${id}/${hyphenize(target)}`;
+      const options = parseOptions(query, target);
+      return `${pluralize(condition)}/${id}/${hyphenize(target)}${
+        isEmpty(options) ? "" : `?${appendOptions(options).substring(1)}`
+      }`;
     }
-    if (isSingleTrackSearch(query)) {
-      target = Object.keys(query)[0];
-      id = query[target].where.id;
-      result = `${pluralize(target)}/${id}`;
+    if (singleSearch(query)) {
+      const target = Object.keys(query)[0];
+      const id = query[target].where.id;
+      return `${pluralize(hyphenize(target))}/${id}`;
     }
-
-    return result;
+    if (multiSearch(query)) {
+      const target = Object.keys(query)[0];
+      const ids = Object.values(innerKeys(query));
+      return `${pluralize(hyphenize(target))}?ids=${ids}`;
+    }
   };
 
   return {
-    // albums: ({ id, market = "" }) => {
-    //   const queryString = `albums/${id}${appendOptions({
-    //     market
-    //   })}`;
-
-    //   return send ? get(queryString) : queryString;
-    // },
-
     search: ({
       query = "",
       type = "",
@@ -130,11 +145,6 @@ const Spotify = (token, send = true) => {
 
     player: () => {}
   };
-};
-
-String.prototype.replaceAll = function(search, replacement) {
-  const target = this;
-  return target.split(search).join(replacement);
 };
 
 export default Spotify;

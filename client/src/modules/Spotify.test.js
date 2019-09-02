@@ -68,61 +68,140 @@ describe("Spotify Web API Module", () => {
     });
   });
   describe("find", () => {
-    it("should create a query that finds the tracks of an album matching the given id", () => {
-      const query = spotify.find({
-        tracks: { where: { albums: { id: "6akEvsycLGftJxYudPjmqK" } } }
+    describe("albums", () => {
+      it("should create a query that finds an album matching the given id", () => {
+        const query = spotify.find({
+          album: { where: { id: "0sNOF9WDwhWunNAHPD3Ba" } }
+        });
+
+        expect(query).toBe("albums/0sNOF9WDwhWunNAHPD3Ba");
       });
-      expect(query).toBe("albums/6akEvsycLGftJxYudPjmqK/tracks");
-    });
-    it("should create a query that finds the topTracks of an artist matching the given id", () => {
-      const query = spotify.find({
-        topTracks: { where: { artist: { id: "43ZHCT0cAZBISjO8DG9PnE" } } }
+      it("should create a query that finds the tracks of an album matching the given id", () => {
+        const query = spotify.find({
+          tracks: { where: { albums: { id: "6akEvsycLGftJxYudPjmqK" } } }
+        });
+        expect(query).toBe("albums/6akEvsycLGftJxYudPjmqK/tracks");
       });
-      expect(query).toBe("artists/43ZHCT0cAZBISjO8DG9PnE/top-tracks");
-    });
-    it("should create a query that finds the related artists of a given artist ids", () => {
-      const query = spotify.find({
-        relatedArtists: { where: { artist: { id: "43ZHCT0cAZBISjO8DG9PnE" } } }
+      it("should create a query that finds the tracks of album matching the given id, add a limit", () => {
+        const query = spotify.find({
+          tracks: {
+            where: { albums: { id: "6akEvsycLGftJxYudPjmqK" } },
+            limit: 2
+          }
+        });
+        expect(query).toBe("albums/6akEvsycLGftJxYudPjmqK/tracks?limit=2");
       });
-      expect(query).toBe("artists/43ZHCT0cAZBISjO8DG9PnE/related-artists");
-    });
-    it("should create a query that finds several atists matching the given ids", () => {
-      const query = spotify.find({
-        artists: {
-          where: { ids: ["0oSGxfWSnnOXhD2fKuz2Gy", "3dBVyJ7JuOMt4GE9607Qin"] }
-        }
-      });
-      expect(query).toBe(
-        "artists?ids=0oSGxfWSnnOXhD2fKuz2Gy,3dBVyJ7JuOMt4GE9607Qin"
-      );
     });
 
-    it("should create a query that finds several tracks matching the given ids", () => {
-      const query = spotify.find({
-        tracks: {
-          where: {
-            ids: [
-              "11dFghVXANMlKmJXsNCbNl",
-              "20I6sIOMTCkB6w7ryavxtO",
-              "7xGfFoTpQ2E7fRF5lN10tr"
-            ]
+    describe("artists", () => {
+      it("should create a query that finds a single artists matching the id", () => {
+        const query = spotify.find({
+          artists: { where: { id: "0OdUWJ0sBjDrqHygGUXeCF" } }
+        });
+        expect(query).toBe("artists/0OdUWJ0sBjDrqHygGUXeCF");
+      });
+      it("should create a query that finds several albums matching the given ids", () => {
+        const query = spotify.find({
+          albums: {
+            where: {
+              ids: [
+                "41MnTivkwTO3UUJ8DrqEJJ",
+                "6JWc4iAiJ9FjyK0B59ABb4",
+                "6UXCm6bOO4gFlDQZV5yL37"
+              ]
+            }
           }
-        }
+        });
+        expect(query).toBe(
+          "albums?ids=41MnTivkwTO3UUJ8DrqEJJ,6JWc4iAiJ9FjyK0B59ABb4,6UXCm6bOO4gFlDQZV5yL37"
+        );
       });
 
-      expect(query).toBe(
-        "tracks?ids=11dFghVXANMlKmJXsNCbNl,20I6sIOMTCkB6w7ryavxtO,7xGfFoTpQ2E7fRF5lN10tr"
-      );
-    });
-    it("should create a query that finds a single track matching the given id", () => {
-      const query = spotify.find({
-        tracks: {
-          where: {
-            id: "11dFghVXANMlKmJXsNCbNl"
-          }
-        }
+      it("should create a query that finds the topTracks of an artist matching the given id", () => {
+        const query = spotify.find({
+          topTracks: { where: { artist: { id: "43ZHCT0cAZBISjO8DG9PnE" } } }
+        });
+        expect(query).toBe("artists/43ZHCT0cAZBISjO8DG9PnE/top-tracks");
       });
-      expect(query).toBe("tracks/11dFghVXANMlKmJXsNCbNl");
+      it("should create a query that finds the related artists of a given artist ids", () => {
+        const query = spotify.find({
+          relatedArtists: {
+            where: { artist: { id: "43ZHCT0cAZBISjO8DG9PnE" } }
+          }
+        });
+        expect(query).toBe("artists/43ZHCT0cAZBISjO8DG9PnE/related-artists");
+      });
+      it("should create a query that finds several atists matching the given ids", () => {
+        const query = spotify.find({
+          artists: {
+            where: { ids: ["0oSGxfWSnnOXhD2fKuz2Gy", "3dBVyJ7JuOMt4GE9607Qin"] }
+          }
+        });
+        expect(query).toBe(
+          "artists?ids=0oSGxfWSnnOXhD2fKuz2Gy,3dBVyJ7JuOMt4GE9607Qin"
+        );
+      });
+    });
+
+    describe("tracks", () => {
+      it("should create a query that finds the audio analysis for a track matching the given id", () => {
+        const query = spotify.find({
+          audioAnalysis: { where: { id: "3JIxjvbbDrA9ztYlNcp3yL" } }
+        });
+
+        expect(query).toBe("audio-analysis/3JIxjvbbDrA9ztYlNcp3yL");
+      });
+      it("should create a query that finds the audio features for a track matching the given ids", () => {
+        const query = spotify.find({
+          audioFeatures: { where: { id: "3JIxjvbbDrA9ztYlNcp3yL" } }
+        });
+
+        expect(query).toBe("audio-features/3JIxjvbbDrA9ztYlNcp3yL");
+      });
+      it("should create a query that finds the audio features for several tracks", () => {
+        const query = spotify.find({
+          audioFeatures: {
+            where: {
+              ids: [
+                "4JpKVNYnVcJ8tuMKjAj50A",
+                "2NRANZE9UCmPAS5XVbXL40",
+                "24JygzOLM0EmRQeGtFcIcG"
+              ]
+            }
+          }
+        });
+
+        expect(query).toBe(
+          "audio-features?ids=4JpKVNYnVcJ8tuMKjAj50A,2NRANZE9UCmPAS5XVbXL40,24JygzOLM0EmRQeGtFcIcG"
+        );
+      });
+      it("should create a query that finds several tracks matching the given ids", () => {
+        const query = spotify.find({
+          tracks: {
+            where: {
+              ids: [
+                "11dFghVXANMlKmJXsNCbNl",
+                "20I6sIOMTCkB6w7ryavxtO",
+                "7xGfFoTpQ2E7fRF5lN10tr"
+              ]
+            }
+          }
+        });
+
+        expect(query).toBe(
+          "tracks?ids=11dFghVXANMlKmJXsNCbNl,20I6sIOMTCkB6w7ryavxtO,7xGfFoTpQ2E7fRF5lN10tr"
+        );
+      });
+      it("should create a query that finds a single track matching the given id", () => {
+        const query = spotify.find({
+          tracks: {
+            where: {
+              id: "11dFghVXANMlKmJXsNCbNl"
+            }
+          }
+        });
+        expect(query).toBe("tracks/11dFghVXANMlKmJXsNCbNl");
+      });
     });
   });
 });
