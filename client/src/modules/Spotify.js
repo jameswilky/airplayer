@@ -17,13 +17,19 @@ function isEmpty(obj) {
 
 const Spotify = (token, send = true) => {
   const api = "https://api.spotify.com/v1/";
-  const get = q =>
+
+  const request = (q, type) => q =>
     fetch(encodeURI(`${api}${q}`), {
       headers: new Headers({
         Authorization: `Bearer ${token}`,
-        "Content-type": "application/json"
+        "Content-type": "application/json",
+        method: type
       })
     }).then(res => res.json());
+
+  const put = q => request(q, "PUT");
+  const get = q => request(q, "GET");
+  const remove = q => request(q, "DELETE");
 
   const merge = (obj, template) => {
     /*
@@ -140,9 +146,50 @@ const Spotify = (token, send = true) => {
     // albums,artists, tracks
     find: query => (send ? get(parseQuery) : parseQuery(query)),
 
-    // library, follow , personalization , playlists, users profile
-    user: () => {},
+    // library, follow , personalization , users profile
+    user: () => {
+      return {
+        follows: ({ id = "", ids = "", type }) => {
+          const q = `me/following/contains?type=${type}&ids=${id ? id : ids}`;
 
+          return send ? get(q) : q;
+        },
+        unfollow: ({ id = "", ids = "", type }) => {
+          const q =
+            type === "playlist"
+              ? `playlists/${id ? id : ids}/followers`
+              : `me/following?type=${type}&ids=${id ? id : ids}`;
+
+          return send ? remove(q) : q;
+        },
+
+        follow: ({ id = "", ids = "", type }) => {
+          const q =
+            type === "playlist"
+              ? `playlists/${id ? id : ids}/followers`
+              : `me/following?type=${type}&ids=${id ? id : ids}`;
+
+          return send ? put(q) : q;
+        },
+        getFollowed: ({ type }) => {
+          const q = `me/following?type=${type}`;
+
+          return send ? get(q) : q;
+        },
+
+        library: () => {
+          return {
+            contains: () => {},
+            // TODO adds body data to request
+            add: () => {},
+            delete: () => {},
+            update: () => {}
+          };
+        }
+      };
+    },
+
+    playlists: () => {},
     player: () => {}
   };
 };
