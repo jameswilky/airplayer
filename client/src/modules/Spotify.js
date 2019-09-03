@@ -27,9 +27,9 @@ const Spotify = (token, send = true) => {
       })
     }).then(res => res.json());
 
-  const put = q => request(q, "PUT");
-  const get = q => request(q, "GET");
-  const remove = q => request(q, "DELETE");
+  const put = q => (send ? request(q, "PUT") : q);
+  const get = q => (send ? request(q, "GET") : q);
+  const remove = q => (send ? request(q, "DELETE") : q);
 
   const merge = (obj, template) => {
     /*
@@ -148,34 +148,41 @@ const Spotify = (token, send = true) => {
 
     // library, follow , personalization , users profile
     user: () => {
+      const userQuery = ({
+        id = "",
+        ids = "",
+        type,
+        suffix = "",
+        prefix = ""
+      }) =>
+        type === "playlist"
+          ? `playlists/${id ? id : ids}${suffix}`
+          : `${prefix}?type=${type}${id || ids ? `&ids=${id ? id : ids}` : ""}`;
+
       return {
-        follows: ({ id = "", ids = "", type }) => {
-          const q = `me/following/contains?type=${type}&ids=${id ? id : ids}`;
+        follows: params =>
+          get(userQuery({ ...params, prefix: "me/following/contains" })),
 
-          return send ? get(q) : q;
-        },
-        unfollow: ({ id = "", ids = "", type }) => {
-          const q =
-            type === "playlist"
-              ? `playlists/${id ? id : ids}/followers`
-              : `me/following?type=${type}&ids=${id ? id : ids}`;
+        follow: params =>
+          put(
+            userQuery({
+              ...params,
+              suffix: "/followers",
+              prefix: "me/following"
+            })
+          ),
 
-          return send ? remove(q) : q;
-        },
+        unfollow: params =>
+          remove(
+            userQuery({
+              ...params,
+              suffix: "/followers",
+              prefix: "me/following"
+            })
+          ),
 
-        follow: ({ id = "", ids = "", type }) => {
-          const q =
-            type === "playlist"
-              ? `playlists/${id ? id : ids}/followers`
-              : `me/following?type=${type}&ids=${id ? id : ids}`;
-
-          return send ? put(q) : q;
-        },
-        getFollowed: ({ type }) => {
-          const q = `me/following?type=${type}`;
-
-          return send ? get(q) : q;
-        },
+        getFollowed: params =>
+          get(userQuery({ ...params, prefix: "me/following" })),
 
         library: () => {
           return {

@@ -271,6 +271,15 @@ describe("Spotify Web API Module", () => {
         expect(query).toBe("playlists/65V6djkcVRyOStLd8nza8E/followers");
       });
     });
+    // describe("library", () => {
+    //   it("should check if an album exists in the library matching the given id", () => {
+    //     const query = spotify
+    //       .library()
+    //       .contains({ id: "0pJJgBzj26qnE1nSQUxaB0", type: "album" });
+
+    //     expect(query).toBe("me/albums/contains?ids=0pJJgBzj26qnE1nSQUxaB0");
+    //   });
+    // });
   });
 
   //describe("browse", () => {
