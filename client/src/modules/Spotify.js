@@ -18,18 +18,21 @@ function isEmpty(obj) {
 const Spotify = (token, send = true) => {
   const api = "https://api.spotify.com/v1/";
 
-  const request = (q, type) => q =>
-    fetch(encodeURI(`${api}${q}`), {
-      headers: new Headers({
-        Authorization: `Bearer ${token}`,
-        "Content-type": "application/json",
-        method: type
-      })
-    }).then(res => res.json());
+  const request = (query, type, body = "") =>
+    send
+      ? fetch(encodeURI(`${api}${query}`), {
+          headers: new Headers({
+            Authorization: `Bearer ${token}`,
+            "Content-type": "application/json",
+            method: type,
+            body: JSON.stringify(body)
+          })
+        }).then(res => res.json())
+      : query;
 
-  const put = q => (send ? request(q, "PUT") : q);
-  const get = q => (send ? request(q, "GET") : q);
-  const remove = q => (send ? request(q, "DELETE") : q);
+  const put = (q, body) => request(q, "PUT", body);
+  const get = q => request(q, "GET");
+  const remove = (q, body) => request(q, "DELETE", body);
 
   const merge = (obj, template) => {
     /*
@@ -50,8 +53,6 @@ const Spotify = (token, send = true) => {
     );
   const appendConditions = condititions =>
     merge(condititions, (k, v) => `${k}:${v}`).replaceAll(",", " ");
-
-  const containsSpaces = str => str.split(" ").length < 2;
 
   const pluralize = str => (str.slice(-1) === "s" ? str : `${str}s`);
   const hyphenize = str => str.replace(/[A-Z]/g, m => "-" + m.toLowerCase());
@@ -88,7 +89,7 @@ const Spotify = (token, send = true) => {
     Object.fromEntries(
       Object.entries(query[target]).filter(option => option[0] !== "where")
     );
-  const parseQuery = query => {
+  const findQuery = query => {
     if (conditionBased(query)) {
       const target = Object.keys(query)[0];
       const condition = Object.keys(query[target].where)[0];
@@ -138,13 +139,13 @@ const Spotify = (token, send = true) => {
         })}`
       );
 
-      return send ? get(queryString) : queryString;
+      return get(queryString);
     },
 
-    browse: query => (send ? get(parseQuery) : parseQuery(query)),
+    // browse: query => (send ? get(findQuery) : findQuery(query)),
 
     // albums,artists, tracks
-    find: query => (send ? get(parseQuery) : parseQuery(query)),
+    find: query => get(findQuery(query)),
 
     // library, follow , personalization , users profile
     user: () => {
@@ -185,12 +186,17 @@ const Spotify = (token, send = true) => {
           get(userQuery({ ...params, prefix: "me/following" })),
 
         library: () => {
+          const libraryQuery = query =>
+            `/me/${typeof query === `string` ? pluralize(query) : query.type}`;
+
+          const libraryBody = ({ id, ids }) => (ids ? ids : [id]);
           return {
-            contains: () => {},
-            // TODO adds body data to request
-            add: () => {},
-            delete: () => {},
-            update: () => {}
+            contains: ({ id, type, ids }) => {
+              return `me/${pluralize(type)}/contains?ids=${id ? id : ids}`;
+            },
+            get: query => get(libraryQuery(query)), // not libary.get, refers to function in Spotify() closure
+            delete: query => remove(libraryQuery(query), libraryBody(query)),
+            add: query => put(libraryQuery(query), libraryBody(query))
           };
         }
       };

@@ -271,15 +271,55 @@ describe("Spotify Web API Module", () => {
         expect(query).toBe("playlists/65V6djkcVRyOStLd8nza8E/followers");
       });
     });
-    // describe("library", () => {
-    //   it("should check if an album exists in the library matching the given id", () => {
-    //     const query = spotify
-    //       .library()
-    //       .contains({ id: "0pJJgBzj26qnE1nSQUxaB0", type: "album" });
-
-    //     expect(query).toBe("me/albums/contains?ids=0pJJgBzj26qnE1nSQUxaB0");
-    //   });
-    // });
+    describe("library", () => {
+      it("should check if an album exists in the library matching the given id", () => {
+        const query = spotify
+          .user()
+          .library()
+          .contains({ id: "0pJJgBzj26qnE1nSQUxaB0", type: "album" });
+        expect(query).toBe("me/albums/contains?ids=0pJJgBzj26qnE1nSQUxaB0");
+      });
+      it("should check if multiple tracks exists in the library matching the given ids", () => {
+        const query = spotify
+          .user()
+          .library()
+          .contains({
+            ids: ["0udZHhCi7p1YzMlvI4fXoK", "3SF5puV5eb6bgRSxBeMOk9"],
+            type: "tracks"
+          });
+        expect(query).toBe(
+          "me/tracks/contains?ids=0udZHhCi7p1YzMlvI4fXoK,3SF5puV5eb6bgRSxBeMOk9"
+        );
+      });
+      it("should get all tracks in the users library", () => {
+        const query = spotify
+          .user()
+          .library()
+          .get("tracks");
+        expect(query).toBe("/me/tracks");
+      });
+      it("should get all albums in the users library", () => {
+        const query = spotify
+          .user()
+          .library()
+          .get("albums");
+        expect(query).toBe("/me/albums");
+      });
+      it("should get delete tracks in the library matching the given ids", () => {
+        const query = spotify
+          .user()
+          .library()
+          .delete({ type: "tracks", ids: ["123", "456"] });
+        expect(query).toBe("/me/tracks");
+      });
+      it("should add a single album in the library matching the given id", () => {
+        const query = spotify
+          .user()
+          .library()
+          .add({ type: "albums", ids: "123" });
+        expect(query).toBe("/me/albums");
+      });
+    });
   });
 
   //describe("browse", () => {
