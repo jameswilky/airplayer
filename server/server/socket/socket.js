@@ -22,8 +22,7 @@ module.exports = function(io, interval = null) {
       name: null,
       id: null,
       playlist: [],
-      currentSong: null,
-      requiresPassword: false
+      currentSong: null
     };
 
     const host = { token: null };
@@ -79,7 +78,6 @@ module.exports = function(io, interval = null) {
        */
       // todo add check to validate input is a room object
       const nextState = await getRoom(id);
-      console.log(socket.id + " Just joined room: " + id);
       if (!nextState) {
         socket.emit("ERROR", `join attempt failed, room not found`);
         return;
@@ -100,8 +98,6 @@ module.exports = function(io, interval = null) {
     // Handles events that Clients and Hosts can use
     Object.keys(ALL).forEach(event => {
       socket.on(event, data => {
-        console.log(socket.id + " attempted to " + event);
-
         if (inARoom(socket)) {
           handleEvent(event, data);
         } else {
@@ -144,22 +140,61 @@ module.exports = function(io, interval = null) {
       });
     });
 
-    if (interval && inARoom(socket)) {
-      let prevState = {};
+    if (interval /*&& inARoom(socket)*/) {
+      const prevState = { ...state };
       setInterval(async () => {
-        // Every X seconds check if state has changed.
-        // If it has, sync socket state with database and update all clients
-        if (!isEmpty(diff(state, prevState))) {
-          const room = await updateRoom(state);
-          if (!room) console.log("Error Updating Room");
-          else {
-            Object.assign(state, room);
-            Object.assign(prevState, state);
-            io.in(state.id).emit("ROOM_UPDATED", state);
+        if (inARoom(socket)) {
+          // Every *interval* seconds check if state has changed.
+          // If it has, sync socket state with database and update all clients
+          if (
+            // Compare previous and next state, but dont compare passwords
+            !isEmpty(
+              diff(
+                { ...state, password: null },
+                { ...prevState, password: null }
+              )
+            )
+          ) {
+            const room = await updateRoom(state);
+            if (!room) return;
+            else {
+              Object.assign(state, room);
+              Object.assign(prevState, state);
+              io.in(state.id).emit("ROOM_UPDATED", state);
+              console.log("Room Updated");
+            }
           }
         }
       }, interval);
     }
+
+    // if (interval /*&& inARoom(socket)*/) {
+    //   const prevState = { ...state };
+    //   setInterval(async () => {
+    //     if (inARoom(socket)) {
+    //       // Every *interval* seconds check if state has changed.
+    //       // If it has, sync socket state with database and update all clients
+    //       console.log(
+    //         state.playlist,
+    //         !isEmpty(diff(state, prevState)) &&
+    //           !diff(state, prevState).hasOwnProperty("password")
+    //       );
+    //       if (
+    //         !isEmpty(diff(state, prevState)) &&
+    //         !diff(state, prevState).hasOwnProperty("password")
+    //       ) {
+    //         const room = await updateRoom(state);
+    //         console.log(state.playlist, room.playlist);
+    //         if (!room) return;
+    //         else {
+    //           Object.assign(state, room);
+    //           Object.assign(prevState, state);
+    //           io.in(state.id).emit("ROOM_UPDATED", state);
+    //         }
+    //       }
+    //     }
+    //   }, interval);
+    // }
   });
 };
 
