@@ -6,7 +6,7 @@ import AudioVisualizer from "../components/AudioVisualizer";
 import styled from "styled-components";
 import { gameOvaImg } from "../images";
 
-import useMusicPlayer from "../hooks/useMusicPlayer";
+import useRoom from "../hooks/useRoom";
 
 const Container = styled.div`
   color: whitesmoke;
@@ -15,9 +15,11 @@ const Container = styled.div`
 `;
 
 export default function MusicPlayer() {
-  useMusicPlayer();
+  const { roomState, roomControllers, error } = useRoom();
+  console.log(roomState, error);
   return (
     <Container>
+      <button onClick={() => roomControllers.addTrack()}>Test</button>
       <CurrentTrack
         AudioVisualizer={AudioVisualizer}
         title="Game Ova"

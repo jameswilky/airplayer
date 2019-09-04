@@ -79,7 +79,7 @@ module.exports = function(io, interval = null) {
        */
       // todo add check to validate input is a room object
       const nextState = await getRoom(id);
-
+      console.log(socket.id + " Just joined room: " + id);
       if (!nextState) {
         socket.emit("ERROR", `join attempt failed, room not found`);
         return;
@@ -100,6 +100,8 @@ module.exports = function(io, interval = null) {
     // Handles events that Clients and Hosts can use
     Object.keys(ALL).forEach(event => {
       socket.on(event, data => {
+        console.log(socket.id + " attempted to " + event);
+
         if (inARoom(socket)) {
           handleEvent(event, data);
         } else {
@@ -114,6 +116,8 @@ module.exports = function(io, interval = null) {
     //Handles events that only hosts can use
     Object.keys(HOST).forEach(event => {
       socket.on(event, data => {
+        console.log(socket.id + " attempted to " + event);
+
         if (!data || !data.hasOwnProperty("token")) {
           socket.emit(
             "ERROR",
