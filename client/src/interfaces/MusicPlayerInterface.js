@@ -15,11 +15,20 @@ const Container = styled.div`
 `;
 
 export default function MusicPlayer() {
-  const { roomState, roomControllers, error } = useRoom();
-  console.log(roomState, error);
+  const {
+    state,
+    controller: { joinRoom, addTrack },
+    error
+  } = useRoom();
+  console.log(state, error);
+
   return (
     <Container>
-      <button onClick={() => roomControllers.addTrack()}>Test</button>
+      <button onClick={() => joinRoom("5d47d90a191f0f30a0d73414")}>
+        Join Room
+      </button>
+
+      <button onClick={() => addTrack("8090")}>add Track</button>
       <CurrentTrack
         AudioVisualizer={AudioVisualizer}
         title="Game Ova"
