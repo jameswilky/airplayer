@@ -27,7 +27,7 @@ function App() {
       <Router>
         <Route exact path="/" component={Home} />
         <Route path="/roomsearch" component={RoomSearch} />
-        <Route path="/room1" component={MusicPlayerInterface} />
+        <Route path="/room/:roomid" component={MusicPlayerInterface} />
         <Route path="/auth/callback" component={Callback} />
       </Router>
     </Provider>

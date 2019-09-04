@@ -47,6 +47,7 @@ export default function RoomSearch() {
     }
   };
   const { container, body, header, item, input, modal, exit } = styles;
+
   return (
     <>
       <div style={container}>
@@ -82,7 +83,7 @@ export default function RoomSearch() {
             <h2>Room 1</h2>
             <p>Enter Password</p>
             <input type="text" style={input} placeholder="enter password" />
-            <Link to="/room1">
+            <Link to={`/room/5d47d90a191f0f30a0d73414`}>
               <button>Join Room</button>
             </Link>
           </div>

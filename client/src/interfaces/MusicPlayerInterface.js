@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import CurrentTrack from "../components/CurrentTrack";
 import Playlist from "../components/Playlist";
 import Footer from "../components/Footer";
@@ -14,20 +14,25 @@ const Container = styled.div`
   font-size: 1.5rem;
 `;
 
-export default function MusicPlayer() {
+export default function MusicPlayer(props) {
+  const roomId = props.location.pathname
+    .split("/")
+    .slice(-1)
+    .pop();
+
   const {
     state,
-    controller: { joinRoom, addTrack },
+    controller: { addTrack, joinRoom },
     error
   } = useRoom();
-  console.log(state, error);
 
+  useEffect(() => {
+    joinRoom(roomId);
+  }, []);
+
+  console.log(state, error);
   return (
     <Container>
-      <button onClick={() => joinRoom("5d47d90a191f0f30a0d73414")}>
-        Join Room
-      </button>
-
       <button onClick={() => addTrack("8090")}>add Track</button>
       <CurrentTrack
         AudioVisualizer={AudioVisualizer}
