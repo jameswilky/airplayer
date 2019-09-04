@@ -5,9 +5,8 @@ import Footer from "../components/Footer";
 import AudioVisualizer from "../components/AudioVisualizer";
 import styled from "styled-components";
 import { gameOvaImg } from "../images";
-import { useSelector, useDispatch } from "react-redux";
 
-import Spotify from "../modules/Spotify";
+import useMusicPlayer from "../hooks/useMusicPlayer";
 
 const Container = styled.div`
   color: whitesmoke;
@@ -16,11 +15,7 @@ const Container = styled.div`
 `;
 
 export default function MusicPlayer() {
-  const { accessToken, isAuthenticated } = useSelector(state => state.auth);
-  const spotify = Spotify(accessToken);
-
-  console.log(spotify);
-
+  useMusicPlayer();
   return (
     <Container>
       <CurrentTrack

@@ -111,7 +111,6 @@ const Spotify = (token, send = true) => {
       return `${pluralize(hyphenize(target))}?ids=${ids}`;
     }
   };
-
   return {
     search: ({
       query = "",
@@ -191,9 +190,8 @@ const Spotify = (token, send = true) => {
 
           const libraryBody = ({ id, ids }) => (ids ? ids : [id]);
           return {
-            contains: ({ id, type, ids }) => {
-              return `me/${pluralize(type)}/contains?ids=${id ? id : ids}`;
-            },
+            contains: ({ id, type, ids }) =>
+              `me/${pluralize(type)}/contains?ids=${id ? id : ids}`,
             get: query => get(libraryQuery(query)), // not libary.get, refers to function in Spotify() closure
             delete: query => remove(libraryQuery(query), libraryBody(query)),
             add: query => put(libraryQuery(query), libraryBody(query))
@@ -208,12 +206,3 @@ const Spotify = (token, send = true) => {
 };
 
 export default Spotify;
-
-// const url = "https://api.spotify.com/v1/albums/0sNOF9WDwhWunNAHPD3Baj";
-// const go = url =>
-//   fetch(encodeURI(url), {
-//     headers: new Headers({
-//       Authorization: `Bearer   BQAf7y4qO08IFngAwyYZ69DPeAlK4vf-7KH00MgvYOaN4qLbkBoKF0bmsBzhCcuMhdZcH0dN49ToDyCjessqxoHQz96ilqGFkpJSO-gBoNGV8ZEiNeo9hiP8Yq9XH6Rie-pa_Mh5K4iY9PeJRiIjYcGNDXyTq0p4xIAaRepltFE7uIQYXBHW`,
-//       "Content-type": "application/json"
-//     })
-//   }).then(res => res.json());

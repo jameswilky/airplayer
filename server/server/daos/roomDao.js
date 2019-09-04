@@ -26,6 +26,8 @@ module.exports = {
     const [err, room] = await to(Room.findById(roomId));
     return err || room === null
       ? null // If room found return null
+      : room.password === undefined
+      ? true // If no password required, then return true
       : room.password === password
       ? true // If password matches return true
       : false; // if doesn't match return false

@@ -205,7 +205,6 @@ describe("Spotify Web API Module", () => {
       });
     });
   });
-  //
   describe("user", () => {
     describe("following", () => {
       it("should check if the current user is following another user", () => {
