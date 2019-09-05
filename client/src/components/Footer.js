@@ -26,7 +26,9 @@ const Underlay = styled.div`
 const Container = styled.div`
   height: 50px;
   width: 100%;
-  position: relative;
+  position: fixed;
+  background-color: rgba(20, 20, 20, 1);
+
   & i {
     color: whitesmoke;
   }

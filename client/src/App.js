@@ -1,5 +1,7 @@
 import React from "react";
 import Home from "./components/Home";
+import { hot } from "react-hot-loader";
+
 import RoomSearch from "./components/RoomSearch";
 import MusicPlayerInterface from "./interfaces/MusicPlayerInterface";
 import { BrowserRouter as Router, Route } from "react-router-dom";
@@ -21,17 +23,15 @@ const INITIAL_STATE = {
 };
 const store = createStore(authReducer, INITIAL_STATE);
 
-function App() {
-  return (
-    <Provider store={store}>
-      <Router>
-        <Route exact path="/" component={Home} />
-        <Route path="/roomsearch" component={RoomSearch} />
-        <Route path="/room/:roomid" component={MusicPlayerInterface} />
-        <Route path="/auth/callback" component={Callback} />
-      </Router>
-    </Provider>
-  );
-}
+const App = hot(module)(() => (
+  <Provider store={store}>
+    <Router>
+      <Route exact path="/" component={Home} />
+      <Route path="/roomsearch" component={RoomSearch} />
+      <Route path="/room/:roomid" component={MusicPlayerInterface} />
+      <Route path="/auth/callback" component={Callback} />
+    </Router>
+  </Provider>
+));
 
 export default App;

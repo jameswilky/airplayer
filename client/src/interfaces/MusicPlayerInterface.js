@@ -33,7 +33,6 @@ export default function MusicPlayer(props) {
   console.log(state, error);
   return (
     <Container>
-      <button onClick={() => addTrack("8090")}>add Track</button>
       <CurrentTrack
         AudioVisualizer={AudioVisualizer}
         title="Game Ova"
