@@ -1,18 +1,24 @@
+// Dependencies
 import React from "react";
-import Home from "./components/Home";
-import { hot } from "react-hot-loader";
-
-import RoomSearch from "./components/RoomSearch";
-import MusicPlayerInterface from "./interfaces/MusicPlayerInterface";
-import { BrowserRouter as Router, Route } from "react-router-dom";
-
-import Callback from "./components/Callback";
-
-import authReducer from "./reducers/authReducer";
+import { hot } from "react-hot-loader"; // used to fix hot reload issues with styled components during development
 import { createStore } from "redux";
 import { Provider } from "react-redux";
+import { BrowserRouter as Router, Route } from "react-router-dom";
 
+//Modules
 import Auth from "./modules/Auth";
+
+//Components
+import Home from "./components/Home";
+import Callback from "./components/Callback";
+import RoomSearch from "./components/RoomSearch";
+
+//Reducers
+import authReducer from "./reducers/authReducer";
+import RoomInterface from "./interfaces/RoomInterface";
+
+//Styles
+import "./global.css";
 
 const INITIAL_STATE = {
   auth: {
@@ -28,7 +34,8 @@ const App = hot(module)(() => (
     <Router>
       <Route exact path="/" component={Home} />
       <Route path="/roomsearch" component={RoomSearch} />
-      <Route path="/room/:roomid" component={MusicPlayerInterface} />
+      <Route path="/room/:roomid" component={RoomInterface} />
+
       <Route path="/auth/callback" component={Callback} />
     </Router>
   </Provider>

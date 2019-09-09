@@ -9,3 +9,7 @@
   --black: "slateblack";
   --white: "whitesmoke";
 }
+textarea,
+input {
+  outline: none;
+}

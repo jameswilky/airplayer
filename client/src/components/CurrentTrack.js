@@ -97,6 +97,7 @@ const Chevron = styled.span`
 
 export default function CurrentTrack(props) {
   const { AudioVisualizer, title, artist, nextTrack, image } = props;
+
   return (
     <Container>
       <ImageContainer>
