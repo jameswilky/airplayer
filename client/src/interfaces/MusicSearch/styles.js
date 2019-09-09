@@ -5,6 +5,7 @@ export const Container = styled.div`
   height: calc(100vh - 50px);
   position: relative;
 `;
+export const SearchResults = styled.div``;
 
 export const SearchBar = styled.div`
   width: 100%;

@@ -18,17 +18,28 @@ function isEmpty(obj) {
 const Spotify = (token, send = true) => {
   const api = "https://api.spotify.com/v1/";
 
-  const request = (query, type, body = "") =>
-    send
-      ? fetch(encodeURI(`${api}${query}`), {
-          headers: new Headers({
-            Authorization: `Bearer ${token}`,
-            "Content-type": "application/json",
-            method: type,
-            body: JSON.stringify(body)
-          })
-        }).then(res => res.json())
-      : query;
+  const request = (query, type, body = "") => {
+    const options = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-type": "application/json"
+      },
+      method: type
+    };
+
+    if (type !== "GET") {
+      options.body = JSON.stringify(body);
+    }
+    if (send) {
+      return fetch(encodeURI(`${api}${query}`), options).then(res =>
+        res.json()
+      );
+    } else {
+      options.api = api;
+      options.query = query;
+      return options;
+    }
+  };
 
   const put = (q, body) => request(q, "PUT", body);
   const get = q => request(q, "GET");
