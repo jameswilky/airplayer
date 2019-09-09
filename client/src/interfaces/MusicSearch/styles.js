@@ -1,7 +1,12 @@
 import React from "react";
 import styled from "styled-components";
 
-const Container = styled.div`
+export const Container = styled.div`
+  height: calc(100vh - 50px);
+  position: relative;
+`;
+
+export const SearchBar = styled.div`
   width: 100%;
   border: 2px solid whitesmoke;
   padding: 15px;
@@ -17,11 +22,3 @@ const Container = styled.div`
     padding: 5px;
   }
 `;
-
-export default function SearchBar() {
-  return (
-    <Container>
-      <input type="text" />{" "}
-    </Container>
-  );
-}

@@ -1,17 +1,17 @@
-import React from "react";
-import styled from "styled-components";
-import SearchBar from "../../components/SearchBar";
+import React, { useState } from "react";
 import SongList from "../../components/SongList";
+import Input from "../../components/Input";
+import { SearchBar, Container } from "./styles";
+import useSearch from "../../hooks/useSearch";
 
 export default function MusicSearchInterface() {
-  const Container = styled.div`
-    height: calc(100vh - 50px);
-    position: relative;
-  `;
+  const { query, setQuery } = useSearch("");
+
   return (
     <Container>
-      <SearchBar></SearchBar>
-      <SongList></SongList>
+      <SearchBar>
+        <Input value={query} setValue={setQuery}></Input>
+      </SearchBar>
     </Container>
   );
 }
