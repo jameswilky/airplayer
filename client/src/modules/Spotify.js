@@ -19,6 +19,8 @@ const Spotify = (token, send = true) => {
   const api = "https://api.spotify.com/v1/";
 
   const request = (query, type, body = "") => {
+    // TODO make more declarative
+
     const options = {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -66,6 +68,9 @@ const Spotify = (token, send = true) => {
     merge(condititions, (k, v) => `${k}:${v}`).replaceAll(",", " ");
 
   const pluralize = str => (str.slice(-1) === "s" ? str : `${str}s`);
+  const dePluralize = str =>
+    str.slice(-1) === "s" ? str.slice(0, str.length - 1) : str;
+
   const hyphenize = str => str.replace(/[A-Z]/g, m => "-" + m.toLowerCase());
   const depthOf = function(object) {
     var level = 1;
@@ -142,7 +147,7 @@ const Spotify = (token, send = true) => {
 
       const queryString = encodeURI(
         `search?q=${buildQuery()}${appendOptions({
-          type,
+          type: dePluralize(type),
           limit,
           offset,
           market
