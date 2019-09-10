@@ -11,45 +11,32 @@ export default function MusicSearchInterface() {
   const { query, setQuery, queryResults, toItems } = useSearch("");
   const { albums, tracks, artists, playlists } = toItems(queryResults);
 
-  console.log(albums, playlists, tracks, artists);
+  const createResults = (title, results) => (
+    <>
+      <h2>{title}</h2>
+      <ul>
+        {results.map(result => (
+          <li key={result.id}>{result.name}</li>
+        ))}
+      </ul>
+    </>
+  );
+
+  const Tracks = () => createResults("Songs", tracks);
+  const Albums = () => createResults("Albums", albums);
+  const Artists = () => createResults("Artists", artists);
+  const Playlists = () => createResults("Playlists", playlists);
+
   return (
     <Container>
       <SearchBar>
         <Input value={query} setValue={setQuery}></Input>
       </SearchBar>
       <SearchResults>
-        <div>
-          <h2>Songs</h2>
-          <ul>
-            <li>Track1</li>
-            <li>Track2</li>
-            <li>Track3</li>
-          </ul>
-        </div>
-        <div>
-          <h2>Artists</h2>
-          <ul>
-            <li>Artist1</li>
-            <li>Artist2</li>
-            <li>Artist3</li>
-          </ul>
-        </div>
-        <div>
-          <h2>Playlists</h2>
-          <ul>
-            <li>Playlist1</li>
-            <li>playlist2</li>
-            <li>Playlist3</li>
-          </ul>
-        </div>
-        <div>
-          <h2>Albums</h2>
-          <ul>
-            <li>Album1</li>
-            <li>Album2</li>
-            <li>Album3</li>
-          </ul>
-        </div>
+        <Tracks></Tracks>
+        <Albums></Albums>
+        <Artists></Artists>
+        <Playlists></Playlists>
       </SearchResults>
     </Container>
   );

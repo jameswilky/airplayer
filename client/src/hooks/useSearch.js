@@ -20,9 +20,9 @@ export default function useSearch() {
       {},
       ...Object.entries(results).map(obj => {
         return obj[1] === null
-          ? { [obj[0]]: {} }
+          ? { [obj[0]]: [] }
           : {
-              [obj[0]]: { ...obj[1].items }
+              [obj[0]]: Object.values({ ...obj[1].items })
             };
       })
     );
