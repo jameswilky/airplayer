@@ -8,8 +8,10 @@ import useSearch from "../../hooks/useSearch";
 import { Container, SearchBar, SearchResults } from "./styles";
 
 export default function MusicSearchInterface() {
-  const { query, setQuery } = useSearch("");
+  const { query, setQuery, queryResults, toItems } = useSearch("");
+  const { albums, tracks, artists, playlists } = toItems(queryResults);
 
+  console.log(albums, playlists, tracks, artists);
   return (
     <Container>
       <SearchBar>

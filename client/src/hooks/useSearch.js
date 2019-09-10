@@ -3,25 +3,44 @@ import Spotify from "../modules/Spotify";
 import { useSelector } from "react-redux";
 
 export default function useSearch() {
+  // Store Access
   const accessToken = useSelector(state => state.auth.accessToken);
+
+  // Local State
   const [query, setQuery] = useState("");
-  const spotify = Spotify(accessToken);
-  const queryTypes = ["tracks", "artists", "albums", "playlists"];
   const [queryResults, setQueryResults] = useState({
     tracks: null,
-    albums: null,
+    artists: null,
     playlists: null,
     albums: null
   });
 
+  const toItems = results =>
+    Object.assign(
+      {},
+      ...Object.entries(results).map(obj => {
+        return obj[1] === null
+          ? { [obj[0]]: {} }
+          : {
+              [obj[0]]: { ...obj[1].items }
+            };
+      })
+    );
+
+  // Local Variables
+  const spotify = Spotify(accessToken);
+
+  // Search Handler
   useEffect(() => {
-    const promises = queryTypes.map(queryType =>
-      spotify.search({ query: "tobi", type: queryType })
-    );
-    Promise.all(promises).then(
-      results => results.map((result, i) => result[queryTypes[i]])
-      //TODO finish mapping to state
-    );
+    const getQueries = async query => {
+      const queries = Object.keys(queryResults).map(type =>
+        spotify.search({ query, type })
+      );
+      const results = await Promise.all(queries);
+      return Object.assign({}, ...results);
+    };
+
+    getQueries("tobi").then(nextResults => setQueryResults(nextResults));
   }, []);
-  return { query, setQuery };
+  return { query, setQuery, queryResults, toItems };
 }
