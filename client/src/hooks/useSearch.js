@@ -1,18 +1,27 @@
 import React, { useState, useEffect } from "react";
 import Spotify from "../modules/Spotify";
+import { useSelector } from "react-redux";
 
-const token =
-  "BQABDMeIyXo3ASU3oiLo_D4VDTnmQnxruIXCmJdp_WtMOUKiv3rccu76iftsrjwrRLzEzPpBrXOXZG6pSSGhoGbPMUmiQAhzr-BRlTMjUDh1DXpvPniFeqnc-O_vSw_H7GwONktPSH5e6sEX2bpgRaydl3LUgx1Aqxewk-9NXaxmopNKQk7z";
 export default function useSearch() {
+  const accessToken = useSelector(state => state.auth.accessToken);
   const [query, setQuery] = useState("");
-  const spotify = Spotify(token);
+  const spotify = Spotify(accessToken);
   const queryTypes = ["tracks", "artists", "albums", "playlists"];
+  const [queryResults, setQueryResults] = useState({
+    tracks: null,
+    albums: null,
+    playlists: null,
+    albums: null
+  });
 
   useEffect(() => {
     const promises = queryTypes.map(queryType =>
       spotify.search({ query: "tobi", type: queryType })
     );
-    Promise.all(promises).then(values => console.log(values));
-  });
+    Promise.all(promises).then(
+      results => results.map((result, i) => result[queryTypes[i]])
+      //TODO finish mapping to state
+    );
+  }, []);
   return { query, setQuery };
 }
