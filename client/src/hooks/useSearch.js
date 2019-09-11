@@ -6,26 +6,16 @@ export default function useSearch() {
   // Store Access
   const accessToken = useSelector(state => state.auth.accessToken);
 
+  const getKey = obj =>
+    Object.keys(obj)[0] === undefined ? {} : Object.keys(obj)[0];
   // Local State
   const [query, setQuery] = useState("");
   const [queryResults, setQueryResults] = useState({
-    tracks: null,
-    artists: null,
-    playlists: null,
-    albums: null
+    tracks: {},
+    artists: {},
+    playlists: {},
+    albums: {}
   });
-
-  const toItems = results =>
-    Object.assign(
-      {},
-      ...Object.entries(results).map(obj => {
-        return obj[1] === null
-          ? { [obj[0]]: [] }
-          : {
-              [obj[0]]: Object.values({ ...obj[1].items })
-            };
-      })
-    );
 
   // Local Variables
   const spotify = Spotify(accessToken);
@@ -37,10 +27,22 @@ export default function useSearch() {
         spotify.search({ query, type })
       );
       const results = await Promise.all(queries);
-      return Object.assign({}, ...results);
+      return Object.assign(
+        {},
+        ...Object.keys(queryResults).map((query, i) => {
+          return {
+            [query]:
+              getKey(results[i]) === "error" ? results[i] : results[i][query]
+          };
+        })
+      );
     };
 
-    getQueries("tobi").then(nextResults => setQueryResults(nextResults));
-  }, []);
-  return { query, setQuery, queryResults, toItems };
+    if (query !== "") {
+      getQueries(query).then(nextResults => {
+        setQueryResults(nextResults);
+      });
+    }
+  }, [query]);
+  return { query, setQuery, queryResults };
 }

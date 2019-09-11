@@ -7,9 +7,24 @@ import useSearch from "../../hooks/useSearch";
 
 import { Container, SearchBar, SearchResults } from "./styles";
 
+const toItems = results =>
+  Object.assign(
+    {},
+    ...Object.entries(results).map(entry => {
+      return entry[1] === null
+        ? { [entry[0]]: [] }
+        : {
+            [entry[0]]: Object.values({ ...entry[1].items })
+          };
+    })
+  );
+
 export default function MusicSearchInterface() {
-  const { query, setQuery, queryResults, toItems } = useSearch("");
+  const { query, setQuery, queryResults } = useSearch("");
   const { albums, tracks, artists, playlists } = toItems(queryResults);
+
+  const noResults = !albums || !tracks || !artists || !playlists;
+  const noQuery = query === "";
 
   const createResults = (title, results) => (
     <>
@@ -22,10 +37,11 @@ export default function MusicSearchInterface() {
     </>
   );
 
-  const Tracks = () => createResults("Songs", tracks);
-  const Albums = () => createResults("Albums", albums);
-  const Artists = () => createResults("Artists", artists);
-  const Playlists = () => createResults("Playlists", playlists);
+  const Songs = () => (tracks ? createResults("Songs", tracks) : null);
+  const Albums = () => (albums ? createResults("Albums", albums) : null);
+  const Artists = () => (artists ? createResults("Artists", artists) : null);
+  const Playlists = () =>
+    playlists ? createResults("Playlists", playlists) : null;
 
   return (
     <Container>
@@ -33,10 +49,18 @@ export default function MusicSearchInterface() {
         <Input value={query} setValue={setQuery}></Input>
       </SearchBar>
       <SearchResults>
-        <Tracks></Tracks>
-        <Albums></Albums>
-        <Artists></Artists>
-        <Playlists></Playlists>
+        {noQuery ? (
+          `Please enter a query`
+        ) : noResults ? (
+          `No results matching ${query}`
+        ) : (
+          <>
+            <Songs></Songs>
+            <Albums></Albums>
+            <Artists></Artists>
+            <Playlists></Playlists>
+          </>
+        )}
       </SearchResults>
     </Container>
   );
