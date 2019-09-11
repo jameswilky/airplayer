@@ -17,24 +17,25 @@ import {
 } from "./styles";
 
 export default function MusicSearchInterface() {
+  // Local State
   const { query, setQuery, queryResults } = useSearch("");
-
   const { albums, tracks, artists, playlists } = getNestedProperty(
     "items",
     queryResults
   );
-
   const [selected, setSelected] = useState("");
 
+  // Booleans
   const noResults =
     albums.length < 1 ||
     tracks.length < 1 ||
     artists.length < 1 ||
     playlists.length < 1;
   const noQuery = query === "";
+  const filterOn = selected !== "";
 
   const Result = ({ title, results }) =>
-    results ? (
+    results && (!filterOn || selected === title) ? (
       <>
         <h2>{title}</h2>
         <ul>
