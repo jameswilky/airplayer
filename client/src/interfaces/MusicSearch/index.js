@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 
 import SongList from "../../components/SongList";
+import SearchBar from "../../components/SearchBar";
 import Input from "../../components/Input";
 
 import useSearch from "../../hooks/useSearch";
@@ -51,7 +52,6 @@ export default function MusicSearchInterface() {
         : result.images.length < 1
         ? fallbackImage
         : result.images.slice(-1)[0].url;
-
     return (
       // TODO, determine properties by each type
       <StyledResultItem>
@@ -59,10 +59,11 @@ export default function MusicSearchInterface() {
         <div>
           <h3>{result.name}</h3>
           <p>Song</p>
-          <p>{result.artist}</p>
+          {/* <p>{result.artist}</p> */}
           <span>&#183;</span>
           <p>{msToMinutes(result.duration_ms)}</p>
         </div>
+        <button>+</button>
       </StyledResultItem>
     );
   };

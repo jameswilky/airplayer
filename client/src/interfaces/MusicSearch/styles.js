@@ -22,9 +22,11 @@ export const StyledResult = styled.div`
 
 export const StyledResultItem = styled.div`
   font-size: 0.8rem;
-  display: flex;
+  display: grid;
+  grid-template-columns: 48px 1fr 48px;
   padding: 0 0 20px 0;
   align-items: center;
+  width: 100%;
   & img {
     height: 48px;
     width: 48px;
@@ -42,6 +44,16 @@ export const StyledResultItem = styled.div`
     display: inline;
     color: rgba(255, 255, 255, 0.7);
     font-weight: 100;
+  }
+  & button {
+    height: 48px;
+    width: 48px;
+    background: none;
+    border: none;
+    color: whitesmoke;
+    font-size: 2rem;
+    text-align: center;
+    text-justify: center;
   }
 `;
 export const StyledSearchFilterContainer = styled.div`
@@ -75,13 +87,6 @@ export const StyledSearchBar = styled.div`
     font-size: 2rem;
     padding: 5px;
   }
-`;
-
-export const StyledResultTitle = styled.div`
-  background: "red";
-  width: 100px;
-  height: 100px;
-  z-index: 1000;
 `;
 
 // TODO make global
