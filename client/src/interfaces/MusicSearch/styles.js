@@ -1,13 +1,50 @@
 import styled from "styled-components";
 
-export const Container = styled.div`
+export const StyledContainer = styled.div`
   height: calc(100vh - 50px);
   position: relative;
 `;
-export const SearchResults = styled.div`
-  padding: 20px;
+export const StyledSearchResults = styled.div`
+  padding: 150px 10px 50px 10px;
+  background-color: black;
+  font-size: 1rem;
 `;
-export const SearchFilterContainer = styled.div`
+
+export const StyledResult = styled.div`
+  & ul {
+    padding-top: 10px;
+    & li {
+      list-style: none;
+      padding-left: 5px;
+    }
+  }
+`;
+
+export const StyledResultItem = styled.div`
+  font-size: 0.8rem;
+  display: flex;
+  padding: 0 0 20px 0;
+  align-items: center;
+  & img {
+    height: 48px;
+    width: 48px;
+  }
+  & span {
+    padding: 0 3px;
+  }
+  & div {
+    padding: 0 0 0 10px;
+  }
+  & h3 {
+    font-size: 0.8rem;
+  }
+  & p {
+    display: inline;
+    color: rgba(255, 255, 255, 0.7);
+    font-weight: 100;
+  }
+`;
+export const StyledSearchFilterContainer = styled.div`
   font-size: 0.5em;
   display: flex;
   justify-content: space-between;
@@ -21,10 +58,12 @@ export const StyledButton = styled.div`
   background-color: ${props => (props.active ? "white" : "black")};
 `;
 
-export const SearchBar = styled.div`
+export const StyledSearchBar = styled.div`
   width: 100%;
-  border: 2px solid whitesmoke;
+  border-bottom: 2px solid whitesmoke;
   padding: 15px;
+  position: fixed;
+  background-color: black;
   & input {
     margin: 0px;
     background-color: black;
@@ -35,5 +74,33 @@ export const SearchBar = styled.div`
     color: whitesmoke;
     font-size: 2rem;
     padding: 5px;
+  }
+`;
+
+export const StyledResultTitle = styled.div`
+  background: "red";
+  width: 100px;
+  height: 100px;
+  z-index: 1000;
+`;
+
+// TODO make global
+export const StyledChevron = styled.span`
+  opacity: 0.7;
+  position: absolute;
+  right: 23px;
+  margin-top: -19px;
+  &:before {
+    border-style: solid;
+    border-width: 1px 1px 0 0;
+    content: "";
+    display: inline-block;
+    height: 12px;
+    left: 0;
+    position: relative;
+    vertical-align: top;
+    width: 12px;
+    transform: rotate(45deg);
+    visibility: ${props => props.visibility};
   }
 `;
