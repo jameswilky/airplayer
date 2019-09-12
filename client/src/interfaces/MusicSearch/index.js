@@ -34,10 +34,11 @@ export default function MusicSearchInterface() {
   const noQuery = query === "";
   const filterOn = selected !== "";
 
+  // Sub Components
   const Result = ({ title, results }) =>
     results && (!filterOn || selected === title) ? (
       <>
-        <h2>{title}</h2>
+        <h2>{filterOn ? "" : title}</h2>
         <ul>
           {results.map(result => (
             <li key={result.id}>{result.name}</li>
@@ -48,14 +49,12 @@ export default function MusicSearchInterface() {
       <></>
     );
 
-  const Button = ({ text }) => {
-    const [isActive, setIsActive] = useState(selected === text);
+  const CheckBox = ({ text }) => {
     return (
       <StyledButton
-        active={isActive}
+        active={selected === text}
         onClick={() => {
-          setIsActive(!isActive);
-          setSelected(text);
+          setSelected(selected === text ? "" : text);
         }}
       >
         {text}
@@ -68,10 +67,10 @@ export default function MusicSearchInterface() {
       <SearchBar>
         <Input value={query} setValue={setQuery}></Input>
         <SearchFilterContainer>
-          <Button text={"Songs"}></Button>
-          <Button text={"Playlists"}></Button>
-          <Button text={"Artists"}></Button>
-          <Button text={"Albums"}></Button>
+          <CheckBox text={"Songs"}></CheckBox>
+          <CheckBox text={"Playlists"}></CheckBox>
+          <CheckBox text={"Artists"}></CheckBox>
+          <CheckBox text={"Albums"}></CheckBox>
         </SearchFilterContainer>
       </SearchBar>
       <SearchResults>
