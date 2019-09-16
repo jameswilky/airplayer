@@ -1,9 +1,7 @@
 import styled from "styled-components";
+import { Container } from "../../globalStyles";
 
-export const StyledContainer = styled.div`
-  height: calc(100vh - 50px);
-  position: relative;
-`;
+export const StyledContainer = styled(Container)``;
 
 export const StyledSearchFilterContainer = styled.div`
   font-size: 0.5em;

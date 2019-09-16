@@ -1,32 +1,21 @@
 import styled from "styled-components";
-// TODO make global
-export const StyledChevron = styled.span`
-  opacity: 0.7;
-  position: absolute;
+import { Chevron } from "../../globalStyles";
+
+export const StyledChevron = styled(Chevron)`
   right: 23px;
   margin-top: -19px;
   &:before {
-    border-style: solid;
-    border-width: 1px 1px 0 0;
-    content: "";
-    display: inline-block;
-    height: 12px;
-    left: 0;
-    position: relative;
-    vertical-align: top;
-    width: 12px;
     transform: rotate(45deg);
-    visibility: ${props => props.visibility};
   }
 `;
 
-export const StyledSearchResults = styled.div`
-  padding: 150px 10px 50px 10px;
-  background-color: black;
-  font-size: 1rem;
+export const StyledContainer = styled.div`
+  padding: ${props => `${props.top} 10px 50px 10px`};
 `;
 
 export const StyledResult = styled.div`
+  font-size: 1rem;
+
   & ul {
     padding-top: 10px;
     & li {

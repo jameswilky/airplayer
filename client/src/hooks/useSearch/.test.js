@@ -3,6 +3,16 @@ import useSearch from "./";
 import { act } from "react-dom/test-utils";
 import { testHook } from "../../helpers/TestHook";
 
+// used to wait an arbitrary amount of time for all events to fire on a socket
+const waitFor = ms => {
+  const mult = 1; // modify this value to increase the amount of time all waitFor statements in the test suite
+  return new Promise(resolve => {
+    setTimeout(resolve, ms * mult);
+  });
+};
+
+const token =
+  "BQB08ysiMIuoVX6AOL9wl0biXs7XQoL6cNV3rUO52xo_9hddVELfS6-fz_zzxDH8R1PQnJsXkPlQEevLKpjW7p_hObCD6eOFnaiCtXttCrMKQ8MJ9CK6-BrndkMzcoYGsHn7860jQZyy-Jh-lVKvhkL7as_hGOIe82r4yE-3l3UZpWo3U1OQ";
 describe("useSearch", () => {
   it("should run without crashing", () => {
     let result;

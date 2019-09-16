@@ -22,6 +22,7 @@ export const testHook = ({
     }
   };
   const store = createStore((state, action) => state, INITIAL_STATE);
+
   mount(
     <Provider store={store}>
       <TestHook callback={hook}></TestHook>

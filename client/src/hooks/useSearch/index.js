@@ -3,10 +3,9 @@ import Spotify from "../../modules/Spotify";
 import { useSelector } from "react-redux";
 import { getKey } from "../../helpers/ObjectUtils";
 
-export default function useSearch(test = false) {
+export default function useSearch() {
   // Store Access
   const accessToken = useSelector(state => state.auth.accessToken);
-
   // Local State
   const [query, setQuery] = useState("");
   const [queryResults, setQueryResults] = useState({
@@ -17,7 +16,7 @@ export default function useSearch(test = false) {
   });
 
   // Local Variables
-  const spotify = Spotify(accessToken, test);
+  const spotify = Spotify(accessToken);
 
   // Search Handler
   useEffect(() => {
@@ -26,6 +25,7 @@ export default function useSearch(test = false) {
         spotify.search({ query, type })
       );
       const results = await Promise.all(queries);
+      console.log(results);
       return Object.assign(
         {},
         ...Object.keys(queryResults).map((query, i) => {
@@ -39,6 +39,7 @@ export default function useSearch(test = false) {
 
     if (query !== "") {
       getQueries(query).then(nextResults => {
+        console.log(nextResults);
         setQueryResults(nextResults);
       });
     }

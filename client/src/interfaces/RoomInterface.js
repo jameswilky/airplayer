@@ -3,6 +3,7 @@ import { Route } from "react-router-dom";
 
 import MusicPlayerInterface from "../interfaces/MusicPlayerInterface";
 import MusicSearchInterface from "../interfaces/MusicSearch";
+import MusicLibraryInterface from "../interfaces/MusicLibrary";
 import Footer from "../components/Footer";
 import styled from "styled-components";
 
@@ -37,6 +38,7 @@ export default function RoomInterface(props) {
       {" "}
       <Route exact path={`${path}`} component={MusicPlayerInterface}></Route>
       <Route path={`${path}/search`} component={MusicSearchInterface}></Route>
+      <Route path={`${path}/library`} component={MusicLibraryInterface}></Route>
       <Footer />
     </Container>
   );

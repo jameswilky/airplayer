@@ -1,6 +1,6 @@
 import React from "react";
 import {
-  StyledSearchResults,
+  StyledContainer,
   StyledResult,
   StyledResultItem,
   StyledChevron
@@ -14,7 +14,7 @@ import fallbackImage from "../../images/fallbackImage.png";
 
 export default function SongList(props) {
   const { albums, tracks, artists, playlists } = props.results;
-  const { query, selected, setSelected } = props;
+  const { query, selected, setSelected, limit = 4 } = props;
 
   const noResults =
     albums.length < 1 ||
@@ -60,7 +60,7 @@ export default function SongList(props) {
           onClick={() => setSelected(selected === title ? "" : title)}
         ></StyledChevron>
         <ul>
-          {results.slice(0, filterOn ? 20 : 4).map(result => (
+          {results.slice(0, filterOn ? 20 : limit).map(result => (
             <li key={result.id}>
               <ResultItem result={result} type={title}></ResultItem>
             </li>
@@ -72,7 +72,7 @@ export default function SongList(props) {
     );
 
   return (
-    <StyledSearchResults>
+    <StyledContainer top={props.top || "10px"}>
       {noQuery ? (
         `Please enter a query`
       ) : noResults ? (
@@ -85,6 +85,6 @@ export default function SongList(props) {
           <Result title="Albums" results={albums}></Result>
         </>
       )}
-    </StyledSearchResults>
+    </StyledContainer>
   );
 }

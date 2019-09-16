@@ -1,7 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-
-// TODO https://styled-icons.js.org/?s=search
+import { Chevron } from "../globalStyles";
 
 const Container = styled.div`
   /* background-color: "black"; */
@@ -76,11 +75,9 @@ const SongInfoContainer = styled.div`
   }
 `;
 
-const Chevron = styled.span`
-  position: absolute;
+const StyledChevron = styled(Chevron)`
   bottom: 10px;
   left: calc(50% - 7.5px);
-  opacity: 0.7;
   &:before {
     border-style: solid;
     border-width: 1px 1px 0 0;
@@ -116,7 +113,7 @@ export default function CurrentTrack(props) {
           </p>
         </SongInfoContainer>
       </Overlay>
-      <Chevron />
+      <StyledChevron />
     </Container>
   );
 }

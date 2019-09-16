@@ -51,9 +51,11 @@ export default function MusicSearchInterface() {
       </StyledSearchBar>
       <SongList
         {...{
+          top: "150px",
           query,
           selected,
           setSelected,
+
           results: { albums, tracks, artists, playlists }
         }}
       ></SongList>
