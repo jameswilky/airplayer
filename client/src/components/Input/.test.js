@@ -11,7 +11,7 @@ describe("Input Component", () => {
     const wrapper = shallow(<Input value="test"></Input>);
     expect(wrapper.props().value).toEqual("test");
   });
-  it("calls set value on change", () => {
+  it("calls setValue() on change", () => {
     let setValueCalled = false;
     const wrapper = shallow(
       <Input name="test" setValue={() => (setValueCalled = true)}></Input>

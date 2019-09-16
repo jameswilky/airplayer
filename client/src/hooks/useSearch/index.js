@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import Spotify from "../modules/Spotify";
+import Spotify from "../../modules/Spotify";
 import { useSelector } from "react-redux";
-import { getKey } from "../helpers/ObjectUtils";
+import { getKey } from "../../helpers/ObjectUtils";
 
-export default function useSearch() {
+export default function useSearch(test = false) {
   // Store Access
   const accessToken = useSelector(state => state.auth.accessToken);
 
@@ -17,7 +17,7 @@ export default function useSearch() {
   });
 
   // Local Variables
-  const spotify = Spotify(accessToken);
+  const spotify = Spotify(accessToken, test);
 
   // Search Handler
   useEffect(() => {
