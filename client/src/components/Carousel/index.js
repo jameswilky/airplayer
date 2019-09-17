@@ -8,7 +8,7 @@ import {
 } from "./styles";
 
 export default function Carousel(props) {
-  const { items, title } = props;
+  const { items } = props;
   console.log(items);
 
   const SubItem = ({ label }) => (
@@ -24,7 +24,8 @@ export default function Carousel(props) {
         <StyledItem>
           <img src={src}></img>
           <h4>{name}</h4>
-          {labels && labels.map(label => <SubItem label={label}></SubItem>)}
+          {labels &&
+            labels.map(label => <SubItem key={label} label={label}></SubItem>)}
         </StyledItem>{" "}
         <StyledOverlay>
           <StyledPlayButton></StyledPlayButton>
@@ -47,7 +48,6 @@ export default function Carousel(props) {
     );
   return (
     <StyledContainer>
-      <h3>{title}</h3>
       <Items></Items>
     </StyledContainer>
   );

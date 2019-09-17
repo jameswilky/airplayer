@@ -22,7 +22,7 @@ export default function MusicLibraryInterface() {
 
   return (
     <StyledContainer>
-      <Carousel items={tracks} title="Recently Played"></Carousel>
+      <Carousel items={tracks}></Carousel>
       {selected === "" ? (
         <></>
       ) : (

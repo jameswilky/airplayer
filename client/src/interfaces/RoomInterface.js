@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Route } from "react-router-dom";
 
-import MusicPlayerInterface from "../interfaces/MusicPlayerInterface";
+import MusicPlayerInterface from "../interfaces/MusicPlayer";
 import MusicSearchInterface from "../interfaces/MusicSearch";
 import MusicLibraryInterface from "../interfaces/MusicLibrary";
 import Footer from "../components/Footer";
