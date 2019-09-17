@@ -1,21 +1,17 @@
 import React from "react";
-
-export default function SongList2() {
-  return <div></div>;
-}
-import React from "react";
 import {
   StyledContainer,
   StyledResult,
   StyledResultItem,
   StyledChevron
-} from "./styles";
+} from "../components/SongList/styles";
+import List from "../components/List";
 
 // Modules/Helpers
-import { msToMinutes } from "../../helpers/TimeUtils";
+import { msToMinutes } from "../helpers/TimeUtils";
 
 // Images
-import fallbackImage from "../../images/fallbackImage.png";
+import fallbackImage from "../images/fallbackImage.png";
 
 export default function SongList(props) {
   const { albums, tracks, artists, playlists } = props.results;
@@ -64,13 +60,14 @@ export default function SongList(props) {
           visibility={filterOn ? "hidden" : "visible"}
           onClick={() => setSelected(selected === title ? "" : title)}
         ></StyledChevron>
-        <ul>
+        {/* <ul>
           {results.slice(0, filterOn ? 20 : limit).map(result => (
             <li key={result.id}>
               <ResultItem result={result} type={title}></ResultItem>
             </li>
           ))}
-        </ul>
+        </ul> */}
+        <List items={results} styles={{ StyledItem: StyledResultItem }}></List>
       </StyledResult>
     ) : (
       <></>
@@ -84,7 +81,7 @@ export default function SongList(props) {
         `No results matching ${query}`
       ) : (
         <>
-          <List {...{ items: [], styles: { StyledItems, StyledItem, StyledSubItem } }}></List>
+          <Result title="Songs" results={tracks}></Result>
           <Result title="Artists" results={artists}></Result>
           <Result title="Playlists" results={playlists}></Result>
           <Result title="Albums" results={albums}></Result>

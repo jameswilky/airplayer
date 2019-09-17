@@ -3,9 +3,9 @@ import React from "react";
 const EmptyComponent = () => <></>;
 
 export default function List(props) {
-  const { items, styles = {}, limit = items.length } = props;
+  const { items, styles = {}, limit = items ? items.length : 1 } = props;
   const {
-    StyledItems = EmptyComponent,
+    StyledList = EmptyComponent,
     StyledItem = EmptyComponent,
     StyledSubItem = EmptyComponent
   } = styles;
@@ -24,16 +24,17 @@ export default function List(props) {
         labels.map(label => <SubItem key={label} label={label}></SubItem>)}
     </StyledItem>
   );
-  const Items = () => (
-    <StyledItems>
-      {items &&
-        items
-          .slice(0, limit)
-          .map(({ key, src, name, labels }) => (
-            <Item key={key} src={src} name={name} labels={labels}></Item>
-          ))}
-    </StyledItems>
-  );
+  const Items = () =>
+    items &&
+    items
+      .slice(0, limit)
+      .map(({ key, src, name, labels }) => (
+        <Item key={key} src={src} name={name} labels={labels}></Item>
+      ));
 
-  return <Items></Items>;
+  return (
+    <StyledList>
+      <Items></Items>
+    </StyledList>
+  );
 }
