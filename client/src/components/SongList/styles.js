@@ -9,8 +9,10 @@ export const StyledChevron = styled(Chevron)`
   }
 `;
 
+// TODO add theme to manage colors and padding
 export const StyledContainer = styled.div`
   padding: ${props => `${props.top} 10px 50px 10px`};
+  background-color: black;
 `;
 
 export const StyledResult = styled.div`

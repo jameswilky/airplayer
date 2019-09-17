@@ -25,7 +25,6 @@ export default function useSearch() {
         spotify.search({ query, type })
       );
       const results = await Promise.all(queries);
-      console.log(results);
       return Object.assign(
         {},
         ...Object.keys(queryResults).map((query, i) => {
@@ -39,7 +38,6 @@ export default function useSearch() {
 
     if (query !== "") {
       getQueries(query).then(nextResults => {
-        console.log(nextResults);
         setQueryResults(nextResults);
       });
     }

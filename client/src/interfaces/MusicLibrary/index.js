@@ -3,6 +3,7 @@ import { StyledContainer, StyledChevron } from "./styles";
 
 //Components
 import SongList from "../../components/SongList/";
+import Carousel from "../../components/Carousel/";
 
 import useSearch from "../../hooks/useSearch/";
 
@@ -10,7 +11,6 @@ import useSearch from "../../hooks/useSearch/";
 import { getNestedProperty } from "../../helpers/ObjectUtils";
 
 export default function MusicLibraryInterface() {
-  const Carousel = () => <div></div>;
   const { query, setQuery, queryResults } = useSearch("");
   const { albums, tracks, artists, playlists } = getNestedProperty(
     "items",
@@ -22,7 +22,7 @@ export default function MusicLibraryInterface() {
 
   return (
     <StyledContainer>
-      <Carousel></Carousel>
+      <Carousel items={tracks} title="Recently Played"></Carousel>
       {selected === "" ? (
         <></>
       ) : (
