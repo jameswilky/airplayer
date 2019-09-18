@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 
-import SongList from "../../components/SongList/";
+import SongList from "../../components/SongList2";
 import Input from "../../components/Input";
 
 import useSearch from "../../hooks/useSearch/";
 
 // Modules/Utilities
-import { getNestedProperty } from "../../helpers/ObjectUtils";
+import SpotifyHelper from "../../modules/SpotifyHelper/SpotifyHelper";
 
 import {
   StyledContainer,
@@ -18,10 +18,7 @@ import {
 export default function MusicSearchInterface() {
   // Local State
   const { query, setQuery, queryResults } = useSearch("");
-  const { albums, tracks, artists, playlists } = getNestedProperty(
-    "items",
-    queryResults
-  );
+  const { albums, tracks, artists, playlists } = queryResults;
   const [selected, setSelected] = useState("");
 
   // Sub Components
@@ -40,7 +37,7 @@ export default function MusicSearchInterface() {
 
   return (
     <StyledContainer>
-      <StyledSearchBar>
+      {/* <StyledSearchBar>
         <Input value={query} setValue={setQuery}></Input>
         <StyledSearchFilterContainer>
           <RadioButton text={"Songs"}></RadioButton>
@@ -48,8 +45,8 @@ export default function MusicSearchInterface() {
           <RadioButton text={"Artists"}></RadioButton>
           <RadioButton text={"Albums"}></RadioButton>
         </StyledSearchFilterContainer>
-      </StyledSearchBar>
-      <SongList
+      </StyledSearchBar> */}
+      {/* <SongList
         {...{
           top: "150px",
           query,
@@ -58,6 +55,9 @@ export default function MusicSearchInterface() {
 
           results: { albums, tracks, artists, playlists }
         }}
+      ></SongList> */}
+      <SongList
+        {...{ results: { albums, tracks, artists, playlists } }}
       ></SongList>
     </StyledContainer>
   );

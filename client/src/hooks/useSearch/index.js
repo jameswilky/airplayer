@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
 import Spotify from "../../modules/Spotify";
 import { useSelector } from "react-redux";
-import { getKey } from "../../helpers/ObjectUtils";
+import { getKey, getNestedProperty } from "../../helpers/ObjectUtils";
+import SpotifyHelper from "../../modules/SpotifyHelper/SpotifyHelper";
 
 export default function useSearch() {
   // Store Access
   const accessToken = useSelector(state => state.auth.accessToken);
   // Local State
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState("tobi");
   const [queryResults, setQueryResults] = useState({
     tracks: {},
     artists: {},
@@ -38,9 +39,19 @@ export default function useSearch() {
 
     if (query !== "") {
       getQueries(query).then(nextResults => {
+        // console.log(nextResults);
+        // console.log(getNestedProperty("items", nextResults));
+        // console.log(SpotifyHelper(nextResults));
+        // console.log(SpotifyHelper(nextResults).getItems());
+        // setQueryResults(SpotifyHelper(nextResults));
+        // console.log(queryResults);
         setQueryResults(nextResults);
       });
     }
   }, [query]);
-  return { query, setQuery, queryResults };
+  return {
+    query,
+    setQuery,
+    queryResults: SpotifyHelper(queryResults).getItems()
+  };
 }

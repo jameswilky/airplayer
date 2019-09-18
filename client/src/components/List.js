@@ -1,13 +1,19 @@
 import React from "react";
-
-const EmptyComponent = () => <></>;
+import styled from "styled-components";
 
 export default function List(props) {
-  const { items, styles = {}, limit = items ? items.length : 1 } = props;
   const {
-    StyledList = EmptyComponent,
-    StyledItem = EmptyComponent,
-    StyledSubItem = EmptyComponent
+    items,
+    styles = {},
+    limit = items ? items.length : 1,
+    getImage,
+    getName,
+    getLabels
+  } = props;
+  const {
+    StyledList = styled.ul``,
+    StyledItem = styled.li``,
+    StyledSubItem = styled.div``
   } = styles;
 
   const SubItem = ({ label }) => (
@@ -24,12 +30,17 @@ export default function List(props) {
         labels.map(label => <SubItem key={label} label={label}></SubItem>)}
     </StyledItem>
   );
+
   const Items = () =>
-    items &&
     items
       .slice(0, limit)
-      .map(({ key, src, name, labels }) => (
-        <Item key={key} src={src} name={name} labels={labels}></Item>
+      .map((item, i) => (
+        <Item
+          key={i}
+          src={getImage(item)}
+          name={getName(item)}
+          labels={getLabels(item)}
+        ></Item>
       ));
 
   return (

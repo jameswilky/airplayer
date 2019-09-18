@@ -19,10 +19,13 @@ const fallbackImages = {
     height: 64,
     width: 64,
     url: "https://i.ibb.co/608nyr6/small-removebg-preview.png"
+  },
+  default: {
+    height: 500,
+    width: 500,
+    url: "https://i.ibb.co/Hh9dXJQ/medium-removebg-preview.png"
   }
 };
-
-const mapImages = images => arrayToObject(images, ["large", "medium", "small"]);
 
 const ItemPrototype = () => {
   return {
@@ -42,12 +45,12 @@ const ItemPrototype = () => {
       switch (this.type) {
         case "track":
           return this.album.images.length < 1
-            ? mapImages(fallbackImages)
-            : mapImages(this.album.images);
+            ? arrayToObject(fallbackImages)
+            : arrayToObject(this.album.images, ["large", "medium", "small"]);
         default:
           return this.images.length < 1
-            ? mapImages(fallbackImages)
-            : mapImages(this.images);
+            ? arrayToObject(fallbackImages)
+            : arrayToObject(this.images, ["large", "medium", "small"]);
       }
     }
   };

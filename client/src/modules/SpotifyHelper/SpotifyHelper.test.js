@@ -3,6 +3,7 @@ import SpotifyHelper from "./SpotifyHelper";
 
 const {
   threeTracks,
+  threeTracksWithNoImages,
   threeAlbums,
   threePlaylists,
   threeArtists
@@ -52,8 +53,24 @@ describe("SpotifyHelper", () => {
       const images = SpotifyHelper(threePlaylists)
         .getItems()
         .playlists[0].getImages();
-      console.log(images);
+      expect(images.default.url).toEqual(
+        "https://thisis-images.scdn.co/37i9dQZF1DZ06evO2RVL6m-default.jpg"
+      );
     });
-    // it("should return an object of images for a given album", () => {});
+    it("should return an object of images for a given album", () => {
+      const images = SpotifyHelper(threeAlbums)
+        .getItems()
+        .albums[0].getImages();
+      expect(images.large.url).toEqual(
+        "https://i.scdn.co/image/354aa96c91e25bb43cc39e27e0aee457ea513558"
+      );
+    });
+    it("should return an object of fallbackimages for a given track if no images exist", () => {
+      const images = SpotifyHelper(threeTracksWithNoImages)
+        .getItems()
+        .tracks[0].getImages();
+      expect(images.default.height).toEqual(500);
+      expect(images.small.width).toEqual(64);
+    });
   });
 });
