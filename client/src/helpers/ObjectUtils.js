@@ -12,4 +12,13 @@ const getNestedProperty = (prop, results) =>
           };
     })
   );
-export { getKey, getNestedProperty };
+// names.map((name, i) => {
+//   return { [name]: array[i] };
+// });
+const ArrayToObject = (array, names) =>
+  names
+    ? names.length === array.length
+      ? Object.assign(...names.map((k, i) => ({ [k]: array[i] })))
+      : {}
+    : Object.assign({}, { ...array });
+export { getKey, getNestedProperty, ArrayToObject };
