@@ -1,4 +1,4 @@
-import { ArrayToObject } from "./ObjectUtils";
+import { arrayToObject } from "./ObjectUtils";
 
 const array = [
   {
@@ -17,21 +17,24 @@ const array = [
     width: 64
   }
 ];
-it("should convert an array into an object", () => {
-  const object = ArrayToObject(array);
-  expect(typeof object).toBe("object");
-  expect(object instanceof Array).toBe(false);
-});
-it("should create an object from an array indexed with numbers if no array is passed", () => {
-  const object = ArrayToObject(array);
-  expect(Object.keys(object)[0]).toEqual("0");
-});
-it("should create an object from an array indexed with the names specified", () => {
-  const object = ArrayToObject(array, ["large", "medium", "small"]);
-  expect(Object.keys(object)[0]).toEqual("large");
-});
-it("should return an empty object both array arguments are a different length", () => {
-  const object = ArrayToObject(array, ["large", "medium"]);
-  expect(object.large).toBe(undefined);
-  expect(object).toEqual({});
+describe("ObjectUtils", () => {
+  describe("arrayToObject", () => {
+    it("should convert an array into an object", () => {
+      const object = arrayToObject(array);
+      expect(typeof object).toBe("object");
+      expect(object instanceof Array).toBe(false);
+    });
+    it("should create an object from an array indexed with numbers if no array is passed", () => {
+      const object = arrayToObject(array);
+      expect(Object.keys(object)[0]).toEqual("0");
+    });
+    it("should create an object from an array indexed with the names specified", () => {
+      const object = arrayToObject(array, ["large", "medium", "small"]);
+      expect(Object.keys(object)[0]).toEqual("large");
+    });
+    it("should return an object with a default property containing the first element of the array if both array arguments are a different length", () => {
+      const object = arrayToObject(array, ["large", "medium"]);
+      expect(object.default).toEqual(array[0]);
+    });
+  });
 });

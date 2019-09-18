@@ -36,11 +36,24 @@ describe("SpotifyHelper", () => {
     });
   });
   describe("getImages", () => {
-    it("should return a list of images for a given track", () => {
+    it("should return an object of images for a given track", () => {
       const images = SpotifyHelper(threeTracks)
         .getItems()
         .tracks[0].getImages();
-      // console.log(images);
+      expect(images.small.height).toEqual(64);
     });
+    it("should return an object of images for a given artist", () => {
+      const images = SpotifyHelper(threeArtists)
+        .getItems()
+        .artists[0].getImages();
+      expect(images.small.height).toEqual(160);
+    });
+    it("should return an object of images for a given playlist", () => {
+      const images = SpotifyHelper(threePlaylists)
+        .getItems()
+        .playlists[0].getImages();
+      console.log(images);
+    });
+    // it("should return an object of images for a given album", () => {});
   });
 });

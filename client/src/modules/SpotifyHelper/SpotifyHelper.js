@@ -1,10 +1,28 @@
-import { getNestedProperty, getKey } from "../../helpers/ObjectUtils";
+import {
+  getNestedProperty,
+  getKey,
+  arrayToObject
+} from "../../helpers/ObjectUtils";
 
 const fallbackImages = {
-  large: { height: 640, width: 640, url: "" },
-  medium: { height: 300, width: 300, url: "" },
-  small: { height: 64, width: 64, url: "" }
+  large: {
+    height: 500,
+    width: 500,
+    url: "https://i.ibb.co/Hh9dXJQ/medium-removebg-preview.png"
+  },
+  medium: {
+    height: 300,
+    width: 300,
+    url: "https://i.ibb.co/vjZVL4p/large-removebg-preview.png"
+  },
+  small: {
+    height: 64,
+    width: 64,
+    url: "https://i.ibb.co/608nyr6/small-removebg-preview.png"
+  }
 };
+
+const mapImages = images => arrayToObject(images, ["large", "medium", "small"]);
 
 const ItemPrototype = () => {
   return {
@@ -23,9 +41,13 @@ const ItemPrototype = () => {
     getImages: function() {
       switch (this.type) {
         case "track":
-          return this.album.images.length < 1 ? null : this.album.images;
+          return this.album.images.length < 1
+            ? mapImages(fallbackImages)
+            : mapImages(this.album.images);
         default:
-          return this.images.length < 1 ? null : this.images;
+          return this.images.length < 1
+            ? mapImages(fallbackImages)
+            : mapImages(this.images);
       }
     }
   };
