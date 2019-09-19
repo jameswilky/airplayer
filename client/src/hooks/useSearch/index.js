@@ -49,6 +49,7 @@ export default function useSearch() {
       });
     }
   }, [query]);
+
   return {
     query,
     setQuery,

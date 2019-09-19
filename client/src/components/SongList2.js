@@ -1,9 +1,9 @@
 import React from "react";
 import {
   StyledContainer,
-  StyledResult,
-  StyledResultItem,
-  StyledChevron
+  StyledChevron,
+  StyledList,
+  StyledItem
 } from "../components/SongList/styles";
 import List from "../components/List";
 
@@ -70,7 +70,6 @@ export default function SongList(props) {
   //     <></>
   //   );
 
-  console.log(tracks);
   return (
     <StyledContainer top={props.top || "10px"}>
       {/* {noQuery ? (
@@ -87,9 +86,11 @@ export default function SongList(props) {
       )} */}
       <List
         items={tracks}
-        getImage={item => item.getImages().small.url}
+        getImage={item => item.getImages().default.url}
         getName={item => item.name}
         getLabels={item => [item.type, item.getArtists()[0].name]}
+        styles={{ StyledList, StyledItem }}
+        button={"+"}
       ></List>
     </StyledContainer>
   );

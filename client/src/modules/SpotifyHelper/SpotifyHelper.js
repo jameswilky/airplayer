@@ -58,11 +58,13 @@ const ItemPrototype = () => {
 export default function SpotifyHelper(obj) {
   return Object.assign({}, obj, {
     getItems: function() {
-      const items = getNestedProperty("items", obj);
-      items[getKey(items)].map(item =>
-        Reflect.setPrototypeOf(item, ItemPrototype())
-      );
-      return items;
+      const itemsByType = getNestedProperty("items", obj);
+      Object.keys(itemsByType).forEach(type => {
+        itemsByType[type].map(item =>
+          Reflect.setPrototypeOf(item, ItemPrototype())
+        );
+      });
+      return itemsByType;
     }
   });
 }

@@ -3,31 +3,37 @@ import styled from "styled-components";
 
 export default function List(props) {
   const {
-    items,
+    items = [],
     styles = {},
     limit = items ? items.length : 1,
     getImage,
     getName,
-    getLabels
+    getLabels,
+    button
   } = props;
   const {
     StyledList = styled.ul``,
     StyledItem = styled.li``,
-    StyledSubItem = styled.div``
+    StyledSubItem = styled.li``
   } = styles;
 
   const SubItem = ({ label }) => (
     <StyledSubItem>
       <p>{label}</p>
-      <span>&#183;</span>
     </StyledSubItem>
   );
   const Item = ({ src, name, labels }) => (
     <StyledItem>
       {src && <img src={src}></img>}
-      <h4>{name}</h4>
-      {labels &&
-        labels.map(label => <SubItem key={label} label={label}></SubItem>)}
+      <div>
+        <h3>{name}</h3>
+        <ul>
+          {labels &&
+            labels.map(label => <SubItem key={label} label={label}></SubItem>)}
+        </ul>
+      </div>
+
+      <button>{button ? "+" : ""}</button>
     </StyledItem>
   );
 
