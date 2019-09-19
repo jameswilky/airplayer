@@ -12,7 +12,7 @@ import { msToMinutes } from "../helpers/TimeUtils";
 
 export default function SongList(props) {
   const { albums, tracks, artists, playlists } = props.results;
-  const { query, selected, setSelected, limit = 4 } = props;
+  const { query, selected, setSelected, limit = 4, results = {} } = props;
 
   const noResults =
     albums.length < 1 ||
@@ -70,28 +70,30 @@ export default function SongList(props) {
   //     <></>
   //   );
 
+  console.log(results);
+  const ListContainer = () =>
+    results &&
+    Object.keys(results).map(result => (
+      <List
+        items={results[result]}
+        getImage={item => item.getImages().default.url}
+        getName={item => item.name}
+        getLabels={item => item.getLabels()}
+        styles={{ StyledList, StyledItem }}
+        button={"+"}
+      ></List>
+    ));
   return (
     <StyledContainer top={props.top || "10px"}>
-      {/* {noQuery ? (
+      {noQuery ? (
         `Please enter a query`
       ) : noResults ? (
         `No results matching ${query}`
       ) : (
         <>
-          <Result title="Songs" results={tracks}></Result>
-          <Result title="Artists" results={artists}></Result>
-          <Result title="Playlists" results={playlists}></Result>
-          <Result title="Albums" results={albums}></Result>
+          <ListContainer></ListContainer>
         </>
-      )} */}
-      <List
-        items={tracks}
-        getImage={item => item.getImages().default.url}
-        getName={item => item.name}
-        getLabels={item => [item.type, item.getArtists()[0].name]}
-        styles={{ StyledList, StyledItem }}
-        button={"+"}
-      ></List>
+      )}
     </StyledContainer>
   );
 }

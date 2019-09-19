@@ -29,7 +29,9 @@ export default function List(props) {
         <h3>{name}</h3>
         <ul>
           {labels &&
-            labels.map(label => <SubItem key={label} label={label}></SubItem>)}
+            labels.map(label => (
+              <SubItem key={label + name} label={label}></SubItem>
+            ))}
         </ul>
       </div>
 

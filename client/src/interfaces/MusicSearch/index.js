@@ -56,9 +56,9 @@ export default function MusicSearchInterface() {
           results: { albums, tracks, artists, playlists }
         }}
       ></SongList> */}
-      {/* <SongList
+      <SongList
         {...{ results: { albums, tracks, artists, playlists } }}
-      ></SongList> */}
+      ></SongList>
     </StyledContainer>
   );
 }

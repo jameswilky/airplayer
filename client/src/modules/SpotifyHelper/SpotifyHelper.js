@@ -52,6 +52,16 @@ const ItemPrototype = () => {
             ? arrayToObject(fallbackImages)
             : arrayToObject(this.images, ["large", "medium", "small"]);
       }
+    },
+    getLabels: function() {
+      return [
+        this.type,
+        this.type === "playlist"
+          ? this.owner.display_name
+          : this.getArtists()
+          ? this.getArtists()[0].name
+          : null
+      ];
     }
   };
 };
