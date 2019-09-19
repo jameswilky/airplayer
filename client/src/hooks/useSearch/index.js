@@ -39,12 +39,6 @@ export default function useSearch() {
 
     if (query !== "") {
       getQueries(query).then(nextResults => {
-        // console.log(nextResults);
-        // console.log(getNestedProperty("items", nextResults));
-        // console.log(SpotifyHelper(nextResults));
-        // console.log(SpotifyHelper(nextResults).getItems());
-        // setQueryResults(SpotifyHelper(nextResults));
-        // console.log(queryResults);
         setQueryResults(nextResults);
       });
     }

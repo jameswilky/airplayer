@@ -1,12 +1,9 @@
 import React, { useState } from "react";
 
-import SongList from "../../components/SongList2";
+import SongList from "../../components/SongList/";
 import Input from "../../components/Input";
 
 import useSearch from "../../hooks/useSearch/";
-
-// Modules/Utilities
-import SpotifyHelper from "../../modules/SpotifyHelper/SpotifyHelper";
 
 import {
   StyledContainer,
@@ -37,16 +34,16 @@ export default function MusicSearchInterface() {
 
   return (
     <StyledContainer>
-      {/* <StyledSearchBar>
+      <StyledSearchBar>
         <Input value={query} setValue={setQuery}></Input>
         <StyledSearchFilterContainer>
-          <RadioButton text={"Songs"}></RadioButton>
+          <RadioButton text={"Tracks"}></RadioButton>
           <RadioButton text={"Playlists"}></RadioButton>
           <RadioButton text={"Artists"}></RadioButton>
           <RadioButton text={"Albums"}></RadioButton>
         </StyledSearchFilterContainer>
-      </StyledSearchBar> */}
-      {/* <SongList
+      </StyledSearchBar>
+      <SongList
         {...{
           top: "150px",
           query,
@@ -55,9 +52,6 @@ export default function MusicSearchInterface() {
 
           results: { albums, tracks, artists, playlists }
         }}
-      ></SongList> */}
-      <SongList
-        {...{ results: { albums, tracks, artists, playlists } }}
       ></SongList>
     </StyledContainer>
   );

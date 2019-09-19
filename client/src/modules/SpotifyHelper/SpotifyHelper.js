@@ -4,6 +4,8 @@ import {
   arrayToObject
 } from "../../helpers/ObjectUtils";
 
+import { msToMinutes } from "../../helpers/TimeUtils";
+
 const fallbackImages = {
   large: {
     height: 500,
@@ -60,7 +62,7 @@ const ItemPrototype = () => {
           ? this.owner.display_name
           : this.getArtists()
           ? this.getArtists()[0].name
-          : null
+          : null //add duration
       ];
     }
   };
