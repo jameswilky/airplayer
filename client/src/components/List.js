@@ -4,56 +4,25 @@ import styled from "styled-components";
 export default function List(props) {
   const {
     items = [],
-    styles = {},
-    limit = items ? items.length : 1,
-    getImage,
-    getName,
-    getLabels,
-    button
+    Style = styled.ul``,
+    limit = items ? items.length : 1
   } = props;
-  const {
-    StyledList = styled.ul``,
-    StyledItem = styled.li``,
-    StyledSubItem = styled.li``
-  } = styles;
 
-  const SubItem = ({ label }) => (
-    <StyledSubItem>
-      <p>{label}</p>
-    </StyledSubItem>
-  );
-  const Item = ({ src, name, labels }) => (
-    <StyledItem>
-      {src && <img src={src}></img>}
-      <div>
-        <h3>{name}</h3>
-        <ul>
-          {labels &&
-            labels.map((label, i) => (
-              <SubItem key={label} label={label}></SubItem>
-            ))}
-        </ul>
-      </div>
+  const ItemProps = (item, childProps) =>
+    Object.fromEntries(
+      Object.entries(childProps).map(([k, v]) => [k, (v = v(item))])
+    );
 
-      <button>{button ? "+" : ""}</button>
-    </StyledItem>
+  const Items = () => (
+    <Style>
+      {items.slice(0, limit).map((item, i) =>
+        React.cloneElement(props.children, {
+          ...ItemProps(item, props.children.props),
+          key: i
+        })
+      )}
+    </Style>
   );
 
-  const Items = () =>
-    items
-      .slice(0, limit)
-      .map((item, i) => (
-        <Item
-          key={i}
-          src={getImage(item)}
-          name={getName(item)}
-          labels={getLabels(item)}
-        ></Item>
-      ));
-
-  return (
-    <StyledList>
-      <Items></Items>
-    </StyledList>
-  );
+  return <Items></Items>;
 }

@@ -7,12 +7,11 @@ import {
   StyledPlayButton,
   StyledList
 } from "./styles";
-import List from "../List2";
+import List from "../List";
 
 export default function Carousel(props) {
   const { items } = props;
 
-  // TODO Finish List2 and restyle
   const ItemTemplate = ({ src, name, labels }) => {
     return (
       <StyledItemContainer>
