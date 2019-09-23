@@ -7,7 +7,6 @@ import {
   StyledResult
 } from "./styles";
 import List from "../List";
-import uuid from "uuid";
 
 // Modules/Helpers
 

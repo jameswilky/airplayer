@@ -13,7 +13,7 @@ export default function MusicLibraryInterface() {
 
   const [selected, setSelected] = useState("");
 
-  useEffect(() => setQuery(""));
+  useEffect(() => setQuery("tobi"));
 
   return (
     <StyledContainer>

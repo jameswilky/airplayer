@@ -14,7 +14,7 @@ import {
 
 export default function MusicSearchInterface() {
   // Local State
-  const { query, setQuery, queryResults } = useSearch("");
+  const { query, setQuery, queryResults } = useSearch("tobi");
   const { albums, tracks, artists, playlists } = queryResults;
   const [selected, setSelected] = useState("");
 

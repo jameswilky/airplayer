@@ -15,12 +15,13 @@ export default function List(props) {
 
   const Items = () => (
     <Style>
-      {items.slice(0, limit).map((item, i) =>
-        React.cloneElement(props.children, {
-          ...ItemProps(item, props.children.props),
-          key: i
-        })
-      )}
+      {items.length > 0 &&
+        items.slice(0, limit).map((item, i) =>
+          React.cloneElement(props.children, {
+            ...ItemProps(item, props.children.props),
+            key: i
+          })
+        )}
     </Style>
   );
 

@@ -16,8 +16,6 @@ const ImageContainer = styled.div`
 
 const ImageWrapper = styled.div`
   /* Adds fade effect to bottom of image*/
-
-  height: 100%;
   &::before {
     content: "";
     background-image: linear-gradient(
@@ -34,7 +32,7 @@ const ImageWrapper = styled.div`
   &::after {
     content: "";
     display: block;
-    height: 9999px;
+    height: 100vh;
   }
 `;
 const Image = styled.img`
