@@ -23,6 +23,8 @@ export default function SongList(props) {
   const noQuery = query === "";
   const filterOn = selected !== "";
 
+  const ItemTemplate = () => <></>;
+
   const Result = ({ title, result }) =>
     results && (!filterOn || selected === title) ? (
       <StyledResult>
@@ -41,7 +43,9 @@ export default function SongList(props) {
           styles={{ StyledList, StyledItem }}
           button={"+"}
           limit={limit}
-        ></List>
+        >
+          <ItemTemplate></ItemTemplate>
+        </List>
       </StyledResult>
     ) : (
       <></>

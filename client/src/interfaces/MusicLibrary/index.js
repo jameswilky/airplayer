@@ -7,18 +7,13 @@ import Carousel from "../../components/Carousel/";
 
 import useSearch from "../../hooks/useSearch/";
 
-// Modules/Utilities
-import { getNestedProperty } from "../../helpers/ObjectUtils";
-
 export default function MusicLibraryInterface() {
   const { query, setQuery, queryResults } = useSearch("");
-  const { albums, tracks, artists, playlists } = getNestedProperty(
-    "items",
-    queryResults
-  );
+  const { albums, tracks, artists, playlists } = queryResults;
+
   const [selected, setSelected] = useState("");
 
-  useEffect(() => setQuery("tobi"));
+  useEffect(() => setQuery(""));
 
   return (
     <StyledContainer>

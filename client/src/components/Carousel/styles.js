@@ -1,20 +1,23 @@
 import styled from "styled-components";
 
-export const StyledContainer = styled.div`
-  height: 256px;
-  display: grid;
-  overflow: scroll;
-  grid-template-columns: repeat(100, 128px);
-  align-items: center;
-  grid-gap: 20px;
+export const StyledList = styled.ul`
+  display: flex;
   padding: 20px;
+`;
+
+export const StyledContainer = styled.div`
+  height: 196px;
+  overflow: scroll;
+
   scrollbar-width: none;
   ::-webkit-scrollbar {
     width: 0px; /* Remove scrollbar space */
     background: transparent; /* Optional: just make scrollbar invisible */
   }
 `;
-export const StyledItem = styled.div`
+export const StyledItem = styled.li`
+  list-style: none;
+  padding-right: 20px;
   & * {
     padding: 2px;
   }
@@ -30,7 +33,7 @@ export const StyledItem = styled.div`
   }
 `;
 
-export const StyledItemContainer = styled.div`
+export const StyledItemContainer = styled.span`
   position: relative;
 `;
 
