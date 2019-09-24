@@ -1,10 +1,5 @@
 import styled from "styled-components";
 
-export const Container = styled.div`
-  height: calc(100vh - 50px);
-  position: relative;
-`;
-
 export const Chevron = styled.span`
   opacity: 0.7;
   position: absolute;

@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 
-import SongList from "../../components/SongList/";
-import Input from "../../components/Input";
+import SongList from "../../../components/SongList";
+import Input from "../../../components/Input";
 
-import useSearch from "../../hooks/useSearch/";
+import useSearch from "../../../hooks/useSearch";
 
 import {
   StyledContainer,

@@ -8,14 +8,18 @@ export default function List(props) {
     limit = items ? items.length : 1
   } = props;
 
+  console.log(props.children);
   const ItemProps = (item, childProps) =>
     Object.fromEntries(
-      Object.entries(childProps).map(([k, v]) => [k, (v = v(item))])
+      Object.entries(childProps)
+        .filter(prop => prop[0] !== "Style")
+        .map(([k, v]) => [k, (v = v(item))])
     );
 
   const Items = () => (
     <Style>
       {items.length > 0 &&
+        props.children &&
         items.slice(0, limit).map((item, i) =>
           React.cloneElement(props.children, {
             ...ItemProps(item, props.children.props),

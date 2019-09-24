@@ -3,13 +3,13 @@ import {
   StyledContainer,
   StyledChevron,
   StyledList,
-  StyledItem,
   StyledResult
 } from "./styles";
 import List from "../List";
+import ListItem from "../ListItem";
+import StyledListItem from "../../styles/StyledListItem";
 
 // Modules/Helpers
-
 export default function SongList(props) {
   const { albums, tracks, artists, playlists } = props.results;
   const { query, selected, setSelected, limit = 4, results = {} } = props;
@@ -23,18 +23,6 @@ export default function SongList(props) {
   const noQuery = query === "";
   const filterOn = selected !== "";
 
-  const ItemTemplate = ({ src, name, labels }) => (
-    <StyledItem>
-      {src && <img src={src}></img>}
-      <div>
-        <h3>{name}</h3>
-        <ul>{labels && labels.map((label, i) => <p key={i}>{label}</p>)}</ul>
-      </div>
-
-      <button>{"+"}</button>
-    </StyledItem>
-  );
-
   const Result = ({ title, result }) =>
     results && (!filterOn || selected === title) ? (
       <StyledResult>
@@ -46,11 +34,12 @@ export default function SongList(props) {
           onClick={() => setSelected(selected === title ? "" : title)}
         ></StyledChevron>
         <List items={result} Style={StyledList} limit={limit}>
-          <ItemTemplate
+          <ListItem
             src={item => item.getImages().default.url}
             name={item => item.name}
             labels={item => item.getLabels()}
-          ></ItemTemplate>
+            Style={StyledListItem}
+          ></ListItem>
         </List>
       </StyledResult>
     ) : (

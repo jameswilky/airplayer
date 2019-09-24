@@ -1,5 +1,6 @@
 import styled from "styled-components";
-import { Container, Chevron } from "../../globalStyles";
+import { Container } from "../../../styles/Container";
+import { Chevron } from "../../../styles/Chevron";
 
 export const StyledContainer = styled(Container)``;
 

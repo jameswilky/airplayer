@@ -1,10 +1,10 @@
 import React from "react";
-import CurrentTrack from "../../components/CurrentTrack";
-import List from "../../components/List";
-import AudioVisualizer from "../../components/AudioVisualizer";
-import { gameOvaImg } from "../../images";
-import { Container } from "../../globalStyles";
-import useSearch from "../../hooks/useSearch/";
+import CurrentTrack from "../../../components/CurrentTrack";
+import List from "../../../components/List";
+import AudioVisualizer from "../../../components/AudioVisualizer";
+import { gameOvaImg } from "../../../images";
+import { Container } from "../../../styles/Container";
+import useSearch from "../../../hooks/useSearch";
 import { StyledItem, StyledList } from "./styles";
 
 export default function MusicPlayerInterface() {

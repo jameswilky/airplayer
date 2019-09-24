@@ -2,10 +2,10 @@ import React, { useState, useEffect } from "react";
 import { StyledContainer, StyledChevron } from "./styles";
 
 //Components
-import SongList from "../../components/SongList/";
-import Carousel from "../../components/Carousel/";
+import SongList from "../../../components/SongList";
+import Carousel from "../../../components/Carousel";
 
-import useSearch from "../../hooks/useSearch/";
+import useSearch from "../../../hooks/useSearch";
 
 export default function MusicLibraryInterface() {
   const { query, setQuery, queryResults } = useSearch("");
@@ -17,7 +17,7 @@ export default function MusicLibraryInterface() {
 
   return (
     <StyledContainer>
-      <Carousel items={tracks}></Carousel>
+      <Carousel items={tracks} height="196px"></Carousel>
       {selected === "" ? (
         <></>
       ) : (

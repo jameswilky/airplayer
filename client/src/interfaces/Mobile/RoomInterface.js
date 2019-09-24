@@ -1,13 +1,13 @@
 import React, { useEffect } from "react";
 import { Route } from "react-router-dom";
 
-import MusicPlayerInterface from "../interfaces/MusicPlayer";
-import MusicSearchInterface from "../interfaces/MusicSearch";
-import MusicLibraryInterface from "../interfaces/MusicLibrary";
-import Footer from "../components/Footer";
+import MusicPlayerInterface from "./MusicPlayer";
+import MusicSearchInterface from "./MusicSearch";
+import MusicLibraryInterface from "./MusicLibrary";
+import Footer from "../../components/Footer";
 import styled from "styled-components";
 
-import useRoom from "../hooks/useRoom";
+import useRoom from "../../hooks/useRoom";
 
 const Container = styled.div`
   color: whitesmoke;

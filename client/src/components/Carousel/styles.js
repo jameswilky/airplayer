@@ -6,7 +6,7 @@ export const StyledList = styled.ul`
 `;
 
 export const StyledContainer = styled.div`
-  height: 196px;
+  height: ${props => props.height};
   overflow: scroll;
 
   scrollbar-width: none;
@@ -68,7 +68,7 @@ export const StyledOverlay = styled.div`
   display: flex;
 
   &:hover {
-    content: "poo";
+    content: "";
     cursor: pointer;
   }
 `;

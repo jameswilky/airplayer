@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { Chevron } from "../globalStyles";
+import { Chevron } from "../styles/Chevron";
 
 const Container = styled.div`
   /* background-color: "black"; */
@@ -16,6 +16,8 @@ const ImageContainer = styled.div`
 
 const ImageWrapper = styled.div`
   /* Adds fade effect to bottom of image*/
+
+  height: 100%;
   &::before {
     content: "";
     background-image: linear-gradient(
