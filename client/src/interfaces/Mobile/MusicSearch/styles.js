@@ -13,8 +13,9 @@ export const StyledButton = styled.div`
   border: 1px solid grey;
   border-radius: 90px;
   padding: 8px;
-  color: ${props => (props.active ? "black" : "white")};
-  background-color: ${props => (props.active ? "white" : "black")};
+  color: ${props => (props.active ? props.theme.black : props.theme.white)};
+  background-color: ${props =>
+    props.active ? props.theme.white : props.theme.black};
 `;
 
 export const StyledSearchBar = styled.div`
@@ -22,15 +23,15 @@ export const StyledSearchBar = styled.div`
   border-bottom: 2px solid whitesmoke;
   padding: 15px;
   position: fixed;
-  background-color: black;
+  background-color: ${props => props.theme.black};
   & input {
     margin: 0px;
-    background-color: black;
+    background-color: ${props => props.theme.black};
     border: none;
-    border-bottom: 2px solid white;
+    border-bottom: 2px solid ${props => props.theme.white};
     width: 100%;
     height: 60px;
-    color: whitesmoke;
+    color: ${props => props.theme.white};
     font-size: 2rem;
     padding: 5px;
   }

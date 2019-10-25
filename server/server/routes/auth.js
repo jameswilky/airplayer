@@ -18,7 +18,9 @@ module.exports = {
     res.cookie(stateKey, state);
 
     // Provides client with login screen
-    const scope = "user-read-private user-read-email";
+    const scope =
+      "streaming user-read-private user-read-email user-read-playback-state user-modify-playback-state";
+    // "streaming user-read-birthdate user-read-private user-read-email user-read-playback-state user-modify-playback-state";
     res.redirect(
       "https://accounts.spotify.com/authorize?" +
         querystring.stringify({
@@ -38,57 +40,57 @@ module.exports = {
     const state = req.query.state || null;
     const storedState = req.cookies ? req.cookies[stateKey] : null;
 
-    if (state === null || state !== storedState) {
-      res.redirect(
-        FRONTEND_URI +
-          `/auth/callback` +
-          querystring.stringify({
-            error: "state_mismatch"
-          })
-      );
-    } else {
-      res.clearCookie(stateKey);
-      const authOptions = {
-        url: "https://accounts.spotify.com/api/token",
-        form: {
-          code: code,
-          redirect_uri: SPOTIFY_REDIRECT_URI,
-          grant_type: "authorization_code"
-        },
-        headers: {
-          Authorization:
-            "Basic " +
-            new Buffer(
-              SPOTIFY_CLIENT_ID + ":" + SPOTIFY_CLIENT_SECRET
-            ).toString("base64")
-        },
-        json: true
-      };
+    // if (state === null || state !== storedState) {
+    //   res.redirect(
+    //     FRONTEND_URI +
+    //       `/auth/callback` +
+    //       querystring.stringify({
+    //         error: "state_mismatch"
+    //       })
+    //   );
+    // } else {
+    res.clearCookie(stateKey);
+    const authOptions = {
+      url: "https://accounts.spotify.com/api/token",
+      form: {
+        code: code,
+        redirect_uri: SPOTIFY_REDIRECT_URI,
+        grant_type: "authorization_code"
+      },
+      headers: {
+        Authorization:
+          "Basic " +
+          new Buffer(SPOTIFY_CLIENT_ID + ":" + SPOTIFY_CLIENT_SECRET).toString(
+            "base64"
+          )
+      },
+      json: true
+    };
 
-      request.post(authOptions, function(error, response, body) {
-        if (!error && response.statusCode === 200) {
-          const access_token = body.access_token,
-            refresh_token = body.refresh_token;
-          res.redirect(
-            FRONTEND_URI +
-              `/auth/callback/` +
-              "/#" +
-              querystring.stringify({
-                access_token: access_token,
-                refresh_token: refresh_token
-              })
-          );
-        } else {
-          res.redirect(
-            FRONTEND_URI +
-              `/auth/callback` +
-              querystring.stringify({
-                error: "invalid_token"
-              })
-          );
-        }
-      });
-    }
+    request.post(authOptions, function(error, response, body) {
+      if (!error && response.statusCode === 200) {
+        const access_token = body.access_token,
+          refresh_token = body.refresh_token;
+        res.redirect(
+          FRONTEND_URI +
+            `/auth/callback/` +
+            "/#" +
+            querystring.stringify({
+              access_token: access_token,
+              refresh_token: refresh_token
+            })
+        );
+      } else {
+        res.redirect(
+          FRONTEND_URI +
+            `/auth/callback` +
+            querystring.stringify({
+              error: "invalid_token"
+            })
+        );
+      }
+    });
+    // }
   },
   refreshToken: (req, res) => {
     console.log(req.query);

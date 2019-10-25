@@ -9,24 +9,18 @@ import useSearch from "../../hooks/useSearch/";
 const Container = styled.div`
   display: grid;
   height: 100%;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: minmax(350px, 1fr) 1fr;
   grid-template-rows: 1fr 2fr;
   grid-gap: 15px;
   padding: 15px;
 `;
 
 const CarouselContainer = styled.div`
-  border: 1px solid black;
   grid-column: span 2;
 `;
 const RoomPlaylist = styled.div`
-  border: 1px solid black;
   overflow-y: scroll;
   padding: 10px;
-`;
-const RoomMemberList = styled.div`
-  border: 1px solid black;
-  overflow-y: scroll;
 `;
 
 export default function DesktopHomeInterface() {
@@ -46,7 +40,6 @@ export default function DesktopHomeInterface() {
           ></ListItem>
         </List>
       </RoomPlaylist>
-      <RoomMemberList></RoomMemberList>
     </Container>
   );
 }

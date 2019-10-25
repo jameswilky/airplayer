@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 export const StyledList = styled.ul`
-  background-color: black;
+  background-color: ${props => props.theme.black};
   padding: 20px 20px 50px 20px;
 `;
 
