@@ -8,7 +8,6 @@ export default function List(props) {
     limit = items ? items.length : 1
   } = props;
 
-  console.log(props.children);
   const ItemProps = (item, childProps) =>
     Object.fromEntries(
       Object.entries(childProps)

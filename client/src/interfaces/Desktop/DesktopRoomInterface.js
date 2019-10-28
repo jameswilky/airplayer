@@ -1,11 +1,12 @@
-import React from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
 import DesktopHomeInterface from "./DesktopHomeInterface";
 import { useSelector } from "react-redux";
 import useSearch from "../../hooks/useSearch/";
 import SpotifyPlayer from "react-spotify-web-playback";
 import theme from "../../theme";
-import usePlayer from "../../hooks/usePlayer";
+
+import useRoom from "../../hooks/useRoom";
 
 const Container = styled.div`
   display: grid;
@@ -13,7 +14,6 @@ const Container = styled.div`
   color: ${props => props.theme.white};
   grid-template-columns: 160px 1fr;
   grid-template-rows: 40px calc(100vh - 120px) 80px;
-  background: #ffafbd;
   background: linear-gradient(to top, #ffc3a0, #ffafbd);
 `;
 const Header = styled.header`
@@ -23,7 +23,7 @@ const Header = styled.header`
 const Sidebar = styled.nav`
   grid-row: span 2;
   padding: 10px;
-  background-color: ${props => props.theme.lightestGray};
+  background-color: ${props => props.theme.tranparent1};
 `;
 
 const Main = styled.main``;
@@ -35,9 +35,56 @@ const Footer = styled.footer`
   height: 100%;
 `;
 
+// NOTE
+// For whatever reason, spotify web player requires atleast 3 tracks in a playlist
+
+// Adding tracks manually will trigger a state update
+// therefore, we will need to create a spotify playlist and then update that
 export default function DesktopRoomInterface() {
   const accessToken = useSelector(state => state.auth.accessToken);
   const { queryResults } = useSearch();
+
+  const room = useRoom();
+
+  const {
+    controller: { joinRoom, addTrack, removeTrack }
+  } = room;
+
+  useEffect(() => {
+    joinRoom("5d47d90a191f0f30a0d73414");
+  }, []);
+
+  const [playlist, setPlaylist] = useState({
+    tracks: null,
+    update: false
+  });
+
+  useEffect(() => {
+    if (playlist.tracks == null) {
+      if (room && room.state && room.state.playlist) {
+        setPlaylist({
+          ...playlist,
+          tracks: room.state.playlist.map(track => track.trackId)
+        });
+      }
+    } else {
+      if (playlist.update) {
+        setPlaylist({
+          ...playlist,
+          tracks: room.state.playlist
+            .map(track => track.trackId)
+            .filter(
+              (track, i) =>
+                i >=
+                Math.abs(room.state.playlist.length - playlist.tracks.length)
+            ),
+          update: false
+        });
+      }
+    }
+  });
+
+  console.log(playlist.tracks, room.state.playlist);
   return (
     <Container>
       <Sidebar>
@@ -51,7 +98,27 @@ export default function DesktopRoomInterface() {
           <li>Search Fav tracks</li>
         </ul>
       </Sidebar>
-      <Header>Search Bar || Login</Header>
+      <Header>
+        Search Bar || Login
+        <button onClick={() => addTrack(queryResults.tracks[0].uri)}>
+          add track1
+        </button>
+        <button onClick={() => addTrack(queryResults.tracks[1].uri)}>
+          add track2
+        </button>{" "}
+        <button onClick={() => addTrack(queryResults.tracks[2].uri)}>
+          add track3
+        </button>
+        <button onClick={() => removeTrack(queryResults.tracks[0].uri)}>
+          remove track1
+        </button>
+        <button onClick={() => removeTrack(queryResults.tracks[1].uri)}>
+          remove track2
+        </button>{" "}
+        <button onClick={() => removeTrack(queryResults.tracks[2].uri)}>
+          remove track3
+        </button>
+      </Header>
       <Main>
         {/* Depends on Route*/}
         <DesktopHomeInterface></DesktopHomeInterface>
@@ -60,10 +127,13 @@ export default function DesktopRoomInterface() {
         {accessToken && (
           <SpotifyPlayer
             token={accessToken}
-            uris={
-              queryResults.tracks &&
-              queryResults.tracks.map(result => result.uri)
-            }
+            callback={state => {
+              console.log(state);
+              if (state && state.type == "track_update") {
+                setPlaylist({ ...playlist, update: true });
+              }
+            }}
+            uris={playlist.tracks}
             styles={{
               height: `80px`,
               bgColor: theme.white,
@@ -73,6 +143,7 @@ export default function DesktopRoomInterface() {
               trackArtistColor: theme.darkGray,
               trackNameColor: theme.black
             }}
+            persistDeviceSelection={true}
           ></SpotifyPlayer>
         )}
       </Footer>

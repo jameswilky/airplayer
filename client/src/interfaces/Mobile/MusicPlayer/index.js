@@ -10,7 +10,6 @@ import { StyledItem, StyledList } from "./styles";
 export default function MusicPlayerInterface() {
   const { query, setQuery, queryResults } = useSearch("");
   const { albums, tracks, artists, playlists } = queryResults;
-  console.log(tracks);
 
   const ItemTemplate = ({ src, name, labels }) => (
     <StyledItem>

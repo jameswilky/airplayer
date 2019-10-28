@@ -6,7 +6,6 @@ import { useSelector } from "react-redux";
 export default function Home(props) {
   const { login, logout } = Auth;
   const auth = useSelector(state => state.auth);
-  console.log(auth);
   return (
     <>
       <h2>Search for parties in your area</h2>

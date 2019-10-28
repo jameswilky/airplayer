@@ -64,7 +64,6 @@ module.exports = function(io, interval = null) {
           // This will require a spotify user ID and will return a token that will be assigned to the host
           Object.assign(host, { token: token });
           Object.assign(state, nextState);
-
           const payload = { token: host.token, roomId: state.id };
           socket.emit("ROOM_CREATED", payload);
         }
@@ -77,6 +76,8 @@ module.exports = function(io, interval = null) {
        * @param {obj} room {id,name,playlist,subscribers,currentSong}
        */
       // todo add check to validate input is a room object
+
+      console.log(id);
       const nextState = await getRoom(id);
       if (!nextState) {
         socket.emit("ERROR", `join attempt failed, room not found`);
@@ -114,15 +115,16 @@ module.exports = function(io, interval = null) {
       socket.on(event, data => {
         console.log(socket.id + " attempted to " + event);
 
-        if (!data || !data.hasOwnProperty("token")) {
-          socket.emit(
-            "ERROR",
-            `${event} requires authorization, please provide a token.`
-          );
-          return;
-        }
-        const isAHost = data.token === host.token;
-
+        // TODO un comment this after to get authentication working
+        // if (!data || !data.hasOwnProperty("token")) {
+        //   socket.emit(
+        //     "ERROR",
+        //     `${event} requires authorization, please provide a token.`
+        //   );
+        //   return;
+        // }
+        // const isAHost = data.token === host.token;
+        const isAHost = true;
         if (inARoom(socket)) {
           if (isAHost) {
             handleEvent(event, data);

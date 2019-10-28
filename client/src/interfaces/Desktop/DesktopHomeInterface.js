@@ -18,9 +18,15 @@ const Container = styled.div`
 const CarouselContainer = styled.div`
   grid-column: span 2;
 `;
+
 const RoomPlaylist = styled.div`
+  & > h2 {
+    margin-bottom: 15px;
+  }
   overflow-y: scroll;
-  padding: 10px;
+
+  padding: 10px 10px 10px 10px;
+  background-color: ${props => props.theme.lightestGray};
 `;
 
 export default function DesktopHomeInterface() {
@@ -28,9 +34,11 @@ export default function DesktopHomeInterface() {
   return (
     <Container>
       <CarouselContainer>
+        <h2>Recommended for you</h2>
         <Carousel items={queryResults.tracks}></Carousel>
       </CarouselContainer>
       <RoomPlaylist>
+        <h2>What's up Next</h2>
         <List items={queryResults.tracks}>
           <ListItem
             Style={StyledListItem} // TODO fix
@@ -39,6 +47,9 @@ export default function DesktopHomeInterface() {
             labels={item => item.getLabels()}
           ></ListItem>
         </List>
+      </RoomPlaylist>
+      <RoomPlaylist>
+        <h2>Room Members</h2>
       </RoomPlaylist>
     </Container>
   );

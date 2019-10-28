@@ -26,6 +26,7 @@ export default function useRoom() {
   });
 
   useEffect(() => {
+    socket.on("ROOM_CREATED", payload => console.log(payload));
     socket.on("ROOM_UPDATED", nextRoomState => {
       setRoom({
         ...room,
@@ -34,7 +35,7 @@ export default function useRoom() {
       });
     });
     socket.on("ERROR", err => setRoom({ ...room, error: err }));
-  });
+  }, [room.state]);
 
   return room;
 }
