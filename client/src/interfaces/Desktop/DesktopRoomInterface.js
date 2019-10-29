@@ -91,7 +91,15 @@ export default function DesktopRoomInterface() {
       </Main>
       <Footer>
         {accessToken && (
-          <SpotifyWebplayer token={accessToken}></SpotifyWebplayer>
+          <SpotifyWebplayer
+            token={accessToken}
+            tracks={
+              room &&
+              room.state &&
+              room.state.playlist &&
+              room.state.playlist.map(track => track.trackId)
+            }
+          ></SpotifyWebplayer>
         )}
       </Footer>
     </Container>

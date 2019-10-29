@@ -1,41 +1,20 @@
-const SpotifyWebplayer = (accessToken, Player) => {
+const SpotifyWebplayer = (accessToken, device_id) => {
   const token = accessToken;
-  // const deviceId = deviceId;
+  const deviceId = device_id;
 
-  const player = new Player({
-    name: "Web Playback SDK Quick Start Player",
-    getOAuthToken: cb => {
-      cb(token);
-    }
-  });
-
-  return Object.assign(player, {
-    deviceId: null,
-    deviceReady: false,
-    setDevice: function(id) {
-      if (this.deviceId == null) {
-        this.deviceId = id;
-        this.deviceReady = true;
-      } else {
-        console.log("Device already selected");
+  const play = track =>
+    fetch(`https://api.spotify.com/v1/me/player/play?device_id=${deviceId}`, {
+      method: "PUT",
+      body: JSON.stringify({
+        uris: [track]
+      }),
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`
       }
-    },
-    play: function(track) {
-      fetch(
-        `https://api.spotify.com/v1/me/player/play?device_id=${this.deviceId}`,
-        {
-          method: "PUT",
-          body: JSON.stringify({
-            uris: [track]
-          }),
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`
-          }
-        }
-      );
-    }
-  });
+    });
+
+  return { play };
 };
 
 export default SpotifyWebplayer;

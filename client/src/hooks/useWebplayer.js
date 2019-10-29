@@ -1,11 +1,25 @@
 import React, { useEffect, useState } from "react";
 import SpotifyWebplayer from "../modules/SpotifyWebplayer/SpotifyWebplayer";
 
-export default function useWebplayer(token) {
+export default function useWebplayer(token, tracks) {
+  const [deviceId, setDeviceId] = useState(null);
   const [player, setPlayer] = useState();
+  const [playlist, setPlaylist] = useState([]);
+  const [changeTrack, setChangeTrack] = useState(false);
+
+  useEffect(() => {
+    setPlaylist(tracks);
+  }, [tracks]);
   useEffect(() => {
     window.onSpotifyWebPlaybackSDKReady = () => {
-      const player = SpotifyWebplayer(token, window.Spotify.Player);
+      const player = new window.Spotify.Player({
+        name: "Web Playback SDK Quick Start Player",
+        getOAuthToken: cb => {
+          cb(token);
+        }
+      });
+
+      setPlayer(player);
 
       // Error handling
       player.addListener("initialization_error", ({ message }) => {
@@ -22,13 +36,15 @@ export default function useWebplayer(token) {
       });
       // Playback status updates
       player.addListener("player_state_changed", state => {
-        console.log(state);
+        if (state.paused == true && state.position == 0) {
+          setChangeTrack(changeTrack ? false : true);
+          console.log("finished?");
+        }
       });
 
       // Ready
       player.addListener("ready", ({ device_id }) => {
-        player.setDevice(device_id);
-        setPlayer(player);
+        setDeviceId(device_id);
         console.log("Ready with Device ID", device_id);
       });
 
@@ -42,5 +58,5 @@ export default function useWebplayer(token) {
     };
   }, []);
 
-  return { player };
+  return { player, deviceId, playlist, changeTrack };
 }
