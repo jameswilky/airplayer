@@ -1,34 +1,16 @@
 import React, { useState, useEffect } from "react";
-import useWebplayer from "../../hooks/useWebplayer";
 import Script from "react-load-script";
 import styled from "styled-components";
+import useWebplayer from "../../hooks/useWebplayer";
 
-export default function SpotifyWebplayer({ token, tracks }) {
-  const { player, deviceId, playlist, changeTrack } = useWebplayer(
-    token,
-    tracks
-  );
+// This component should send commands to the server to update the room state,
+// it should not directly control the player
+export default function SpotifyWebplayer({ token, room }) {
   const [scriptState, setScriptState] = useState({
     error: false
   });
 
-  const play = track =>
-    fetch(`https://api.spotify.com/v1/me/player/play?device_id=${deviceId}`, {
-      method: "PUT",
-      body: JSON.stringify({
-        uris: [track]
-      }),
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`
-      }
-    });
-
-  useEffect(() => {
-    if (deviceId) {
-      play(playlist[1]);
-    }
-  }, [changeTrack]);
+  const { deviceId, player } = useWebplayer(token, room);
 
   const playerReady = deviceId !== null;
   const AudioPlayer = styled.div``;
@@ -41,12 +23,14 @@ export default function SpotifyWebplayer({ token, tracks }) {
         onError={() => setScriptState({ ...scriptState, error: true })}
         onLoad={() => setScriptState({ ...scriptState, loaded: true })}
       ></Script>
-      {scriptState.loaded && playerReady && playlist ? (
+      {scriptState.loaded && playerReady ? (
         <AudioPlayer>
           loaded
-          <button onClick={() => play(playlist[0])}>Play</button> {/*Temp*/}
-          <button onClick={() => player.resume()}>resume</button>
-          <button onClick={() => player.pause()}>Pause</button>
+          <button onClick={() => room.controller.play(room.state.playlist[0])}>
+            Play
+          </button>
+          <button onClick={() => {}}>Resume</button>
+          <button onClick={() => {}}>Pause</button>
           <button
             onClick={() => {
               player.getCurrentState().then(state => {

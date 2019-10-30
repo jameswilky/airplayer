@@ -3,6 +3,7 @@ import styled from "styled-components";
 import DesktopHomeInterface from "./DesktopHomeInterface";
 import { useSelector } from "react-redux";
 import useSearch from "../../hooks/useSearch/";
+
 import theme from "../../theme";
 
 import SpotifyWebplayer from "../../components/SpotifyWebplayer/SpotifyWebplayer";
@@ -44,7 +45,6 @@ export default function DesktopRoomInterface() {
   const {
     controller: { joinRoom, addTrack, removeTrack }
   } = room;
-
   useEffect(() => {
     joinRoom("5d47d90a191f0f30a0d73414");
   }, []);
@@ -90,16 +90,8 @@ export default function DesktopRoomInterface() {
         ></DesktopHomeInterface>
       </Main>
       <Footer>
-        {accessToken && (
-          <SpotifyWebplayer
-            token={accessToken}
-            tracks={
-              room &&
-              room.state &&
-              room.state.playlist &&
-              room.state.playlist.map(track => track.trackId)
-            }
-          ></SpotifyWebplayer>
+        {accessToken && room.state && room.state.currentSong && (
+          <SpotifyWebplayer token={accessToken} room={room}></SpotifyWebplayer>
         )}
       </Footer>
     </Container>
