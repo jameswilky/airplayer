@@ -34,12 +34,17 @@ export default function SpotifyWebplayer({ token, room }) {
             onClick={() => {
               player.getCurrentState().then(state => {
                 if (state) {
-                  player.seek(state.duration - 10000);
+                  player.seek(state.duration - 15000);
                 }
               });
             }}
           >
             skipToend
+          </button>
+          <button
+            onClick={() => room.controller.play(room.state.playlist[1].trackId)}
+          >
+            play track 2
           </button>
         </AudioPlayer>
       ) : (

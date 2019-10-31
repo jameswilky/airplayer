@@ -2,8 +2,6 @@ import React, { useEffect, useState, useReducer, useCallback } from "react";
 
 const deviceReducer = (state, action) => {
   switch (action.type) {
-    case "SET_TRACK_FINISHED":
-      return { ...state, trackFinished: action.payload };
     case "SET_DEVICE":
       return {
         ...state,
@@ -16,27 +14,47 @@ const deviceReducer = (state, action) => {
       return {
         ...state,
         currentSong: roomState.currentSong.trackId,
-        paused: !roomState.currentSong.playing
+        paused: !roomState.currentSong.playing,
+        playlist: roomState.playlist.map(track => track.trackId)
       };
     }
     default:
       return state;
   }
 };
+
 // This webplayer will control the player by reading state from the room
 export default function useWebplayer(token, room) {
   const [player, setPlayer] = useState();
   const [loadScript, setLoadScript] = useState(false);
 
+  const [trackFinished, setTrackFinished] = useState(false);
+
   const [deviceState, dispatch] = useReducer(deviceReducer, {
     id: null,
     currentSong: null,
     paused: false,
-    trackFinished: false,
-    ready: false
+    ready: false,
+    playlist: []
   });
 
-  const autoplay = true;
+  useEffect(() => {
+    if (trackFinished == true) {
+      if (queNextTrack()) {
+        setTrackFinished(false);
+      }
+    }
+  }, [trackFinished]);
+
+  const queNextTrack = useCallback(() => {
+    const nextSongIndex = deviceState.playlist.indexOf(deviceState.currentSong);
+    const nextSong = deviceState.playlist[nextSongIndex + 1];
+
+    if (nextSong) {
+      room.controller.play(nextSong);
+      return true;
+    } else return false;
+  }, [deviceState]);
 
   const play = useCallback(
     async track =>
@@ -111,20 +129,21 @@ export default function useWebplayer(token, room) {
       });
 
       // Playback status updates
+      let timeStamp = Date.now();
+
       player.addListener("player_state_changed", state => {
         if (state.paused == true && state.position == 0) {
-          console.log(state);
-          const nextSongIndex =
-            room.state.playlist.findIndex(
-              track => track.trackId === room.state.currentSong.trackId
-            ) + 1;
+          // Hacky way to make sure the event doesnt trigger end of track
+          // too many times
 
-          const nextSong = room.state.playlist[nextSongIndex];
-          console.log(nextSong);
-
-          if (nextSong) {
-            room.controller.play(nextSong.trackId);
+          if (timeStamp > 0) {
+            setTrackFinished(true);
           }
+
+          timeStamp -= state.timestamp;
+          setTimeout(() => {
+            timeStamp = Date.now();
+          }, 1000);
         }
       });
 
