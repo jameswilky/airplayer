@@ -10,27 +10,26 @@ export default function SpotifyWebplayer({ token, room }) {
     error: false
   });
 
-  const { deviceId, player } = useWebplayer(token, room);
+  const { loadScript, player, deviceState } = useWebplayer(token, room);
 
-  const playerReady = deviceId !== null;
+  // const playerReady = deviceId !== null;
   const AudioPlayer = styled.div``;
   const Spinner = styled.div``;
 
   return (
     <>
-      <Script
-        url="https://sdk.scdn.co/spotify-player.js"
-        onError={() => setScriptState({ ...scriptState, error: true })}
-        onLoad={() => setScriptState({ ...scriptState, loaded: true })}
-      ></Script>
-      {scriptState.loaded && playerReady ? (
+      {loadScript && (
+        <Script
+          url="https://sdk.scdn.co/spotify-player.js"
+          onError={() => setScriptState({ ...scriptState, error: true })}
+          onLoad={() => {
+            setScriptState({ ...scriptState, loaded: true });
+          }}
+        ></Script>
+      )}
+
+      {deviceState.ready ? (
         <AudioPlayer>
-          loaded
-          <button onClick={() => room.controller.play(room.state.playlist[0])}>
-            Play
-          </button>
-          <button onClick={() => {}}>Resume</button>
-          <button onClick={() => {}}>Pause</button>
           <button
             onClick={() => {
               player.getCurrentState().then(state => {
