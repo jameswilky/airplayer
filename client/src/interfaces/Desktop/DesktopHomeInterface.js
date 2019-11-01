@@ -30,15 +30,16 @@ const RoomPlaylist = styled.div`
   background-color: ${props => props.theme.lightestGray};
 `;
 
-export default function DesktopHomeInterface(room) {
+export default function DesktopHomeInterface({ room }) {
   const { queryResults } = useSearch();
   const { roomTracks } = useRoomTracks(room);
 
+  const play = (e, item) => room.controller.play(item.uri);
   return (
     <Container>
       <CarouselContainer>
         <h2>Recommended for you</h2>
-        <Carousel items={queryResults.tracks}></Carousel>
+        {/* <Carousel items={queryResults.tracks}></Carousel> */}
       </CarouselContainer>
       <RoomPlaylist>
         <h2>What's up Next</h2>
@@ -50,6 +51,7 @@ export default function DesktopHomeInterface(room) {
               name={item => item.name}
               labels={item => item.getLabels()}
               selected={item => item.uri == roomTracks.currentSong.uri}
+              onClick={play}
             ></ListItem>
           </List>
         )}

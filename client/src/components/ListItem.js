@@ -6,7 +6,8 @@ export default function ListItem({
   name,
   labels,
   Style = styled.li``,
-  selected
+  selected = false,
+  onClick = () => {}
 }) {
   const Labels = () => (
     <ul>
@@ -16,9 +17,8 @@ export default function ListItem({
     </ul>
   );
 
-  // console.log(selected, name);
   return (
-    <Style selected={selected}>
+    <Style selected={selected} onClick={(e, item) => onClick(e, item)}>
       {src && <img src={src}></img>}
       <div>
         <h3>{name}</h3>

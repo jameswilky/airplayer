@@ -3,7 +3,7 @@ import Spotify from "../modules/Spotify";
 import { useSelector } from "react-redux";
 import { ItemPrototype } from "../modules/SpotifyHelper/SpotifyHelper";
 
-export default function useRoomTracks({ room }) {
+export default function useRoomTracks(room) {
   // Store Access
   const accessToken = useSelector(state => state.auth.accessToken);
   // Local State

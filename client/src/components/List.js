@@ -8,23 +8,29 @@ export default function List(props) {
     limit = items ? items.length : 1
   } = props;
 
-  const ItemProps = (item, childProps) =>
-    Object.fromEntries(
+  const ItemProps = function(item, childProps) {
+    return Object.fromEntries(
       Object.entries(childProps)
-        .filter(prop => prop[0] !== "Style")
-        .map(([k, v]) => [k, (v = v(item))])
+        .filter(([propName]) => propName !== "Style")
+        .map(([propName, callback]) => {
+          const handler = callback;
+          return propName !== "onClick"
+            ? [propName, (callback = handler(item))]
+            : [propName, (callback = e => handler(e, item))];
+        })
     );
+  };
 
   const Items = () => (
     <Style>
       {items.length > 0 &&
         props.children &&
-        items.slice(0, limit).map((item, i) =>
-          React.cloneElement(props.children, {
+        items.slice(0, limit).map((item, i) => {
+          return React.cloneElement(props.children, {
             ...ItemProps(item, props.children.props),
             key: i
-          })
-        )}
+          });
+        })}
     </Style>
   );
 
