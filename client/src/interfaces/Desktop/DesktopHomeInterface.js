@@ -31,6 +31,7 @@ const RoomPlaylist = styled.div`
 
 export default function DesktopHomeInterface() {
   const { query, setQuery, queryResults } = useSearch();
+
   return (
     <Container>
       <CarouselContainer>

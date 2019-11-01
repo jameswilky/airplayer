@@ -38,6 +38,7 @@ export default function useWebplayer(token, room) {
     playlist: []
   });
 
+  // When a track ends, que the next track
   useEffect(() => {
     if (trackFinished == true) {
       if (queNextTrack()) {
@@ -82,7 +83,7 @@ export default function useWebplayer(token, room) {
   // play the currently loaded track
   useEffect(() => {
     if (deviceState.ready && deviceState.currentSong) {
-      play(deviceState.currentSong);
+      // play(deviceState.currentSong);
     }
   }, [deviceState.ready, deviceState.currentSong]);
 
@@ -134,8 +135,7 @@ export default function useWebplayer(token, room) {
       player.addListener("player_state_changed", state => {
         if (state.paused == true && state.position == 0) {
           // Hacky way to make sure the event doesnt trigger end of track
-          // too many times
-
+          // too many times, event is triggering multiple times for some reason
           if (timeStamp > 0) {
             setTrackFinished(true);
           }
