@@ -85,9 +85,7 @@ export default function DesktopRoomInterface() {
       </Header>
       <Main>
         {/* Depends on Route*/}
-        <DesktopHomeInterface
-          tracks={room.state.playlist}
-        ></DesktopHomeInterface>
+        <DesktopHomeInterface room={room}></DesktopHomeInterface>
       </Main>
       <Footer>
         {accessToken && room.state && room.state.currentSong && (

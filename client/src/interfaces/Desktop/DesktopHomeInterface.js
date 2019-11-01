@@ -5,6 +5,7 @@ import List from "../../components/List";
 import ListItem from "../../components/ListItem";
 import StyledListItem from "../../styles/StyledListItem";
 import useSearch from "../../hooks/useSearch/";
+import useRoomTracks from "../../hooks/useRoomTracks";
 
 const Container = styled.div`
   display: grid;
@@ -29,8 +30,9 @@ const RoomPlaylist = styled.div`
   background-color: ${props => props.theme.lightestGray};
 `;
 
-export default function DesktopHomeInterface() {
-  const { query, setQuery, queryResults } = useSearch();
+export default function DesktopHomeInterface(room) {
+  const { queryResults } = useSearch();
+  useRoomTracks(room);
 
   return (
     <Container>

@@ -8,10 +8,7 @@ export default function useSearch() {
   // Store Access
   const accessToken = useSelector(state => state.auth.accessToken);
   // Local State
-
-  const queryTypes = ["find", "search"];
-  const [query, setQuery] = useState({ input: "", queryType: "" });
-
+  const [query, setQuery] = useState("tobi");
   const [queryResults, setQueryResults] = useState({
     tracks: {},
     artists: {},
