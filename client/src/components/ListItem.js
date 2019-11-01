@@ -18,7 +18,7 @@ export default function ListItem({
   );
 
   return (
-    <Style selected={selected} onClick={(e, item) => onClick(e, item)}>
+    <Style selected={selected} onClick={(e, item) => onClick(e, item)} on>
       {src && <img src={src}></img>}
       <div>
         <h3>{name}</h3>

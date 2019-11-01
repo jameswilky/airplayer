@@ -1,7 +1,9 @@
 export default {
+  // Light
   primary: "#ffafbd",
   secondary: "#ffc3a0",
   black: `rgba(25, 25, 25, 1)`,
+
   darkestGray: `rgba(35, 35, 35, 1)`,
   darkerGray: `rgba(60, 60, 60, 1)`,
   darkGray: `rgba(120, 120, 120, 1)`,

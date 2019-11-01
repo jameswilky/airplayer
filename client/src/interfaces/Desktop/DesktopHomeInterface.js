@@ -34,12 +34,14 @@ export default function DesktopHomeInterface({ room }) {
   const { queryResults } = useSearch();
   const { roomTracks } = useRoomTracks(room);
 
-  const play = (e, item) => room.controller.play(item.uri);
+  const play = (e, item) => {
+    room.controller.play(item.uri);
+  };
   return (
     <Container>
       <CarouselContainer>
         <h2>Recommended for you</h2>
-        {/* <Carousel items={queryResults.tracks}></Carousel> */}
+        <Carousel items={queryResults.tracks}></Carousel>
       </CarouselContainer>
       <RoomPlaylist>
         <h2>What's up Next</h2>
