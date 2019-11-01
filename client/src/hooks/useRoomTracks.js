@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import Spotify from "../modules/Spotify";
 import { useSelector } from "react-redux";
+import { ItemPrototype } from "../modules/SpotifyHelper/SpotifyHelper";
 
 export default function useRoomTracks({ room }) {
   // Store Access
@@ -14,7 +15,6 @@ export default function useRoomTracks({ room }) {
   });
   const spotify = Spotify(accessToken);
 
-  console.log(roomTracks);
   useEffect(() => {
     if (room.state.currentSong && room.state.playlist) {
       const currentSongPromise = spotify.find({
@@ -28,7 +28,15 @@ export default function useRoomTracks({ room }) {
         )
       );
       Promise.all([currentSongPromise, playlistPromise]).then(
-        ([currentSong, playlist]) => setRoomTracks({ currentSong, playlist })
+        ([currentSong, playlist]) => {
+          Reflect.setPrototypeOf(currentSong, ItemPrototype());
+
+          playlist.map(track => Reflect.setPrototypeOf(track, ItemPrototype()));
+          setRoomTracks({
+            currentSong,
+            playlist
+          });
+        }
       );
     }
   }, [room.state]);

@@ -32,7 +32,7 @@ const RoomPlaylist = styled.div`
 
 export default function DesktopHomeInterface(room) {
   const { queryResults } = useSearch();
-  useRoomTracks(room);
+  const { roomTracks } = useRoomTracks(room);
 
   return (
     <Container>
@@ -42,14 +42,17 @@ export default function DesktopHomeInterface(room) {
       </CarouselContainer>
       <RoomPlaylist>
         <h2>What's up Next</h2>
-        <List items={queryResults.tracks}>
-          <ListItem
-            Style={StyledListItem} // TODO fix
-            src={item => item.getImages().default.url}
-            name={item => item.name}
-            labels={item => item.getLabels()}
-          ></ListItem>
-        </List>
+        {roomTracks.playlist && (
+          <List items={roomTracks.playlist}>
+            <ListItem
+              Style={StyledListItem} // TODO fix
+              src={item => item.getImages().default.url}
+              name={item => item.name}
+              labels={item => item.getLabels()}
+              selected={item => item.uri == roomTracks.currentSong.uri}
+            ></ListItem>
+          </List>
+        )}
       </RoomPlaylist>
       <RoomPlaylist>
         <h2>Room Members</h2>

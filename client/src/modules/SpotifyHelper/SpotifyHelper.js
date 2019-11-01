@@ -80,3 +80,5 @@ export default function SpotifyHelper(obj) {
     }
   });
 }
+
+export { ItemPrototype };

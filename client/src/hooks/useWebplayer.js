@@ -83,7 +83,7 @@ export default function useWebplayer(token, room) {
   // play the currently loaded track
   useEffect(() => {
     if (deviceState.ready && deviceState.currentSong) {
-      // play(deviceState.currentSong);
+      play(deviceState.currentSong);
     }
   }, [deviceState.ready, deviceState.currentSong]);
 

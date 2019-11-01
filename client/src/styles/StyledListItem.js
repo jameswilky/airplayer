@@ -1,10 +1,12 @@
 import styled from "styled-components";
 
 export default styled.li`
+  background-color: ${props =>
+    props.selected ? props.theme.transparent3 : ""};
   font-size: 0.8rem;
   display: grid;
   grid-template-columns: 48px 1fr 48px;
-  padding-bottom: 15px;
+  margin-bottom: 15px;
   align-items: center;
   width: 100%;
   & img {
