@@ -16,7 +16,7 @@ const Container = styled.div`
   color: ${props => props.theme.white};
   grid-template-columns: 160px 1fr;
   grid-template-rows: 40px calc(100vh - 120px) 80px;
-  background: linear-gradient(to top, #ffc3a0, #e696a4, #ffafbd);
+  background: ${props => props.theme.gradient};
 `;
 const Header = styled.header`
   padding: 10px;

@@ -37,6 +37,7 @@ export default function DesktopHomeInterface({ room }) {
   const play = (e, item) => {
     room.controller.play(item.uri);
   };
+
   return (
     <Container>
       <CarouselContainer>

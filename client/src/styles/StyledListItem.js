@@ -5,7 +5,7 @@ export default styled.li`
     props.selected ? props.theme.transparent2 : ""};
   font-size: 0.8rem;
   display: grid;
-  grid-template-columns: 48px 1fr 48px;
+  grid-template-columns: 48px 1fr ${props => (props.button ? "100px" : "48px")};
   margin-bottom: 15px;
   align-items: center;
   width: 100%;

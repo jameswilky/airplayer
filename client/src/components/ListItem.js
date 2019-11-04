@@ -7,7 +7,8 @@ export default function ListItem({
   labels,
   Style = styled.li``,
   selected = false,
-  onClick = () => {}
+  onClick = () => {},
+  button = <></>
 }) {
   const Labels = () => (
     <ul>
@@ -18,14 +19,19 @@ export default function ListItem({
   );
 
   return (
-    <Style selected={selected} onClick={(e, item) => onClick(e, item)} on>
+    <Style
+      selected={selected}
+      button={button}
+      onClick={(e, item) => onClick(e, item)}
+      on
+    >
       {src && <img src={src}></img>}
       <div>
         <h3>{name}</h3>
         {labels && <Labels></Labels>}
       </div>
 
-      <button>{"+"}</button>
+      {button}
     </Style>
   );
 }

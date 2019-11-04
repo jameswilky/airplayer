@@ -4,10 +4,10 @@ import SongList from "../../../components/SongList";
 import Input from "../../../components/Input";
 
 import useSearch from "../../../hooks/useSearch";
+import StyledSearchBar from "../../../styles/StyledSearchBar";
 
 import {
   StyledContainer,
-  StyledSearchBar,
   StyledSearchFilterContainer,
   StyledButton
 } from "./styles";
