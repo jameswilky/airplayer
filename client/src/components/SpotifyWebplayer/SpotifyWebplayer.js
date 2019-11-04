@@ -2,19 +2,40 @@ import React, { useState, useEffect } from "react";
 import Script from "react-load-script";
 import styled from "styled-components";
 import useWebplayer from "../../hooks/useWebplayer";
+import Loader from "react-loader-spinner";
+import theme from "../../theme";
 
-// This component should send commands to the server to update the room state,
-// it should not directly control the player
+const AudioPlayer = styled.div`
+  background-color: ${props => props.theme.white};
+  height: 100%;
+  color: ${props => props.theme.black};
+  display: grid;
+  width: 100%;
+  grid-template-rows: 10px 1fr;
+`;
+
+const Body = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;
+
+  & div {
+    border: 2px solid black;
+  }
+`;
+const Spinner = styled(Loader)`
+  padding-top: 5px;
+  text-align: center;
+  background-color: ${props => props.theme.white};
+`;
+
+const Slider = styled.div``;
+
 export default function SpotifyWebplayer({ token, room }) {
   const [scriptState, setScriptState] = useState({
     error: false
   });
 
   const { loadScript, player, deviceState } = useWebplayer(token, room);
-
-  // const playerReady = deviceId !== null;
-  const AudioPlayer = styled.div``;
-  const Spinner = styled.div``;
 
   return (
     <>
@@ -28,27 +49,17 @@ export default function SpotifyWebplayer({ token, room }) {
         ></Script>
       )}
 
-      {deviceState.ready ? (
+      {true ? (
         <AudioPlayer>
-          <button
-            onClick={() => {
-              player.getCurrentState().then(state => {
-                if (state) {
-                  player.seek(state.duration - 15000);
-                }
-              });
-            }}
-          >
-            skipToend
-          </button>
-          <button
-            onClick={() => room.controller.play(room.state.playlist[1].trackId)}
-          >
-            play track 2
-          </button>
+          <Slider></Slider>
+          <Body>
+            <div></div>
+            <div></div>
+            <div></div>
+          </Body>
         </AudioPlayer>
       ) : (
-        <Spinner>Loading</Spinner>
+        <Spinner type="Bars" color={theme.primary} height={70} width={50} />
       )}
     </>
   );

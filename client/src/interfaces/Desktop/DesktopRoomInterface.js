@@ -62,27 +62,7 @@ export default function DesktopRoomInterface() {
           <li>Search Fav tracks</li>
         </ul>
       </Sidebar>
-      <Header>
-        Search Bar || Login
-        <button onClick={() => addTrack(queryResults.tracks[0].uri)}>
-          add track1
-        </button>
-        <button onClick={() => addTrack(queryResults.tracks[1].uri)}>
-          add track2
-        </button>{" "}
-        <button onClick={() => addTrack(queryResults.tracks[2].uri)}>
-          add track3
-        </button>
-        <button onClick={() => removeTrack(queryResults.tracks[0].uri)}>
-          remove track1
-        </button>
-        <button onClick={() => removeTrack(queryResults.tracks[1].uri)}>
-          remove track2
-        </button>{" "}
-        <button onClick={() => removeTrack(queryResults.tracks[2].uri)}>
-          remove track3
-        </button>
-      </Header>
+      <Header>Search Bar || Login</Header>
       <Main>
         {/* Depends on Route*/}
         <DesktopHomeInterface room={room}></DesktopHomeInterface>

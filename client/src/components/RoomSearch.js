@@ -50,6 +50,11 @@ const Head = styled.div`
 const Body = styled.div`
   & ${List} {
     width: 100%;
+
+    & li:nth-child(even) {
+      background: ${props => props.theme.transparent2};
+      height: 80px;
+    }
   }
   overflow-x: hidden;
   overflow-y: scroll;
@@ -58,12 +63,13 @@ const Body = styled.div`
 
 const ExtendedStyledListItem = styled(StyledListItem)`
   & button {
-    background: ${props => props.theme.transparent2};
+    background: ${props => props.theme.white};
     color: ${props => props.theme.black};
     border-radius: 5px;
     cursor: pointer;
     font-size: 0.8rem;
-    width: 100px;
+    width: 90px;
+    height: 30px;
   }
   padding: 0 15px;
 `;
@@ -81,6 +87,7 @@ export default function Home(props) {
       .then(res => res.json())
       .then(data => setRooms(data));
   }, []);
+
   const JoinButton = item => (
     <Link to={`/room/5d47d90a191f0f30a0d73414`}>
       <button>Join Room</button>
