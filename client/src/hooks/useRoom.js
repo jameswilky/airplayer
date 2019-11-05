@@ -28,6 +28,7 @@ export default function useRoom() {
   useEffect(() => {
     socket.on("ROOM_CREATED", payload => console.log(payload));
     socket.on("ROOM_UPDATED", nextRoomState => {
+      console.log(nextRoomState);
       setRoom({
         ...room,
         state: nextRoomState,
