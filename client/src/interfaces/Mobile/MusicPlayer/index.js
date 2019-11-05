@@ -7,6 +7,7 @@ import { Container } from "../../../styles/Container";
 import useSearch from "../../../hooks/useSearch";
 import { StyledItem, StyledList } from "./styles";
 
+// TODO use paralax https://www.youtube.com/watch?v=P5zGTEGPpu4
 export default function MusicPlayerInterface() {
   const { query, setQuery, queryResults } = useSearch("");
   const { albums, tracks, artists, playlists } = queryResults;

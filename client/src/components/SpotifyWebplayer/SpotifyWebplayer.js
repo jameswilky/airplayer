@@ -5,13 +5,13 @@ import useWebplayer from "../../hooks/useWebplayer";
 import Loader from "react-loader-spinner";
 import theme from "../../theme";
 import placeholder from "../../images/gameova.jpg";
+import VolumeSlider from "../VolumeSlider";
 
 import {
   IoIosSkipBackward,
   IoIosPlay,
   IoIosSkipForward,
-  IoIosPause,
-  IoIosVolumeHigh
+  IoIosPause
 } from "react-icons/io";
 
 const AudioPlayer = styled.div`
@@ -85,34 +85,6 @@ const Right = styled.div`
   justify-items: flex-end;
 `;
 
-const HoverArea = styled.div`
-  align-items: center;
-  display: grid;
-  justify-items: center;
-  cursor: pointer;
-  width: 40px;
-  height: 70px;
-`;
-
-const VolumeSlider = styled.div`
-  position: absolute;
-  bottom: 70px;
-  right: 0;
-  background-color: ${props => props.theme.transparent5};
-  height: 160px;
-  width: 40px;
-  border-top-right-radius: 15px;
-  border-top-left-radius: 15px;
-  visibility: ${props => (props.show ? "visible" : "hidden")};
-
-  & > div {
-    width: 10px;
-    height: 130px;
-    background: ${props => props.theme.gradient};
-    border-radius: 5px;
-    margin: 15px;
-  }
-`;
 const Spinner = styled(Loader)`
   padding-top: 5px;
   text-align: center;
@@ -131,6 +103,8 @@ export default function SpotifyWebplayer({ token, room }) {
   const { loadScript, player, deviceState } = useWebplayer(token, room);
 
   const paused = false;
+
+  const volume = 70;
 
   const [showVolumeSlider, setShowVolumeSlider] = useState(false);
   return (
@@ -162,15 +136,11 @@ export default function SpotifyWebplayer({ token, room }) {
               <IoIosSkipForward></IoIosSkipForward>
             </Centre>
             <Right>
-              <HoverArea
-                onMouseEnter={() => setShowVolumeSlider(true)}
-                onMouseLeave={() => setShowVolumeSlider(false)}
-              >
-                <IoIosVolumeHigh></IoIosVolumeHigh>
-                <VolumeSlider show={showVolumeSlider}>
-                  <div></div>
-                </VolumeSlider>
-              </HoverArea>
+              <VolumeSlider
+                show={showVolumeSlider}
+                setShow={setShowVolumeSlider}
+                volume={volume}
+              ></VolumeSlider>
             </Right>
           </Body>
         </AudioPlayer>
