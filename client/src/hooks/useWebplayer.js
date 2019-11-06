@@ -24,7 +24,7 @@ const deviceReducer = (state, action) => {
 };
 
 // This webplayer will control the player by reading state from the room
-export default function useWebplayer(token, room) {
+export default function useWebplayer(token, room, start) {
   const [player, setPlayer] = useState();
   const [loadScript, setLoadScript] = useState(false);
 
@@ -80,12 +80,27 @@ export default function useWebplayer(token, room) {
     room.controller.play(room.state.playlist[0].trackId);
   }, []);
 
-  // play the currently loaded track
+  // start loaded track
+  useEffect(() => {
+    if (start) {
+      if (deviceState.ready && deviceState.currentSong) {
+        play(deviceState.currentSong);
+      }
+    } else {
+      room.controller.pause();
+    }
+  }, [deviceState.ready, deviceState.currentSong, start]);
+
+  // Pause/Resume loaded Track
   useEffect(() => {
     if (deviceState.ready && deviceState.currentSong) {
-      // play(deviceState.currentSong);
+      if (deviceState.paused) {
+        player.pause();
+      } else {
+        player.resume().then(x => console.log(x));
+      }
     }
-  }, [deviceState.ready, deviceState.currentSong]);
+  }, [deviceState.ready, deviceState.currentSong, deviceState.paused]);
 
   // if room state changes, reflect that state in the webplayer
   useEffect(() => {

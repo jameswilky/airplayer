@@ -121,9 +121,8 @@ export default function SpotifyWebplayer({ token, room }) {
     error: false
   });
 
-  const { loadScript, player, deviceState } = useWebplayer(token, room);
-
-  const paused = false;
+  const [start, setStart] = useState(false);
+  const { loadScript, player, deviceState } = useWebplayer(token, room, start);
 
   const volume = 70;
 
@@ -140,7 +139,7 @@ export default function SpotifyWebplayer({ token, room }) {
         ></Script>
       )}
 
-      {true ? (
+      {deviceState.ready ? (
         <AudioPlayer>
           <Slider progress={30}>
             <div type="progressBar"></div>
@@ -156,7 +155,20 @@ export default function SpotifyWebplayer({ token, room }) {
             </Left>
             <Centre>
               <IoIosSkipBackward></IoIosSkipBackward>
-              {paused ? <IoIosPause></IoIosPause> : <IoIosPlay></IoIosPlay>}
+              {deviceState.paused ? (
+                <IoIosPlay
+                  onClick={() => {
+                    room.controller.resume();
+                    setStart(true);
+                  }}
+                ></IoIosPlay>
+              ) : (
+                <IoIosPause
+                  onClick={() => {
+                    room.controller.pause();
+                  }}
+                ></IoIosPause>
+              )}
               <IoIosSkipForward></IoIosSkipForward>
             </Centre>
             <Right>

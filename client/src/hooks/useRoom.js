@@ -15,7 +15,8 @@ export default function useRoom() {
       removeTrack: id => socket.emit("REMOVE_TRACK", { trackId: id }),
       updatePlaylist: playlist => socket.emit("UPDATE_PLAYLIST", playlist),
       play: id => socket.emit("PLAY", { trackId: id }),
-      pause: () => socket.emit("PAUSE", null)
+      pause: () => socket.emit("PAUSE", null),
+      resume: () => socket.emit("RESUME", null)
     };
   };
 
