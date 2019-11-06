@@ -122,9 +122,24 @@ export default function SpotifyWebplayer({ token, room }) {
   });
 
   const [start, setStart] = useState(false);
-  const { loadScript, player, deviceState } = useWebplayer(token, room, start);
+  const { loadScript, player, deviceState, queTrack } = useWebplayer(
+    token,
+    room,
+    start
+  );
 
   const volume = 70;
+
+  const isFirstTrack =
+    room.state.playlist
+      .map(track => track.trackId)
+      .indexOf(room.state.currentSong.trackId) === 0;
+
+  const isLastTrack =
+    room.state.playlist
+      .map(track => track.trackId)
+      .indexOf(room.state.currentSong.trackId) ===
+    room.state.playlist.length - 1;
 
   const [showVolumeSlider, setShowVolumeSlider] = useState(false);
   return (
@@ -154,7 +169,14 @@ export default function SpotifyWebplayer({ token, room }) {
               </div>
             </Left>
             <Centre>
-              <IoIosSkipBackward></IoIosSkipBackward>
+              {isFirstTrack ? (
+                <div></div>
+              ) : (
+                <IoIosSkipBackward
+                  onClick={() => queTrack(-1)}
+                ></IoIosSkipBackward>
+              )}
+
               {deviceState.paused ? (
                 <IoIosPlay
                   onClick={() => {
@@ -169,7 +191,13 @@ export default function SpotifyWebplayer({ token, room }) {
                   }}
                 ></IoIosPause>
               )}
-              <IoIosSkipForward></IoIosSkipForward>
+              {isLastTrack ? (
+                <div></div>
+              ) : (
+                <IoIosSkipForward
+                  onClick={() => queTrack(1)}
+                ></IoIosSkipForward>
+              )}
             </Centre>
             <Right>
               <VolumeSlider

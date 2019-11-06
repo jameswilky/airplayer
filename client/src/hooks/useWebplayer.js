@@ -41,21 +41,26 @@ export default function useWebplayer(token, room, start) {
   // When a track ends, que the next track
   useEffect(() => {
     if (trackFinished == true) {
-      if (queNextTrack()) {
+      if (queTrack(1)) {
         setTrackFinished(false);
       }
     }
   }, [trackFinished]);
 
-  const queNextTrack = useCallback(() => {
-    const nextSongIndex = deviceState.playlist.indexOf(deviceState.currentSong);
-    const nextSong = deviceState.playlist[nextSongIndex + 1];
+  const queTrack = useCallback(
+    pos => {
+      const nextSongIndex = deviceState.playlist.indexOf(
+        deviceState.currentSong
+      );
+      const nextSong = deviceState.playlist[nextSongIndex + pos];
 
-    if (nextSong) {
-      room.controller.play(nextSong);
-      return true;
-    } else return false;
-  }, [deviceState]);
+      if (nextSong) {
+        room.controller.play(nextSong);
+        return true;
+      } else return false;
+    },
+    [deviceState]
+  );
 
   const play = useCallback(
     async track =>
@@ -80,8 +85,9 @@ export default function useWebplayer(token, room, start) {
     room.controller.play(room.state.playlist[0].trackId);
   }, []);
 
-  // start loaded track
+  // Play loaded track
   useEffect(() => {
+    // start variable is used for toggling autoplay
     if (start) {
       if (deviceState.ready && deviceState.currentSong) {
         play(deviceState.currentSong);
@@ -97,7 +103,7 @@ export default function useWebplayer(token, room, start) {
       if (deviceState.paused) {
         player.pause();
       } else {
-        player.resume().then(x => console.log(x));
+        player.resume();
       }
     }
   }, [deviceState.ready, deviceState.currentSong, deviceState.paused]);
@@ -179,5 +185,5 @@ export default function useWebplayer(token, room, start) {
     }
   }, [player]);
 
-  return { deviceState, loadScript, player };
+  return { deviceState, loadScript, player, queTrack };
 }
