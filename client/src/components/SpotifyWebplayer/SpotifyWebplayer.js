@@ -7,6 +7,8 @@ import theme from "../../theme";
 import placeholder from "../../images/gameova.jpg";
 import VolumeSlider from "../VolumeSlider";
 
+import "../../global.css";
+
 import {
   IoIosSkipBackward,
   IoIosPlay,
@@ -20,7 +22,7 @@ const AudioPlayer = styled.div`
   color: ${props => props.theme.black};
   display: grid;
   width: 100%;
-  grid-template-rows: 10px 1fr;
+  grid-template-rows: 1fr;
 `;
 
 const Body = styled.div`
@@ -31,11 +33,11 @@ const Body = styled.div`
 
 const Left = styled.div`
   display: grid;
-  grid-template-columns: 70px 1fr;
+  grid-template-columns: 80px 1fr;
   align-items: center;
 
   & > img {
-    width: 70px;
+    width: 80px;
   }
 
   & > div {
@@ -92,7 +94,26 @@ const Spinner = styled(Loader)`
 `;
 
 const Slider = styled.div`
-  background: ${props => props.theme.transparent3};
+  background: ${props => props.theme.lighterGray};
+  position: absolute;
+  bottom: 80px;
+  width: 100%;
+  height: 15px;
+
+  & > div[type="progressBar"] {
+    position: absolute;
+    width: ${props => props.progress + "%"};
+    height: 15px;
+    background: ${props => props.theme.gradient};
+  }
+
+  & > input {
+    position: relative;
+    width: 100%;
+    height: 15px;
+    z-index: 99;
+    cursor: pointer;
+  }
 `;
 
 export default function SpotifyWebplayer({ token, room }) {
@@ -121,7 +142,10 @@ export default function SpotifyWebplayer({ token, room }) {
 
       {true ? (
         <AudioPlayer>
-          <Slider></Slider>
+          <Slider progress={30}>
+            <div type="progressBar"></div>
+            <input type="range" min="0" max="100" className="slider" />
+          </Slider>
           <Body>
             <Left>
               <img src={placeholder} alt="" />

@@ -49,12 +49,14 @@ export default function VolumeSlider({ show, setShow, volume }) {
           y={100 - volume}
           styles={{
             thumb: {
-              width: 20,
-              height: 10,
-              backgroundColor: theme.gray,
-              borderRadius: "3px",
+              width: 30,
+              height: 6,
+              backgroundColor: theme.white,
+              borderRadius: "5px",
               opacity: show ? 1 : 0,
-              transition: "opacity 0.4s"
+              transition: "opacity 0.4s",
+              cursor: "pointer",
+              boxShadow: "1px 1px 2px 1px rgba(0, 0, 0, 0.5)"
             },
             track: {
               backgroundColor: theme.primary,

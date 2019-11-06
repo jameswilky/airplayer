@@ -33,3 +33,32 @@ input {
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.6);
 }
+
+/* The slider itself */
+.slider {
+  /* -webkit-appearance: none; /* Override default CSS styles */
+  appearance: none;
+  height: 10px;
+  outline: none; /* Remove outline */
+  background: transparent;
+}
+
+/* The slider handle (use -webkit- (Chrome, Opera, Safari, Edge) and -moz- (Firefox) to override default look) */
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none; /* Override default look */
+  appearance: none;
+  width: 6px; /* Set a specific slider handle width */
+  height: 30px; /* Slider handle height */
+  background: whitesmoke; /* Green background */
+  box-shadow: 1px 1px 3px 1px rgba(0, 0, 0, 0.5);
+  border-radius: 90px;
+  margin-top: -1px;
+}
+
+.slider::-moz-range-thumb {
+  width: 6px; /* Set a specific slider handle width */
+  height: 30px; /* Slider handle height */
+  background: whitesmoke; /* Green background */
+  box-shadow: 1px 1px 3px 1px rgba(0, 0, 0, 0.5);
+  margin-top: -1px;
+}

@@ -10,7 +10,7 @@ import useRoomTracks from "../../hooks/useRoomTracks";
 const Container = styled.div`
   display: grid;
   height: 100%;
-  grid-template-columns: minmax(350px, 1fr) 1fr;
+  grid-template-columns: calc(50% - 85px) 1fr;
   grid-template-rows: 1fr 2fr;
   grid-gap: 15px;
   padding: 15px;
