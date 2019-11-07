@@ -39,20 +39,31 @@ module.exports = {
     // TODO add validation and write test to check value of roomModel and err
     return err || roomModel === null ? null : roomModel.toClient();
   },
-  updateRoom: async nextRoom => {
-    let err, updatedRoomModel, roomModel;
-    [err, roomModel] = await to(Room.findById({ _id: nextRoom.id }));
-    if (err) return null;
-    else {
-      // Ensure password is not overwritten
-      nextRoom.password = roomModel.password;
 
-      [err, updatedRoomModel] = await to(
-        Object.assign(roomModel, nextRoom).save()
-      );
-      return err || updatedRoomModel === null
-        ? null
-        : updatedRoomModel.toClient();
-    }
+  updateRoom: async room => {
+    const [err, nextRoom] = await to(Room.findByIdAndUpdate(room.id, room));
+    console.log(err);
+    return nextRoom;
   }
+  // updateRoom: async nextRoom => {
+  //   let err, updatedRoomModel, roomModel;
+  //   [err, roomModel] = await to(Room.findById({ _id: nextRoom.id }));
+  //   if (err) return null;
+  //   else {
+  //     // Ensure password is not overwritten
+  //     nextRoom.password = roomModel.password;
+
+  //     [err, updatedRoomModel] = await to(
+  //       roomModel.save()
+  //       // Object.assign(roomModel, nextRoom).updateOne()
+  //     );
+  //     if (err) {
+  //       console.log(err);
+  //     }
+
+  //     return err || updatedRoomModel === null
+  //       ? null
+  //       : updatedRoomModel.toClient();
+  //   }
+  // }
 };

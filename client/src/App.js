@@ -17,7 +17,7 @@ import RoomSearch from "./components/RoomSearch";
 
 //Reducers
 import authReducer from "./reducers/authReducer";
-import RoomInterface from "./interfaces/Mobile/RoomInterface";
+// import RoomInterface from "./interfaces/Mobile/RoomInterface";
 import DesktopRoomInterface from "./interfaces/Desktop/DesktopRoomInterface";
 
 //Styles

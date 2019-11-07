@@ -12,7 +12,8 @@ const HoverArea = styled.div`
   display: grid;
   justify-items: center;
   width: 40px;
-  height: 70px;
+  height: 80px;
+  z-index: 99999;
 `;
 
 const SliderBackground = styled.div`
@@ -35,7 +36,7 @@ const SliderBackground = styled.div`
   }
 `;
 
-export default function VolumeSlider({ show, setShow, volume }) {
+export default function VolumeSlider({ show, setShow, volume, setVolume }) {
   return (
     <HoverArea
       onMouseEnter={() => setShow(true)}
@@ -47,6 +48,7 @@ export default function VolumeSlider({ show, setShow, volume }) {
         <Slider
           axis="y"
           y={100 - volume}
+          onChange={({ y }) => setVolume(100 - y)}
           styles={{
             thumb: {
               width: 30,
@@ -61,7 +63,8 @@ export default function VolumeSlider({ show, setShow, volume }) {
             track: {
               backgroundColor: theme.primary,
               height: show ? "130px" : "0px",
-              transition: "height 0.4s"
+              transition: "height 0.4s",
+              cursor: "pointer"
             }
           }}
         ></Slider>

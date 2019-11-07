@@ -47,6 +47,7 @@ module.exports = function(io, interval = null) {
       Object.assign(state, nextState);
       // After each update, send updated room to each socket in room
       io.in(state.id).emit("ROOM_UPDATED", state);
+      updateRoom(state).then(x => console.log("-"));
     };
 
     socket.on(
@@ -142,35 +143,35 @@ module.exports = function(io, interval = null) {
       });
     });
 
-    if (interval /*&& inARoom(socket)*/) {
-      const prevState = { ...state };
-      setInterval(async () => {
-        if (inARoom(socket)) {
-          // Every *interval* seconds check if state has changed.
-          // If it has, sync socket state with database and update all clients
-          // if (
-          //   // Compare previous and next state, but dont compare passwords
-          //   !isEmpty(
-          //     diff(
-          //       { ...state, password: null },
-          //       { ...prevState, password: null }
-          //     )
-          //   )
-          // ) {
+    // if (interval /*&& inARoom(socket)*/) {
+    //   const prevState = { ...state };
+    //   setInterval(async () => {
+    //     if (inARoom(socket)) {
+    //       // Every *interval* seconds check if state has changed.
+    //       // If it has, sync socket state with database and update all clients
+    //       // if (
+    //       //   // Compare previous and next state, but dont compare passwords
+    //       //   !isEmpty(
+    //       //     diff(
+    //       //       { ...state, password: null },
+    //       //       { ...prevState, password: null }
+    //       //     )
+    //       //   )
+    //       // ) {
 
-          // TODO fix diffing
-          const room = await updateRoom(state);
-          if (!room) return;
-          else {
-            Object.assign(state, room);
-            Object.assign(prevState, state);
-            io.in(state.id).emit("ROOM_UPDATED", state);
-            // console.log("Room Updated");
-          }
-          //}
-        }
-      }, interval);
-    }
+    //       // TODO fix diffing
+    //       const room = await updateRoom(state);
+    //       if (!room) return;
+    //       else {
+    //         Object.assign(state, room);
+    //         Object.assign(prevState, state);
+    //         io.in(state.id).emit("ROOM_UPDATED", state);
+    //         // console.log("Room Updated");
+    //       }
+    //       //}
+    //     }
+    //   }, interval);
+    // }
   });
 };
 
