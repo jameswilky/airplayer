@@ -66,12 +66,12 @@ export default (() => {
   };
 
   const getAccessToken = () => {
-    // tokenHasExpired()
-    //   ? refreshAccessToken(getRefreshToken(), setAccessToken)
-    //   : localStorage.getItem("accessToken");
+    return tokenHasExpired()
+      ? refreshAccessToken(getRefreshToken(), setAccessToken)
+      : localStorage.getItem("accessToken");
     //TODO find a way to do this asynchronously
 
-    return localStorage.getItem("accessToken");
+    // return localStorage.getItem("accessToken");
   };
 
   const getRefreshToken = () => localStorage.getItem("refreshToken");

@@ -122,13 +122,15 @@ export default function SpotifyWebplayer({ token, room }) {
   });
 
   const [start, setStart] = useState(false);
-  const { loadScript, player, deviceState, queTrack } = useWebplayer(
+  const { loadScript, deviceState, queTrack } = useWebplayer(
     token,
     room,
     start
   );
 
   const volume = 70;
+
+  const [seekPosition, setSeekPosition] = useState(0);
 
   const isFirstTrack =
     room.state.playlist
@@ -156,9 +158,16 @@ export default function SpotifyWebplayer({ token, room }) {
 
       {deviceState.ready ? (
         <AudioPlayer>
-          <Slider progress={30}>
+          <Slider progress={seekPosition}>
             <div type="progressBar"></div>
-            <input type="range" min="0" max="100" className="slider" />
+            <input
+              type="range"
+              min="0"
+              max="100"
+              className="slider"
+              value={seekPosition}
+              onChange={e => setSeekPosition(e.target.value)}
+            />
           </Slider>
           <Body>
             <Left>
