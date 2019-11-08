@@ -12,6 +12,9 @@ module.exports = function(app, express, io) {
     useNewUrlParser: true
   });
 
+  // handle findByIdAndUpdate depreciation warnings https://mongoosejs.com/docs/deprecations.html#-findandmodify-
+  mongoose.set("useFindAndModify", false);
+
   // Handle Sockets
   socketConfig(io, 3000);
 

@@ -47,7 +47,7 @@ module.exports = function(io, interval = null) {
       Object.assign(state, nextState);
       // After each update, send updated room to each socket in room
       io.in(state.id).emit("ROOM_UPDATED", state);
-      updateRoom(state).then(x => console.log("-"));
+      updateRoom(state);
     };
 
     socket.on(
@@ -78,7 +78,6 @@ module.exports = function(io, interval = null) {
        */
       // todo add check to validate input is a room object
 
-      console.log(id);
       const nextState = await getRoom(id);
       if (!nextState) {
         socket.emit("ERROR", `join attempt failed, room not found`);
@@ -114,8 +113,6 @@ module.exports = function(io, interval = null) {
     //Handles events that only hosts can use
     Object.keys(HOST).forEach(event => {
       socket.on(event, data => {
-        console.log(socket.id + " attempted to " + event);
-
         // TODO un comment this after to get authentication working
         // if (!data || !data.hasOwnProperty("token")) {
         //   socket.emit(

@@ -41,9 +41,11 @@ module.exports = {
   },
 
   updateRoom: async room => {
-    const [err, nextRoom] = await to(Room.findByIdAndUpdate(room.id, room));
-    console.log(err);
-    return nextRoom;
+    // TODO make sure passwords cant be changed
+    const [err, nextRoom] = await to(
+      Room.findByIdAndUpdate(room.id, room, { new: true })
+    );
+    return err || nextRoom.toClient();
   }
   // updateRoom: async nextRoom => {
   //   let err, updatedRoomModel, roomModel;
