@@ -58,26 +58,6 @@ module.exports = {
       // option.new needs to be set to true to make sure new object is being returned .
       // source:https://stackoverflow.com/questions/30419575/mongoose-findbyidandupdate-not-returning-correct-model
     );
-    return err ? null : nextRoom.toClient();
+    return err || nextRoom === null ? null : nextRoom.toClient();
   }
-  // updateRoom: async nextRoom => {
-  //   let err, updatedRoomModel, roomModel;
-  //   [err, roomModel] = await to(Room.findById({ _id: nextRoom.id }));
-  //   if (err) return null;
-  //   else {
-  //     // Ensure password is not overwritten
-  //     nextRoom.password = roomModel.password;
-
-  //     [err, updatedRoomModel] = await to(
-  //       Object.assign(roomModel, nextRoom.save()
-  //     );
-  //     if (err) {
-  //       console.log(err);
-  //     }
-
-  //     return err || updatedRoomModel === null
-  //       ? null
-  //       : updatedRoomModel.toClient();
-  //   }
-  // }
 };

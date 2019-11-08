@@ -6,7 +6,12 @@ const RoomSchema = new Schema({
   location: String,
   playlist: [{ trackId: String }],
   currentSong: { playing: Boolean, trackId: String },
-  createdAt: { type: Date, default: Date.now },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+    duration: Number,
+    lastSkip: Number
+  },
   subscribers: [{ type: Schema.Types.ObjectId, ref: "users" }],
   host: { socketId: String },
   password: String

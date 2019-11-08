@@ -54,14 +54,12 @@ describe("Room Data Access Object", () => {
     });
   });
 
-  describe.only("updateRoom", () => {
+  describe("updateRoom", () => {
     it("should return a copy of the newly updated room on success", async () => {
       const room = await createRoom(birthday);
       room.name = "wedding";
       room.playlist.push({ trackId: "789" });
-      // console.log(room);
       const res = await updateRoom(room);
-      // console.log(res);
       expect(res).to.be.a("object");
       expect(res.id).to.eql(room.id);
       expect(res).to.not.have.property("_id");

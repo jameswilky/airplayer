@@ -4,7 +4,8 @@ const {
   PLAY,
   PAUSE,
   UPDATE_PLAYLIST,
-  RESUME
+  RESUME,
+  SEEK
 } = require("../actions/actions");
 
 const dispatch = (state, { type, payload }) => {
@@ -24,10 +25,11 @@ const dispatch = (state, { type, payload }) => {
     case PLAY:
       return {
         ...state,
-        currentSong: { playing: true, trackId: payload.trackId }
+        currentSong: { playing: true, trackId: payload.trackId, lastSkip: 0 }
       };
 
-    // TODO add tests
+    case SEEK:
+      return { ...state, currentSong: { lastSkip: payload } };
     case RESUME:
       return {
         ...state,
