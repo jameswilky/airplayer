@@ -68,12 +68,12 @@ describe("Room Data Access Object", () => {
       expect(res.name).to.eql("wedding");
       expect(res.playlist.length).to.eql(3);
     });
-    // it("should return null if id is not found in the database", async () => {
-    //   const room = await createRoom(birthday);
-    //   room.id = 25;
-    //   const res = await updateRoom(room);
-    //   expect(res).to.eql(null);
-    // });
+    it("should return null if id is not found in the database", async () => {
+      const room = await createRoom(birthday);
+      room.id = 25;
+      const res = await updateRoom(room);
+      expect(res).to.eql(null);
+    });
   });
   describe("passwordDoesMatch", () => {
     it("should return true if the password matches the room password specified by the room id", async () => {

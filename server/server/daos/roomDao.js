@@ -41,11 +41,24 @@ module.exports = {
   },
 
   updateRoom: async room => {
-    // TODO make sure passwords cant be changed
-    const [err, nextRoom] = await to(
-      Room.findByIdAndUpdate(room.id, room, { new: true })
+    let err, oldRoom, nextRoom;
+
+    // Search for room, to get old password
+    [err, oldRoom] = await to(Room.findById(room.id));
+
+    // if not found, return null
+    if (err) return null;
+
+    // Override incoming room with old password
+    room.password = oldRoom.password;
+
+    // find and update room
+    [err, nextRoom] = await to(
+      Room.findByIdAndUpdate(room.id, { $set: room }, { new: true })
+      // option.new needs to be set to true to make sure new object is being returned .
+      // source:https://stackoverflow.com/questions/30419575/mongoose-findbyidandupdate-not-returning-correct-model
     );
-    return err || nextRoom.toClient();
+    return err ? null : nextRoom.toClient();
   }
   // updateRoom: async nextRoom => {
   //   let err, updatedRoomModel, roomModel;
@@ -56,8 +69,7 @@ module.exports = {
   //     nextRoom.password = roomModel.password;
 
   //     [err, updatedRoomModel] = await to(
-  //       roomModel.save()
-  //       // Object.assign(roomModel, nextRoom).updateOne()
+  //       Object.assign(roomModel, nextRoom.save()
   //     );
   //     if (err) {
   //       console.log(err);
