@@ -5,12 +5,10 @@ const RoomSchema = new Schema({
   name: String,
   location: String,
   playlist: [{ trackId: String }],
-  currentSong: { playing: Boolean, trackId: String },
+  currentSong: { playing: Boolean, trackId: String, lastSeek: Number },
   createdAt: {
     type: Date,
-    default: Date.now,
-    duration: Number,
-    lastSkip: Number
+    default: Date.now
   },
   subscribers: [{ type: Schema.Types.ObjectId, ref: "users" }],
   host: { socketId: String },

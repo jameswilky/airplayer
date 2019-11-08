@@ -21,7 +21,7 @@ const birthday = {
   id: "123",
   name: "birthday",
   playlist: [{ trackId: "123" }, { trackId: "456" }],
-  currentSong: { playing: true, trackId: "123", lastSkip: 0 }
+  currentSong: { playing: true, trackId: "123", lastSeek: 0 }
 };
 
 describe("Room Reducer", () => {
@@ -63,11 +63,11 @@ describe("Room Reducer", () => {
       const result = dispatch(birthday, action);
       expect(result.currentSong.trackId).to.eql(action.payload.trackId);
     });
-    it("should set lastSkip to 0", () => {
-      birthday.currentSong.lastSkip = 12345;
+    it("should set lastSeek to 0", () => {
+      birthday.currentSong.lastSeek = 12345;
       const action = { type: PLAY, payload: { trackId: "123" } };
       const result = dispatch(birthday, action);
-      expect(result.currentSong.lastSkip).to.eql(0);
+      expect(result.currentSong.lastSeek).to.eql(0);
     });
   });
 
@@ -113,7 +113,7 @@ describe("Room Reducer", () => {
       const action = { type: SEEK, payload: 1000 };
       const result = dispatch(birthday, action);
 
-      expect(result.currentSong.lastSkip).to.eql(1000);
+      expect(result.currentSong.lastSeek).to.eql(1000);
     });
   });
 });

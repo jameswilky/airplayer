@@ -5,5 +5,5 @@ module.exports = {
   PLAY: "PLAY",
   UPDATE_PLAYLIST: "UPDATE_PLAYLIST",
   RESUME: "RESUME",
-  SKIP: "SKIP"
+  SEEK: "SEEK"
 };

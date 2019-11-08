@@ -25,11 +25,14 @@ const dispatch = (state, { type, payload }) => {
     case PLAY:
       return {
         ...state,
-        currentSong: { playing: true, trackId: payload.trackId, lastSkip: 0 }
+        currentSong: { playing: true, trackId: payload.trackId, lastSeek: 0 }
       };
 
     case SEEK:
-      return { ...state, currentSong: { lastSkip: payload } };
+      return {
+        ...state,
+        currentSong: { ...state.currentSong, lastSeek: payload }
+      };
     case RESUME:
       return {
         ...state,
@@ -43,7 +46,11 @@ const dispatch = (state, { type, payload }) => {
     case PAUSE:
       return {
         ...state,
-        currentSong: { playing: false, trackId: state.currentSong.trackId }
+        currentSong: {
+          ...state.currentSong,
+          playing: false,
+          trackId: state.currentSong.trackId
+        }
       };
 
     case UPDATE_PLAYLIST:

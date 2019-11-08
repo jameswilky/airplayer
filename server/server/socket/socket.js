@@ -5,8 +5,7 @@ const {
   passwordDoesMatch
 } = require("../daos/roomDao");
 const { createHost } = require("../daos/hostDao");
-const diff = require("../helpers/diff");
-const isEmpty = require("../helpers/isEmpty");
+
 const { ALL, HOST } = require("../actions/scopes");
 const dispatch = require("../reducers/roomReducer");
 
@@ -40,6 +39,7 @@ module.exports = function(io, interval = null) {
 
     const handleEvent = (event, data) => {
       // Update state based on event type
+      console.log("attempted", event, "payload :", data);
       const nextState = dispatch(state, {
         type: event,
         payload: data
