@@ -5,7 +5,7 @@ import { StyledContainer, StyledChevron } from "./styles";
 import SongList from "../../../components/SongList";
 import Carousel from "../../../components/Carousel";
 
-import useSearch from "../../../hooks/useSearch";
+import useSearch from "../../../hooks/useSearch/useSearch";
 
 export default function MusicLibraryInterface() {
   const { query, setQuery, queryResults } = useSearch("");

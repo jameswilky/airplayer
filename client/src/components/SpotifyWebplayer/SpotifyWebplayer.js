@@ -18,11 +18,6 @@ export default function SpotifyWebplayer({ token, room }) {
   });
 
   const [start, setStart] = useState(false);
-  const { loadScript, deviceState, queTrack } = useWebplayer(
-    token,
-    room,
-    start
-  );
 
   const [volume, setVolume] = useState(0);
 
@@ -31,8 +26,16 @@ export default function SpotifyWebplayer({ token, room }) {
   const [seekPosition, setSeekPosition] = useState(0);
 
   const [showVolumeSlider, setShowVolumeSlider] = useState(false);
+  const duration =
+    roomTracks && roomTracks.currentSong && roomTracks.currentSong.duration_ms;
 
-  console.log(roomTracks);
+  const { loadScript, deviceState, queTrack } = useWebplayer(
+    token,
+    room,
+    start,
+    setSeekPosition,
+    duration
+  );
 
   return (
     <>
@@ -56,7 +59,14 @@ export default function SpotifyWebplayer({ token, room }) {
               max="100"
               className="slider"
               value={seekPosition}
-              onChange={e => setSeekPosition(e.target.value)}
+              onChange={e => {
+                if (duration) {
+                  const seekDestinationMs = Math.round(
+                    (parseInt(e.target.value) / 100) * duration
+                  );
+                  room.controller.seek(seekDestinationMs);
+                }
+              }}
             />
           </Slider>
           <Body>

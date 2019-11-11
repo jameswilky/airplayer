@@ -1,14 +1,14 @@
 import React, { useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
-import DesktopHomeInterface from "./DesktopHomeInterface";
+import Home from "../Home/Home";
 import { useSelector } from "react-redux";
-import useSearch from "../../hooks/useSearch/";
+import useSearch from "../../../hooks/useSearch/useSearch";
 
-import theme from "../../theme";
+import theme from "../../../theme";
 
-import SpotifyWebplayer from "../../components/SpotifyWebplayer/SpotifyWebplayer";
+import SpotifyWebplayer from "../../../components/SpotifyWebplayer/SpotifyWebplayer";
 
-import useRoom from "../../hooks/useRoom";
+import useRoom from "../../../hooks/useRoom";
 
 const Background = styled.div`
   background: ${props => props.theme.gradient};
@@ -38,7 +38,7 @@ const Footer = styled.footer`
   height: 100%;
 `;
 
-export default function DesktopRoomInterface() {
+export default function Room() {
   const accessToken = useSelector(state => state.auth.accessToken);
   const { queryResults } = useSearch();
 
@@ -67,7 +67,7 @@ export default function DesktopRoomInterface() {
         <Header>Search Bar || Login</Header>
         <Main>
           {/* Depends on Route*/}
-          <DesktopHomeInterface room={room}></DesktopHomeInterface>
+          <Home room={room}></Home>
         </Main>
         <Footer>
           {accessToken && room.state && room.state.currentSong && (

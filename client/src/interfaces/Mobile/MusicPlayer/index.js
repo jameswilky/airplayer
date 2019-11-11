@@ -4,7 +4,7 @@ import List from "../../../components/List";
 import AudioVisualizer from "../../../components/AudioVisualizer";
 import { gameOvaImg } from "../../../images";
 import { Container } from "../../../styles/Container";
-import useSearch from "../../../hooks/useSearch";
+import useSearch from "../../../hooks/useSearch/useSearch";
 import { StyledItem, StyledList } from "./styles";
 
 // TODO use paralax https://www.youtube.com/watch?v=P5zGTEGPpu4

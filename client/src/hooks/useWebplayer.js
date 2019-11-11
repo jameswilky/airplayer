@@ -15,7 +15,8 @@ const deviceReducer = (state, action) => {
         ...state,
         currentSong: roomState.currentSong.trackId,
         paused: !roomState.currentSong.playing,
-        playlist: roomState.playlist.map(track => track.trackId)
+        playlist: roomState.playlist.map(track => track.trackId),
+        lastSeek: roomState.currentSong.lastSeek
       };
     }
     default:
@@ -24,10 +25,21 @@ const deviceReducer = (state, action) => {
 };
 
 // This webplayer will control the player by reading state from the room
-export default function useWebplayer(token, room, start) {
+export default function useWebplayer(
+  token,
+  room,
+  start,
+  setSeekPosition,
+  duration
+) {
   const [player, setPlayer] = useState();
   const [loadScript, setLoadScript] = useState(false);
 
+  const [trackTimer, setTrackTimer] = useState({
+    duration: duration,
+    remaining: null,
+    active: false
+  });
   const [trackFinished, setTrackFinished] = useState(false);
 
   const [deviceState, dispatch] = useReducer(deviceReducer, {
@@ -35,31 +47,22 @@ export default function useWebplayer(token, room, start) {
     currentSong: null,
     paused: false,
     ready: false,
-    playlist: []
+    playlist: [],
+    lastSeek: 0
   });
 
-  // When a track ends, que the next track
-  useEffect(() => {
-    if (trackFinished == true) {
-      if (queTrack(1)) {
-        setTrackFinished(false);
-      }
+  const setTimer = useCallback(
+    ({
+      active = trackTimer.active,
+      duration = trackTimer.duration,
+      remaining = trackTimer.remaining
+    }) => {
+      setTrackTimer({
+        active,
+        duration,
+        remaining
+      });
     }
-  }, [trackFinished]);
-
-  const queTrack = useCallback(
-    pos => {
-      const nextSongIndex = deviceState.playlist.indexOf(
-        deviceState.currentSong
-      );
-      const nextSong = deviceState.playlist[nextSongIndex + pos];
-
-      if (nextSong) {
-        room.controller.play(nextSong);
-        return true;
-      } else return false;
-    },
-    [deviceState]
   );
 
   const play = useCallback(
@@ -77,20 +80,64 @@ export default function useWebplayer(token, room, start) {
           }
         }
       ),
-    [deviceState, token]
+    [deviceState.id, token]
   );
+
+  // A few milliseconds before a track ends, pause it then skip to next track
+
+  useEffect(() => {
+    // Due to a bug in the Spotify WebSDK, tracks will always repeat
+    // This prevents the next track playing for a few seconds before changing,
+    // by deliberately pausing 1 second before and quing next track
+
+    const pauseTrackJustBeforeFinished = () =>
+      setTimeout(
+        () => console.log("next Track", trackTimer.duration),
+        trackTimer.remaining - 10000
+      );
+    if (trackTimer.active) {
+      console.log("tracktimer on");
+      pauseTrackJustBeforeFinished();
+    }
+
+    return () => clearTimeout(pauseTrackJustBeforeFinished);
+  }, [player, trackTimer]);
 
   // Load the first track in the roomstate
   useEffect(() => {
     room.controller.play(room.state.playlist[0].trackId);
   }, []);
 
+  // When a track ends, que the next track
+  useEffect(() => {
+    if (trackFinished == true) {
+      player.pause().then(() => {
+        queTrack(1);
+        setTrackFinished(false);
+      });
+    }
+  }, [trackFinished]);
+
+  const queTrack = useCallback(
+    pos => {
+      const nextSongIndex = deviceState.playlist.indexOf(
+        deviceState.currentSong
+      );
+      const nextSong = deviceState.playlist[nextSongIndex + pos];
+
+      if (nextSong) {
+        room.controller.play(nextSong);
+      }
+    },
+    [deviceState]
+  );
+
   // Play loaded track
   useEffect(() => {
     // start variable is used for toggling autoplay
     if (start) {
       if (deviceState.ready && deviceState.currentSong) {
-        play(deviceState.currentSong);
+        play(deviceState.currentSong).then(() => setTimer({ active: true }));
       }
     } else {
       room.controller.pause();
@@ -108,6 +155,29 @@ export default function useWebplayer(token, room, start) {
     }
   }, [deviceState.ready, deviceState.currentSong, deviceState.paused]);
 
+  // When seek position changes update player accordingly
+  // useEffect(() => {
+  //   if (deviceState.ready && deviceState.currentSong && duration) {
+  //     player.seek((parseInt(seekPosition) / 100) * duration)
+  //   }
+  // }, [deviceState.ready, deviceState.currentSong, seekPosition, duration]);
+  useEffect(() => {
+    if (
+      deviceState.ready &&
+      deviceState.currentSong &&
+      duration &&
+      deviceState.lastSeek
+    ) {
+      player.seek(deviceState.lastSeek);
+      setSeekPosition((deviceState.lastSeek / duration) * 100);
+    }
+  }, [
+    deviceState.ready,
+    deviceState.currentSong,
+    deviceState.lastSeek,
+    duration
+  ]);
+
   // if room state changes, reflect that state in the webplayer
   useEffect(() => {
     dispatch({ type: "UPDATE_PLAYER", payload: { roomState: room.state } });
@@ -122,13 +192,9 @@ export default function useWebplayer(token, room, start) {
           cb(token);
         }
       });
-      player
-        .connect()
-        .then(success =>
-          success
-            ? setPlayer(player)
-            : setPlayer({ error: "Failed to connect" })
-        );
+      player.connect().then(success => {
+        success ? setPlayer(player) : setPlayer({ error: "Failed to connect" });
+      });
     };
     setLoadScript(true);
   }, [player, window.Spotify]);
@@ -136,6 +202,8 @@ export default function useWebplayer(token, room, start) {
   //Player Events
   useEffect(() => {
     if (player) {
+      console.log("playerevent");
+
       // Error handling
       player.addListener("initialization_error", ({ message }) => {
         console.error(message);
@@ -148,24 +216,6 @@ export default function useWebplayer(token, room, start) {
       });
       player.addListener("playback_error", ({ message }) => {
         console.error(message);
-      });
-
-      // Playback status updates
-      let timeStamp = Date.now();
-
-      player.addListener("player_state_changed", state => {
-        if (state.paused == true && state.position == 0) {
-          // Hacky way to make sure the event doesnt trigger end of track
-          // too many times, event is triggering multiple times for some reason
-          if (timeStamp > 0) {
-            setTrackFinished(true);
-          }
-
-          timeStamp -= state.timestamp;
-          setTimeout(() => {
-            timeStamp = Date.now();
-          }, 1000);
-        }
       });
 
       // Ready
@@ -184,6 +234,33 @@ export default function useWebplayer(token, room, start) {
       });
     }
   }, [player]);
+
+  useEffect(() => {
+    if (player) {
+      let timeStamp = Date.now();
+      const handleStateChange = state => {
+        // Hacky way to make sure the event doesnt trigger end of track
+        // too many times, event is triggering multiple times for some reason
+        if (timeStamp > 0) {
+          setTrackTimer({
+            ...trackTimer,
+            duration: state.duration,
+            remaining: state.duration - state.position
+          });
+        }
+
+        timeStamp -= state.timestamp;
+        setTimeout(() => {
+          timeStamp = Date.now();
+        }, 1000);
+      };
+
+      player.addListener("player_state_changed", handleStateChange);
+
+      return () =>
+        player.removeListener("player_state_changed", handleStateChange);
+    }
+  }, [player, trackTimer]);
 
   return { deviceState, loadScript, player, queTrack };
 }

@@ -10,15 +10,15 @@ import theme from "./theme";
 //Modules
 import Auth from "./modules/Auth";
 
-//Components
-import Home from "./components/Home";
-import Callback from "./components/Callback";
-import RoomSearch from "./components/RoomSearch";
+//Routes
+import Landing from "./pages/Agnostic/Landing/Landing";
+import Callback from "./pages/Agnostic/Callback";
+import RoomSearch from "./pages/Agnostic/RoomSearch/RoomSearch";
 
 //Reducers
 import authReducer from "./reducers/authReducer";
 // import RoomInterface from "./interfaces/Mobile/RoomInterface";
-import DesktopRoomInterface from "./interfaces/Desktop/DesktopRoomInterface";
+import Room from "./pages/Desktop/Room/Room";
 
 //Styles
 import "./global.css";
@@ -35,10 +35,10 @@ const App = hot(module)(() => (
   <Provider store={store}>
     <ThemeProvider theme={theme}>
       <Router>
-        <Route exact path="/" component={Home} />
+        <Route exact path="/" component={Landing} />
         <Route path="/roomsearch" component={RoomSearch} />
         {/* <Route path="/room/:roomid" component={RoomInterface} /> */}
-        <Route path="/room/:roomid" component={DesktopRoomInterface} />
+        <Route path="/room/:roomid" component={Room} />
 
         <Route path="/auth/callback" component={Callback} />
       </Router>

@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import Auth from "../modules/Auth";
+import Auth from "../../modules/Auth";
 import { useDispatch } from "react-redux";
 
 export default function Callback(props) {

@@ -1,11 +1,6 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import Auth from "../modules/Auth";
-import { useSelector } from "react-redux";
 import styled from "styled-components";
-import spotifyLogo from "../images/spotifyLogo.png";
 
-const Background = styled.div`
+export const Background = styled.div`
   background: ${props => props.theme.gradient};
   height: 100vh;
   justify-content: center;
@@ -17,7 +12,7 @@ const Background = styled.div`
   color: ${props => props.theme.white};
 `;
 
-const Head = styled.div`
+export const Head = styled.div`
   text-align: center;
   & > h1 {
     font-size: 5rem;
@@ -40,7 +35,7 @@ const Head = styled.div`
     }
   }
 `;
-const Body = styled.div`
+export const Body = styled.div`
   animation: fadeIn 1s;
 
   @keyframes fadeIn {
@@ -64,7 +59,7 @@ const Body = styled.div`
     color: ${props => props.theme.black};
   }
 `;
-const Submit = styled.button`
+export const Submit = styled.button`
   border: none;
   padding: 20px;
   font-size: 1.2rem;
@@ -79,7 +74,7 @@ const Submit = styled.button`
   }
 `;
 
-const Input = styled.input`
+export const Input = styled.input`
   margin: 0px;
   background-color: ${props => props.theme.transparent4};
   padding: 20px;
@@ -88,11 +83,11 @@ const Input = styled.input`
   text-align: center;
   width: 300px;
 `;
-const ShadowWrapper = styled.div`
+export const ShadowWrapper = styled.div`
   box-shadow: 4px 4px ${props => props.theme.gray};
 `;
 
-const Button = styled.button`
+export const Button = styled.button`
   background: ${props => props.theme.transparent3};
   margin: 0px;
   padding: 30px 50px;
@@ -128,36 +123,3 @@ const Button = styled.button`
     margin-right: 10px;
   }
 `;
-
-export default function Home(props) {
-  const { login, logout } = Auth;
-  const auth = useSelector(state => state.auth);
-  return (
-    <Background>
-      <Head>
-        {" "}
-        <h1>Airplayer</h1>
-        <p>Connect to parties in your area</p>
-      </Head>
-      <Body>
-        {auth.isAuthenticated ? (
-          <>
-            <ShadowWrapper>
-              <Input type="text" placeholder="Enter your location..."></Input>
-              <Submit>
-                <Link to="/roomsearch">Go</Link>
-              </Submit>
-            </ShadowWrapper>
-
-            <p onClick={logout}>or click here to logout</p>
-          </>
-        ) : (
-          <Button onClick={login}>
-            <img src={spotifyLogo} alt="" />
-            <p>Login With Spotify</p>
-          </Button>
-        )}
-      </Body>
-    </Background>
-  );
-}
