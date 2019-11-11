@@ -17,6 +17,7 @@ import {
 export default function Landing(props) {
   const { login, logout } = Auth;
   const auth = useSelector(state => state.auth);
+  console.log(auth.isAuthenticated());
   return (
     <Background>
       <Head>

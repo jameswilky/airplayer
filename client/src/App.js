@@ -27,7 +27,7 @@ const INITIAL_STATE = {
   auth: {
     refreshToken: Auth.getRefreshToken(),
     accessToken: Auth.getAccessToken(),
-    isAuthenticated: Auth.isAuthenticated()
+    isAuthenticated: Auth.isAuthenticated
   }
 };
 const store = createStore(authReducer, INITIAL_STATE);
