@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
 import Home from "../Home/Home";
-import { useSelector } from "react-redux";
 import useSearch from "../../../hooks/useSearch/useSearch";
 
 import theme from "../../../theme";
@@ -9,6 +8,7 @@ import theme from "../../../theme";
 import SpotifyWebplayer from "../../../components/SpotifyWebplayer/SpotifyWebplayer";
 
 import useRoom from "../../../hooks/useRoom";
+import useAuth from "../../../hooks/useAuth";
 
 const Background = styled.div`
   background: ${props => props.theme.gradient};
@@ -39,7 +39,7 @@ const Footer = styled.footer`
 `;
 
 export default function Room() {
-  const accessToken = useSelector(state => state.auth.accessToken);
+  const { accessToken } = useAuth();
   const { queryResults } = useSearch();
 
   const room = useRoom();

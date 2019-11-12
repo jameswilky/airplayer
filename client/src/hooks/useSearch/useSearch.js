@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import Spotify from "../../modules/Spotify";
-import { useSelector } from "react-redux";
+import useAuth from "../useAuth";
 import { getKey, getNestedProperty } from "../../helpers/ObjectUtils";
 import SpotifyHelper from "../../modules/SpotifyHelper/SpotifyHelper";
 
 export default function useSearch() {
   // Store Access
-  const accessToken = useSelector(state => state.auth.accessToken);
+  const { accessToken } = useAuth();
   // Local State
   const [query, setQuery] = useState("tobi");
   const [queryResults, setQueryResults] = useState({

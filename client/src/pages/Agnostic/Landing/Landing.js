@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import Auth from "../../../modules/Auth";
-import { useSelector } from "react-redux";
+import useAuth from "../../../hooks/useAuth";
+
 import spotifyLogo from "../../../images/spotifyLogo.png";
 
 import {
@@ -15,9 +15,8 @@ import {
 } from "./styles";
 
 export default function Landing(props) {
-  const { login, logout } = Auth;
-  const auth = useSelector(state => state.auth);
-  console.log(auth.isAuthenticated());
+  const { login, logout, isAuthenticated } = useAuth();
+
   return (
     <Background>
       <Head>
@@ -26,7 +25,7 @@ export default function Landing(props) {
         <p>Connect to parties in your area</p>
       </Head>
       <Body>
-        {auth.isAuthenticated ? (
+        {isAuthenticated ? (
           <>
             <ShadowWrapper>
               <Input type="text" placeholder="Enter your location..."></Input>
