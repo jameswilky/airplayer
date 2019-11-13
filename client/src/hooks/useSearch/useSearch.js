@@ -37,7 +37,6 @@ export default function useSearch() {
       );
     };
     if (query !== "" && accessToken) {
-      console.log("query");
       getQueries(query).then(nextResults => {
         setQueryResults(nextResults);
       });

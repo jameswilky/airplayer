@@ -37,7 +37,7 @@ export default function useAuth(auth) {
   useInterval(
     () => refreshToken(),
     authData.accessTokenCreationTime
-      ? Date.now() - authData.accessTokenCreationTime + anHour
+      ? authData.accessTokenCreationTime - Date.now() + anHour
       : null
   );
 

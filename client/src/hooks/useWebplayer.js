@@ -1,5 +1,11 @@
-import React, { useEffect, useState, useReducer, useCallback } from "react";
-
+import React, {
+  useEffect,
+  useState,
+  useReducer,
+  useCallback,
+  useRef
+} from "react";
+import useTimeout from "./useTimeout";
 const deviceReducer = (state, action) => {
   switch (action.type) {
     case "SET_DEVICE":
@@ -40,7 +46,6 @@ export default function useWebplayer(
     remaining: null
   });
 
-  const [timerActive, setTimerActive] = useState(false);
   const [trackFinished, setTrackFinished] = useState(false);
 
   const [deviceState, dispatch] = useReducer(deviceReducer, {
@@ -70,41 +75,37 @@ export default function useWebplayer(
     [deviceState.id, token]
   );
 
-  // A few milliseconds before a track ends, pause it then skip to next track
+  const skipAttempts = useRef(0);
+  const [delay, setDelay] = useState();
 
-  useEffect(() => {
-    // Due to a bug in the Spotify WebSDK, tracks will always repeat
-    // This prevents the next track playing for a few seconds before changing,
-    // by deliberately pausing 1 second before and quing next track
+  useEffect(() => setDelay(trackTimer.remaining - 2000), [
+    trackTimer.remaining
+  ]);
 
-    console.log((trackTimer.remaining - 10000) / 1000 / 60);
-    const pauseTrackJustBeforeFinished = () =>
-      trackTimer.duration &&
-      trackTimer.remaining &&
-      setTimeout(() => console.log("next Track"), trackTimer.remaining - 10000);
-
-    if (timerActive) {
-      clearTimeout(pauseTrackJustBeforeFinished);
-      pauseTrackJustBeforeFinished();
-    }
-
-    return () => clearTimeout(pauseTrackJustBeforeFinished);
-  }, [player, trackTimer, timerActive]);
-
+  useTimeout(
+    () => {
+      skipAttempts.current += 1;
+      console.log(skipAttempts);
+      setTrackFinished(true);
+    },
+    trackTimer.remaining ? delay : null
+  );
   // Load the first track in the roomstate
   useEffect(() => {
     room.controller.play(room.state.playlist[0].trackId);
   }, []);
 
-  // When a track ends, que the next track
+  //When a track ends, que the next track
   useEffect(() => {
-    if (trackFinished == true) {
-      player.pause().then(() => {
-        queTrack(1);
-        setTrackFinished(false);
-      });
+    if (trackFinished) {
+      console.log("false next Track ATTEMPT");
     }
-  }, [trackFinished]);
+    if (trackFinished == true && skipAttempts.current === 1) {
+      console.log("next Track");
+      queTrack(1);
+      setTrackFinished(false);
+    }
+  });
 
   const queTrack = useCallback(
     pos => {
@@ -115,6 +116,7 @@ export default function useWebplayer(
 
       if (nextSong) {
         room.controller.play(nextSong);
+        setTimeout(() => (skipAttempts.current = 0), 5000);
       }
     },
     [deviceState]
@@ -125,7 +127,7 @@ export default function useWebplayer(
     // start variable is used for toggling autoplay
     if (start) {
       if (deviceState.ready && deviceState.currentSong) {
-        play(deviceState.currentSong).then(() => setTimerActive(true));
+        play(deviceState.currentSong);
       }
     } else {
       room.controller.pause();
@@ -136,8 +138,10 @@ export default function useWebplayer(
   useEffect(() => {
     if (deviceState.ready && deviceState.currentSong) {
       if (deviceState.paused) {
+        console.log("pausing");
         player.pause();
       } else {
+        console.log("playing");
         player.resume();
       }
     }
@@ -173,6 +177,7 @@ export default function useWebplayer(
 
   // Set up webplayer
   useEffect(() => {
+    // Assign event to listen for script to load
     window.onSpotifyWebPlaybackSDKReady = () => {
       const player = new window.Spotify.Player({
         name: "Web Playback SDK Quick Start Player",
@@ -184,6 +189,7 @@ export default function useWebplayer(
         success ? setPlayer(player) : setPlayer({ error: "Failed to connect" });
       });
     };
+    // Start loading script
     setLoadScript(true);
   }, [player, window.Spotify]);
 
@@ -225,19 +231,23 @@ export default function useWebplayer(
     if (player) {
       let timeStamp = Date.now();
       const handleStateChange = state => {
-        // Hacky way to make sure the event doesnt trigger end of track
-        // too many times, event is triggering multiple times for some reason
-        if (timeStamp > 0) {
-          setTrackTimer({
-            duration: state.duration,
-            remaining: state.duration - state.position
-          });
-        }
+        setTrackTimer({
+          duration: state.duration,
+          remaining: state.duration - state.position
+        });
+        // // Hacky way to make sure the event doesnt trigger end of track
+        // // too many times, event is triggering multiple times for some reason
+        // if (timeStamp > 0) {
+        //   setTrackTimer({
+        //     duration: state.duration,
+        //     remaining: state.duration - state.position
+        //   });
+        // }
 
-        timeStamp -= state.timestamp;
-        setTimeout(() => {
-          timeStamp = Date.now();
-        }, 1000);
+        // timeStamp -= state.timestamp;
+        // setTimeout(() => {
+        //   timeStamp = Date.now();
+        // }, 1000);
       };
 
       player.addListener("player_state_changed", handleStateChange);

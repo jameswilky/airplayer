@@ -15,6 +15,7 @@ function useTimeout(callback, delay) {
     }
     if (delay !== null) {
       let id = setTimeout(tick, delay);
+
       return () => clearTimeout(id);
     }
   }, [delay]);
