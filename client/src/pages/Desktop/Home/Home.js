@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import Carousel from "../../../components/Carousel/";
+import Carousel from "../../../components/Carousel/Carousel";
 import List from "../../../components/List";
 import ListItem from "../../../components/ListItem";
 import StyledListItem from "../../../styles/StyledListItem";
@@ -33,7 +33,6 @@ const RoomPlaylist = styled.div`
 export default function Home({ room }) {
   const { queryResults } = useSearch();
   const { roomTracks } = useRoomTracks(room);
-
   const play = (e, item) => {
     room.controller.play(item.uri);
   };

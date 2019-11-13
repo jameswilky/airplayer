@@ -33,10 +33,12 @@ export default function useAuth(auth) {
         setAuthData(nextAuthData);
       });
 
-  // refresh token after an hour
+  // Refresh token after an hour
   useInterval(
     () => refreshToken(),
-    Date.now() - authData.accessTokenCreationTime + anHour
+    authData.accessTokenCreationTime
+      ? Date.now() - authData.accessTokenCreationTime + anHour
+      : null
   );
 
   // TODO fix timers
@@ -65,7 +67,6 @@ export default function useAuth(auth) {
       window.location.reload();
     }, 2000);
   };
-
   return {
     login,
     logout,

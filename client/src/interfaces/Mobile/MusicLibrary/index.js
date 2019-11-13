@@ -3,7 +3,7 @@ import { StyledContainer, StyledChevron } from "./styles";
 
 //Components
 import SongList from "../../../components/SongList";
-import Carousel from "../../../components/Carousel";
+import Carousel from "../../../components/Carousel/Carousel";
 
 import useSearch from "../../../hooks/useSearch/useSearch";
 

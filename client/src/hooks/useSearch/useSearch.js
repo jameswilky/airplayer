@@ -36,13 +36,13 @@ export default function useSearch() {
         })
       );
     };
-
-    if (query !== "") {
+    if (query !== "" && accessToken) {
+      console.log("query");
       getQueries(query).then(nextResults => {
         setQueryResults(nextResults);
       });
     }
-  }, [query]);
+  }, [query, accessToken]);
 
   return {
     query,
