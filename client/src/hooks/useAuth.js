@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import useInterval from "./useInterval";
 
 export default function useAuth(auth) {
@@ -20,28 +20,26 @@ export default function useAuth(auth) {
     if (prevAuthData) setAuthData(prevAuthData);
   }, []);
 
-  // Refresh token after an hour
-  useEffect(() => {
-    let timer;
-    if (authData.accessToken && authData.accessTokenCreationTime) {
-      timer = setTimeout(() => {
-        fetch(
-          `${server}/auth/refreshToken?refresh_token=${authData.accessToken}`
-        )
-          .then(res => res.json())
-          .then(data =>
-            setAuthData({
-              ...authData,
-              accessToken: data.acces_token,
-              accessTokenCreationTime: Date.now()
-            })
-          );
-      }, authData.accessTokenCreationTime - Date.now() + anHour);
-    }
+  const refreshToken = () =>
+    fetch(`${server}/auth/refreshToken?refresh_token=${authData.refreshToken}`)
+      .then(res => res.json())
+      .then(data => {
+        const nextAuthData = {
+          ...authData,
+          accessToken: data.access_token,
+          accessTokenCreationTime: Date.now()
+        };
+        localStorage.setItem("authData", JSON.stringify(nextAuthData));
+        setAuthData(nextAuthData);
+      });
 
-    return () => clearTimeout(timer);
-  }, [authData.accessToken]);
+  // refresh token after an hour
+  useInterval(
+    () => refreshToken(),
+    Date.now() - authData.accessTokenCreationTime + anHour
+  );
 
+  // TODO fix timers
   //Updated boolean to let consumer now that we are authenticated
   useEffect(() => {
     if (authData.accessToken) setIsAuthenticated(true);

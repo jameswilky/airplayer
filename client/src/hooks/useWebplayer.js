@@ -37,9 +37,10 @@ export default function useWebplayer(
 
   const [trackTimer, setTrackTimer] = useState({
     duration: duration,
-    remaining: null,
-    active: false
+    remaining: null
   });
+
+  const [timerActive, setTimerActive] = useState(false);
   const [trackFinished, setTrackFinished] = useState(false);
 
   const [deviceState, dispatch] = useReducer(deviceReducer, {
@@ -50,20 +51,6 @@ export default function useWebplayer(
     playlist: [],
     lastSeek: 0
   });
-
-  const setTimer = useCallback(
-    ({
-      active = trackTimer.active,
-      duration = trackTimer.duration,
-      remaining = trackTimer.remaining
-    }) => {
-      setTrackTimer({
-        active,
-        duration,
-        remaining
-      });
-    }
-  );
 
   const play = useCallback(
     async track =>
@@ -90,18 +77,19 @@ export default function useWebplayer(
     // This prevents the next track playing for a few seconds before changing,
     // by deliberately pausing 1 second before and quing next track
 
+    console.log((trackTimer.remaining - 10000) / 1000 / 60);
     const pauseTrackJustBeforeFinished = () =>
-      setTimeout(
-        () => console.log("next Track", trackTimer.duration),
-        trackTimer.remaining - 10000
-      );
-    if (trackTimer.active) {
-      console.log("tracktimer on");
+      trackTimer.duration &&
+      trackTimer.remaining &&
+      setTimeout(() => console.log("next Track"), trackTimer.remaining - 10000);
+
+    if (timerActive) {
+      clearTimeout(pauseTrackJustBeforeFinished);
       pauseTrackJustBeforeFinished();
     }
 
     return () => clearTimeout(pauseTrackJustBeforeFinished);
-  }, [player, trackTimer]);
+  }, [player, trackTimer, timerActive]);
 
   // Load the first track in the roomstate
   useEffect(() => {
@@ -137,7 +125,7 @@ export default function useWebplayer(
     // start variable is used for toggling autoplay
     if (start) {
       if (deviceState.ready && deviceState.currentSong) {
-        play(deviceState.currentSong).then(() => setTimer({ active: true }));
+        play(deviceState.currentSong).then(() => setTimerActive(true));
       }
     } else {
       room.controller.pause();
@@ -202,8 +190,6 @@ export default function useWebplayer(
   //Player Events
   useEffect(() => {
     if (player) {
-      console.log("playerevent");
-
       // Error handling
       player.addListener("initialization_error", ({ message }) => {
         console.error(message);
@@ -243,7 +229,6 @@ export default function useWebplayer(
         // too many times, event is triggering multiple times for some reason
         if (timeStamp > 0) {
           setTrackTimer({
-            ...trackTimer,
             duration: state.duration,
             remaining: state.duration - state.position
           });
