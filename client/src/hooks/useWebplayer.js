@@ -31,20 +31,9 @@ const deviceReducer = (state, action) => {
 };
 
 // This webplayer will control the player by reading state from the room
-export default function useWebplayer(
-  token,
-  room,
-  start,
-  setSeekPosition,
-  duration
-) {
+export default function useWebplayer(token, room, start, duration) {
   const [player, setPlayer] = useState();
   const [loadScript, setLoadScript] = useState(false);
-
-  const [trackTimer, setTrackTimer] = useState({
-    duration: duration,
-    remaining: null
-  });
 
   const [trackFinished, setTrackFinished] = useState(false);
 
@@ -76,32 +65,18 @@ export default function useWebplayer(
   );
 
   const skipAttempts = useRef(0);
-  const [delay, setDelay] = useState();
+  const [remaining, setRemaining] = useState(null);
 
-  useEffect(() => setDelay(trackTimer.remaining - 2000), [
-    trackTimer.remaining
-  ]);
-
-  useTimeout(
-    () => {
-      skipAttempts.current += 1;
-      console.log(skipAttempts);
-      setTrackFinished(true);
-    },
-    trackTimer.remaining ? delay : null
-  );
-  // Load the first track in the roomstate
-  useEffect(() => {
-    room.controller.play(room.state.playlist[0].trackId);
-  }, []);
+  // 1 Second before track finishes, que the next track
+  // Workaround for spotify sdk bug
+  useTimeout(() => {
+    skipAttempts.current += 1;
+    setTrackFinished(true);
+  }, remaining);
 
   //When a track ends, que the next track
   useEffect(() => {
-    if (trackFinished) {
-      console.log("false next Track ATTEMPT");
-    }
     if (trackFinished == true && skipAttempts.current === 1) {
-      console.log("next Track");
       queTrack(1);
       setTrackFinished(false);
     }
@@ -121,6 +96,11 @@ export default function useWebplayer(
     },
     [deviceState]
   );
+
+  // Load the first track in the roomstate
+  useEffect(() => {
+    room.controller.play(room.state.playlist[0].trackId);
+  }, []);
 
   // Play loaded track
   useEffect(() => {
@@ -148,11 +128,6 @@ export default function useWebplayer(
   }, [deviceState.ready, deviceState.currentSong, deviceState.paused]);
 
   // When seek position changes update player accordingly
-  // useEffect(() => {
-  //   if (deviceState.ready && deviceState.currentSong && duration) {
-  //     player.seek((parseInt(seekPosition) / 100) * duration)
-  //   }
-  // }, [deviceState.ready, deviceState.currentSong, seekPosition, duration]);
   useEffect(() => {
     if (
       deviceState.ready &&
@@ -161,7 +136,6 @@ export default function useWebplayer(
       deviceState.lastSeek
     ) {
       player.seek(deviceState.lastSeek);
-      setSeekPosition((deviceState.lastSeek / duration) * 100);
     }
   }, [
     deviceState.ready,
@@ -227,35 +201,17 @@ export default function useWebplayer(
     }
   }, [player]);
 
+  // When device state updates, get current position of track
   useEffect(() => {
     if (player) {
-      let timeStamp = Date.now();
       const handleStateChange = state => {
-        setTrackTimer({
-          duration: state.duration,
-          remaining: state.duration - state.position
-        });
-        // // Hacky way to make sure the event doesnt trigger end of track
-        // // too many times, event is triggering multiple times for some reason
-        // if (timeStamp > 0) {
-        //   setTrackTimer({
-        //     duration: state.duration,
-        //     remaining: state.duration - state.position
-        //   });
-        // }
-
-        // timeStamp -= state.timestamp;
-        // setTimeout(() => {
-        //   timeStamp = Date.now();
-        // }, 1000);
+        setRemaining(state.duration - state.position - 1000);
       };
-
       player.addListener("player_state_changed", handleStateChange);
-
       return () =>
         player.removeListener("player_state_changed", handleStateChange);
     }
-  }, [player, trackTimer]);
+  }, [player]);
 
   return { deviceState, loadScript, player, queTrack };
 }
