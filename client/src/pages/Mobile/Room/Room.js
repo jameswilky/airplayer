@@ -1,13 +1,13 @@
 import React, { useEffect } from "react";
 import { Route } from "react-router-dom";
 
-import MusicPlayerInterface from "./MusicPlayer";
-import MusicSearchInterface from "./MusicSearch";
-import MusicLibraryInterface from "./MusicLibrary";
-import Footer from "../../components/Footer";
+import Home from "../Home/Home";
+import Search from "../Search/Search";
+import Library from "../Library/Library";
+import Footer from "../../../components/MobileMenu";
 import styled from "styled-components";
 
-import useRoom from "../../hooks/useRoom";
+import useRoom from "../../../hooks/useRoom";
 
 const Container = styled.div`
   color: whitesmoke;
@@ -15,7 +15,7 @@ const Container = styled.div`
   font-size: 1.5rem;
 `;
 
-export default function RoomInterface(props) {
+export default function Room(props) {
   const roomId = props.location.pathname
     .split("/")
     .slice(-1)
@@ -36,9 +36,9 @@ export default function RoomInterface(props) {
   return (
     <Container>
       {" "}
-      <Route exact path={`${path}`} component={MusicPlayerInterface}></Route>
-      <Route path={`${path}/search`} component={MusicSearchInterface}></Route>
-      <Route path={`${path}/library`} component={MusicLibraryInterface}></Route>
+      <Route exact path={`${path}`} component={Home}></Route>
+      <Route path={`${path}/search`} component={Search}></Route>
+      <Route path={`${path}/library`} component={Library}></Route>
       <Footer />
     </Container>
   );

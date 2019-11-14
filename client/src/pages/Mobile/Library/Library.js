@@ -2,12 +2,12 @@ import React, { useState, useEffect } from "react";
 import { StyledContainer, StyledChevron } from "./styles";
 
 //Components
-import SongList from "../../../components/SongList";
+import SongList from "../../../components/SongList/SongList";
 import Carousel from "../../../components/Carousel/Carousel";
 
 import useSearch from "../../../hooks/useSearch/useSearch";
 
-export default function MusicLibraryInterface() {
+export default function Library() {
   const { query, setQuery, queryResults } = useSearch("");
   const { albums, tracks, artists, playlists } = queryResults;
 

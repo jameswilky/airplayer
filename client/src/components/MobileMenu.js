@@ -34,7 +34,7 @@ const Container = styled.div`
   }
 `;
 
-export default function Footer() {
+export default function MobileMenu() {
   return (
     <Container>
       <Body>

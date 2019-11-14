@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
-import SongList from "../../../components/SongList";
-import Input from "../../../components/Input";
+import SongList from "../../../components/SongList/SongList";
+import Input from "../../../components/Input/Input";
 
 import useSearch from "../../../hooks/useSearch/useSearch";
 import StyledSearchBar from "../../../styles/StyledSearchBar";
@@ -12,7 +12,7 @@ import {
   StyledButton
 } from "./styles";
 
-export default function MusicSearchInterface() {
+export default function Search() {
   // Local State
   const { query, setQuery, queryResults } = useSearch("tobi");
   const { albums, tracks, artists, playlists } = queryResults;

@@ -1,13 +1,13 @@
 1. Webplayer
 
 - Functionality
-  1. Volume Slider
-  2. if no tracks left in playlist, restart playlist
+  1. if no tracks left in playlist, restart playlist
+  2. Display users in room members section
+  3. Implement Search functionality
+  4. fix mobilelayout
 
 Housekeeping
 
-- Change Interface- component- hooks model to Routes, Components Hooks -- Finished for desktop
 - Add tests
 - Seperate Styling from components
 - FIx warning messages
-- Split up webplayer component

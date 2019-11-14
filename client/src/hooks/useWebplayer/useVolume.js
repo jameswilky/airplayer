@@ -1,10 +1,10 @@
 import { useState } from "react";
-import useDelay from "../useDelay";
+import useDebounce from "../useDebounce";
 
 export default function useVolume(player) {
   const [volume, setVolume] = useState(80);
 
-  useDelay(
+  useDebounce(
     () => {
       if (player)
         player
