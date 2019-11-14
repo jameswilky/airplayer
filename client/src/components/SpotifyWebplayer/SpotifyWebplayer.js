@@ -1,22 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Script from "react-load-script";
 import useWebplayer from "../../hooks/useWebplayer";
 import theme from "../../theme";
-import useInterval from "../../hooks/useInterval";
 import VolumeSlider from "../VolumeSlider";
+import AudioSlider from "../AudioSlider/AudioSlider";
 
-import {
-  Container,
-  Slider,
-  Body,
-  Left,
-  Right,
-  Spinner,
-  ProgressBar
-} from "./styles";
+import { Container, Body, Left, Right, Spinner } from "./styles";
 import useRoomTracks from "../../hooks/useRoomTracks";
-
-import "../../global.css";
 
 import MusicController from "../MusicController";
 
@@ -31,8 +21,6 @@ export default function SpotifyWebplayer({ token, room }) {
 
   const { roomTracks } = useRoomTracks(room);
 
-  const [seekPosition, setSeekPosition] = useState(0);
-
   const [showVolumeSlider, setShowVolumeSlider] = useState(false);
   const duration =
     roomTracks && roomTracks.currentSong && roomTracks.currentSong.duration_ms;
@@ -43,24 +31,6 @@ export default function SpotifyWebplayer({ token, room }) {
     start,
     duration
   );
-
-  // Used for updating slider posiiton
-  // TODO seperate into new component
-  const [trackPosition, setTrackPosition] = useState(0);
-
-  useEffect(() => {
-    setTrackPosition(deviceState.lastSeek);
-  }, [deviceState.lastSeek, deviceState.currentSong]);
-
-  useInterval(
-    () => setTrackPosition(trackPosition + 100),
-    !deviceState.paused ? 100 : null
-  );
-
-  useEffect(() => {
-    const position = (trackPosition / duration) * 300;
-    setSeekPosition(position < 300 ? position : 0);
-  }, [duration, trackPosition]);
 
   return (
     <>
@@ -76,26 +46,11 @@ export default function SpotifyWebplayer({ token, room }) {
 
       {deviceState.ready ? (
         <Container>
-          <Slider>
-            <ProgressBar
-              width={seekPosition ? seekPosition / 3 + "%" : 0}
-            ></ProgressBar>
-            <input
-              type="range"
-              min="0"
-              max="300"
-              className="slider"
-              value={seekPosition}
-              onChange={e => {
-                if (duration) {
-                  const seekDestinationMs = Math.round(
-                    (parseInt(e.target.value) / 300) * duration
-                  );
-                  room.controller.seek(seekDestinationMs);
-                }
-              }}
-            />
-          </Slider>
+          <AudioSlider
+            duration={duration}
+            deviceState={deviceState}
+            seek={room.controller.seek}
+          ></AudioSlider>
           <Body>
             <Left>
               <img

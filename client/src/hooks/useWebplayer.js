@@ -118,10 +118,8 @@ export default function useWebplayer(token, room, start, duration) {
   useEffect(() => {
     if (deviceState.ready && deviceState.currentSong) {
       if (deviceState.paused) {
-        console.log("pausing");
         player.pause();
       } else {
-        console.log("playing");
         player.resume();
       }
     }
