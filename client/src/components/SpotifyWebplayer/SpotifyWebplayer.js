@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Script from "react-load-script";
-import useWebplayer from "../../hooks/useWebplayer/useWebplayer";
+import useWebplayer from "../../hooks/useWebplayer/";
 import theme from "../../theme";
 import VolumeSlider from "../VolumeSlider";
 import AudioSlider from "../AudioSlider/AudioSlider";
