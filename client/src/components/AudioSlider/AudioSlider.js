@@ -4,17 +4,23 @@ import "../../global.css";
 
 import useInterval from "../../hooks/useInterval";
 
-export default function AudioSlider({ deviceState, duration, seek }) {
+export default function AudioSlider({
+  playing,
+  currentSong,
+  lastSeek,
+  duration,
+  seek
+}) {
   const [seekPosition, setSeekPosition] = useState(0);
   const [trackPosition, setTrackPosition] = useState(0);
 
   useEffect(() => {
-    setTrackPosition(deviceState.lastSeek);
-  }, [deviceState.lastSeek, deviceState.currentSong]);
+    setTrackPosition(lastSeek);
+  }, [lastSeek, currentSong]);
 
   useInterval(
     () => setTrackPosition(trackPosition + 100),
-    !deviceState.paused ? 100 : null
+    playing ? 100 : null
   );
 
   useEffect(() => {

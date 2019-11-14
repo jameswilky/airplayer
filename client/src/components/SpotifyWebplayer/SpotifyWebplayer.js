@@ -1,31 +1,24 @@
 import React, { useState } from "react";
 import Script from "react-load-script";
-import useWebplayer from "../../hooks/useWebplayer";
+import useWebplayer from "../../hooks/useWebplayer/useWebplayer";
 import theme from "../../theme";
 import VolumeSlider from "../VolumeSlider";
 import AudioSlider from "../AudioSlider/AudioSlider";
 
 import { Container, Body, Left, Right, Spinner } from "./styles";
-import useRoomTracks from "../../hooks/useRoomTracks";
 
 import MusicController from "../MusicController";
 
-export default function SpotifyWebplayer({ token, room }) {
+export default function SpotifyWebplayer({ token, room, roomTracks }) {
   const [scriptState, setScriptState] = useState({
     error: false
   });
 
   const [start, setStart] = useState(false);
 
-  const [volume, setVolume] = useState(0);
+  const duration = roomTracks.currentSong.duration_ms;
 
-  const { roomTracks } = useRoomTracks(room);
-
-  const [showVolumeSlider, setShowVolumeSlider] = useState(false);
-  const duration =
-    roomTracks && roomTracks.currentSong && roomTracks.currentSong.duration_ms;
-
-  const { loadScript, deviceState, queTrack } = useWebplayer(
+  const { loadScript, deviceState, queTrack, volume, setVolume } = useWebplayer(
     token,
     room,
     start,
@@ -48,7 +41,9 @@ export default function SpotifyWebplayer({ token, room }) {
         <Container>
           <AudioSlider
             duration={duration}
-            deviceState={deviceState}
+            playing={!deviceState.paused}
+            lastSeek={deviceState.lastSeek}
+            currentSong={deviceState.currentSong}
             seek={room.controller.seek}
           ></AudioSlider>
           <Body>
@@ -70,8 +65,6 @@ export default function SpotifyWebplayer({ token, room }) {
             ></MusicController>
             <Right>
               <VolumeSlider
-                show={showVolumeSlider}
-                setShow={setShowVolumeSlider}
                 volume={volume}
                 setVolume={setVolume}
               ></VolumeSlider>

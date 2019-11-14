@@ -36,7 +36,9 @@ const SliderBackground = styled.div`
   }
 `;
 
-export default function VolumeSlider({ show, setShow, volume, setVolume }) {
+export default function VolumeSlider({ volume, setVolume }) {
+  const [show, setShow] = useState(false);
+
   return (
     <HoverArea
       onMouseEnter={() => setShow(true)}

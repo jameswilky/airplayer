@@ -9,6 +9,7 @@ import SpotifyWebplayer from "../../../components/SpotifyWebplayer/SpotifyWebpla
 
 import useRoom from "../../../hooks/useRoom";
 import useAuth from "../../../hooks/useAuth";
+import useRoomTracks from "../../../hooks/useRoomTracks";
 
 const Background = styled.div`
   background: ${props => props.theme.gradient};
@@ -43,9 +44,20 @@ export default function Room() {
   const { queryResults } = useSearch();
 
   const room = useRoom();
+  const { roomTracks } = useRoomTracks(room);
+
   const {
     controller: { joinRoom, addTrack, removeTrack }
   } = room;
+
+  const playerReady =
+    accessToken &&
+    room.state &&
+    room.state.currentSong &&
+    roomTracks &&
+    roomTracks.currentSong;
+
+  const homeReady = room && room.state;
   useEffect(() => {
     joinRoom("5d47d90a191f0f30a0d73414");
   }, []);
@@ -67,13 +79,14 @@ export default function Room() {
         <Header>Search Bar || Login</Header>
         <Main>
           {/* Depends on Route*/}
-          <Home room={room}></Home>
+          {homeReady && <Home room={room}></Home>}
         </Main>
         <Footer>
-          {accessToken && room.state && room.state.currentSong && (
+          {playerReady && (
             <SpotifyWebplayer
               token={accessToken}
               room={room}
+              roomTracks={roomTracks}
             ></SpotifyWebplayer>
           )}
         </Footer>
