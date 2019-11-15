@@ -4,7 +4,7 @@ export const SearchFilterContainer = styled.div`
   font-size: 0.5em;
   display: flex;
   justify-content: space-between;
-  margin-top: ${props => 1 * props.theme.unit + "px"};
+  margin-top: ${props => 2 * props.theme.unit + "px"};
 `;
 export const Button = styled.div`
   border: 1px solid grey;
@@ -20,7 +20,7 @@ export const Wrapper = styled.div`
 export const Container = styled.div`
   width: 100%;
   border-bottom: 1px solid ${props => props.theme.white};
-  padding: ${props => 1 * props.theme.unit + "px"};
+  padding: ${props => 2 * props.theme.unit + "px"};
   position: fixed;
   background-color: ${props => props.theme.darkestGray};
   z-index: 10;
@@ -33,6 +33,6 @@ export const Container = styled.div`
     height: ${props => 8 * props.theme.unit + "px"};
     color: ${props => props.theme.white};
     font-size: 2rem;
-    padding: ${props => 1 * props.theme.unit + "px"};
+    padding: ${props => 2 * props.theme.unit + "px"};
   }
 `;

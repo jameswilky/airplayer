@@ -2,11 +2,11 @@ import styled from "styled-components";
 
 export const StyledList = styled.ul`
   display: flex;
-  padding: ${props => 1 * props.theme.unit + "px"};
+  padding: ${props => 2 * props.theme.unit + "px"};
 `;
 
 export const StyledContainer = styled.div`
-  height: ${props => 24 * props.theme.unit + "px"};
+  height: ${props => 25 * props.theme.unit + "px"};
   overflow: scroll;
   scrollbar-width: none;
   ::-webkit-scrollbar {
@@ -16,7 +16,7 @@ export const StyledContainer = styled.div`
 `;
 export const StyledItem = styled.li`
   list-style: none;
-  padding-right: ${props => 1 * props.theme.unit + "px"};
+  padding-right: ${props => 2 * props.theme.unit + "px"};
   & * {
     padding: ${props => 0.25 * props.theme.unit + "px"};
   }

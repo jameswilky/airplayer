@@ -16,7 +16,7 @@ export default function useRoomTracks(room) {
   const spotify = Spotify(accessToken);
 
   useEffect(() => {
-    if (room.state.currentSong && room.state.playlist) {
+    if (room && room.state.currentSong && room.state.playlist) {
       const currentSongPromise = spotify.find({
         track: { where: { id: room.state.currentSong.trackId.split(":")[2] } }
       });
@@ -39,7 +39,7 @@ export default function useRoomTracks(room) {
         }
       );
     }
-  }, [room.state]);
+  }, [room]);
 
   return { roomTracks };
 }

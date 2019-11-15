@@ -49,6 +49,7 @@ const App = hot(module)(() => {
   });
 
   useEffect(() => handleResize(), []);
+
   return (
     <Provider store={store}>
       <ThemeProvider theme={theme}>

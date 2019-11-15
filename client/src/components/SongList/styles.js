@@ -11,7 +11,7 @@ export const StyledChevron = styled(Chevron)`
 
 // TODO add theme to manage colors and padding
 export const StyledContainer = styled.div`
-  padding: ${props => 1 * props.theme.unit + "px"};
+  padding: ${props => 2 * props.theme.unit + "px"};
   background-color: ${props => props.theme.black};
 `;
 
@@ -21,7 +21,7 @@ export const StyledResult = styled.div`
 
 export const StyledList = styled.ul`
   font-size: 1rem;
-  padding-top: ${props => 1 * props.theme.unit + "px"};
+  padding-top: ${props => 2 * props.theme.unit + "px"};
   & li {
     list-style: none;
   }
