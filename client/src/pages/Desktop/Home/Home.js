@@ -10,23 +10,26 @@ import useRoomTracks from "../../../hooks/useRoomTracks";
 const Container = styled.div`
   display: grid;
   height: 100%;
-  grid-template-columns: calc(50% - 85px) 1fr;
+  grid-template-columns: calc(50% - 62px) 1fr;
   grid-template-rows: 1fr 2fr;
-  grid-gap: 15px;
-  padding: 15px;
+  grid-gap: ${props => 2 * props.theme.unit + "px"};
 `;
 
 const CarouselContainer = styled.div`
   grid-column: span 2;
+
+  & > h2 {
+    padding-left: ${props => 1.5 * props.theme.unit + "px"};
+  }
 `;
 
 const RoomPlaylist = styled.div`
   & > h2 {
-    margin-bottom: 15px;
+    margin-bottom: ${props => 2 * props.theme.unit + "px"};
   }
   overflow-y: scroll;
 
-  padding: 10px 10px 10px 10px;
+  padding: ${props => 1 * props.theme.unit + "px"};
   background-color: ${props => props.theme.lightestGray};
 `;
 

@@ -19,7 +19,6 @@ import DesktopRoom from "./pages/Desktop/Room/Room";
 
 //Styles
 import "./global.css";
-import { ThemeContext } from "@emotion/core";
 
 // Refactor authentication into a hook instead of using redux
 const INITIAL_STATE = {

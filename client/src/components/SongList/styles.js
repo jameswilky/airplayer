@@ -2,8 +2,8 @@ import styled from "styled-components";
 import { Chevron } from "../../styles/Chevron";
 
 export const StyledChevron = styled(Chevron)`
-  right: 32px;
-  margin-top: -23px;
+  right: ${props => 3 * props.theme.unit + "px"};
+  margin-top: ${props => -2.5 * props.theme.unit + "px"};
   &:before {
     transform: rotate(45deg);
   }
@@ -11,8 +11,8 @@ export const StyledChevron = styled(Chevron)`
 
 // TODO add theme to manage colors and padding
 export const StyledContainer = styled.div`
-  padding: ${props => `${props.top} 10px 50px 10px`};
-  background-color: black;
+  padding: ${props => 1 * props.theme.unit + "px"};
+  background-color: ${props => props.theme.black};
 `;
 
 export const StyledResult = styled.div`
@@ -21,7 +21,7 @@ export const StyledResult = styled.div`
 
 export const StyledList = styled.ul`
   font-size: 1rem;
-  padding-top: 10px;
+  padding-top: ${props => 1 * props.theme.unit + "px"};
   & li {
     list-style: none;
   }

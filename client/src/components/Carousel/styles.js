@@ -2,13 +2,12 @@ import styled from "styled-components";
 
 export const StyledList = styled.ul`
   display: flex;
-  padding: 20px;
+  padding: ${props => 1 * props.theme.unit + "px"};
 `;
 
 export const StyledContainer = styled.div`
-  height: ${props => props.height};
+  height: ${props => 24 * props.theme.unit + "px"};
   overflow: scroll;
-
   scrollbar-width: none;
   ::-webkit-scrollbar {
     width: 0px; /* Remove scrollbar space */
@@ -17,18 +16,18 @@ export const StyledContainer = styled.div`
 `;
 export const StyledItem = styled.li`
   list-style: none;
-  padding-right: 20px;
+  padding-right: ${props => 1 * props.theme.unit + "px"};
   & * {
-    padding: 2px;
+    padding: ${props => 0.25 * props.theme.unit + "px"};
   }
   & img {
-    width: 128px;
-    height: 128px;
+    width: ${props => 16 * props.theme.unit + "px"};
+    height: ${props => 16 * props.theme.unit + "px"};
   }
   font-size: 0.8rem;
   & p {
     display: inline;
-    color: rgba(255, 255, 255, 0.6);
+    color: ${props => props.theme.transparent4};
     text-transform: capitalize;
   }
 `;
@@ -38,11 +37,12 @@ export const StyledItemContainer = styled.span`
 `;
 
 export const StyledPlayButton = styled.div`
-  border: 2px solid transparent;
+  border: 1px solid transparent;
   border-radius: 90px;
-  background-color: rgba(0, 0, 0, 0.3);
-  height: 48px;
-  width: 48px;
+  background-color: ${props => props.theme.transparentBlack};
+
+  height: ${props => 6 * props.theme.unit + "px"};
+  width: ${props => 6 * props.theme.unit + "px"};
   position: relative;
   &::after {
     content: "";
@@ -61,8 +61,8 @@ export const StyledPlayButton = styled.div`
 export const StyledOverlay = styled.div`
   position: absolute;
   top: 0px;
-  height: 128px;
-  width: 128px;
+  height: ${props => 16 * props.theme.unit + "px"};
+  width: ${props => 16 * props.theme.unit + "px"};
   align-items: center;
   justify-content: center;
   display: flex;

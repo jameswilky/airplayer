@@ -15,12 +15,12 @@ export const Background = styled.div`
 export const Container = styled.div`
   display: grid;
   justify-items: center;
-  min-width: 320px;
+  min-width: ${props => 40 * props.theme.unit + "px"};
   width: 85vw;
-  min-height: 400px;
+  min-height: ${props => 50 * props.theme.unit + "px"};
   height: 85vh;
   background-color: ${props => props.theme.transparent2};
-  grid-template-rows: 70px 1fr;
+  grid-template-rows: ${props => 8 * props.theme.unit + "px"} 1fr;
   grid-template-columns: 1fr;
   animation: fadeIn 1s;
   @keyframes fadeIn {
@@ -39,7 +39,7 @@ export const Head = styled.div`
   grid-template-columns: 2fr 1fr;
 
   & > input {
-    padding: 15px;
+    padding: ${props => 1 * props.theme.unit + "px"};
   }
 `;
 
@@ -49,12 +49,12 @@ export const Body = styled.div`
 
     & li:nth-child(even) {
       background: ${props => props.theme.transparent2};
-      height: 80px;
+      height: ${props => 8 * props.theme.unit + "px"};
     }
   }
   overflow-x: hidden;
   overflow-y: scroll;
-  padding-top: 15px;
+  padding-top: ${props => 2 * props.theme.unit + "px"};
 `;
 
 export const ExtendedStyledListItem = styled(StyledListItem)`
@@ -64,8 +64,8 @@ export const ExtendedStyledListItem = styled(StyledListItem)`
     border-radius: 5px;
     cursor: pointer;
     font-size: 0.8rem;
-    width: 90px;
-    height: 30px;
+    width: ${props => 10 * props.theme.unit + "px"};
+    height: ${props => 5 * props.theme.unit + "px"};
   }
-  padding: 0 15px;
+  padding: 0 ${props => 2 * props.theme.unit + "px"};
 `;

@@ -12,25 +12,25 @@ const Row = css`
 
 const Body = styled.div`
   ${Row}
-  border-top: 2px solid white;
+  border-top: 1px solid ${props => props.theme.white};
   justify-items: center;
 `;
 const Underlay = styled.div`
   ${Row}
   position:absolute;
   top: 0px;
-  right: 4px;
+  right: 5px;
   pointer-events: none;
 `;
 
 const Container = styled.div`
-  height: 50px;
+  height: ${props => 6.1 * props.theme.unit + "px"};
   width: 100%;
   position: fixed;
-  background-color: rgba(20, 20, 20, 1);
+  background-color: ${props => props.theme.darkestGray};
 
   & i {
-    color: whitesmoke;
+    color: ${props => props.theme.white};
   }
 `;
 

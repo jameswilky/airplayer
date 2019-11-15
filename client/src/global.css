@@ -62,3 +62,8 @@ input {
   box-shadow: 1px 1px 3px 1px rgba(0, 0, 0, 0.5);
   margin-top: -1px;
 }
+
+body {
+  margin: 0;
+  padding: 0;
+}

@@ -6,9 +6,9 @@ export const Background = styled.div`
   justify-content: center;
   justify-items: center;
   display: grid;
-  grid-gap: 30px;
+  grid-gap: ${props => 2 * props.theme.unit + "px"};
   padding-top: 15vh;
-  grid-template-rows: 140px 1fr;
+  grid-template-rows: ${props => 18 * props.theme.unit + "px"} 1fr;
   color: ${props => props.theme.white};
 `;
 
@@ -21,7 +21,7 @@ export const Head = styled.div`
 
   & > p {
     font-size: 1.5rem;
-    padding-top: 10px;
+    padding-top: ${props => 1 * props.theme.unit + "px"};
     color: ${props => props.theme.transparent5};
   }
   animation: fadeIn 1s;
@@ -50,7 +50,7 @@ export const Body = styled.div`
   text-align: center;
 
   & > p {
-    margin-top: 50px;
+    margin-top: ${props => 6 * props.theme.unit + "px"};
     color: ${props => props.theme.transparent5};
     cursor: pointer;
   }
@@ -61,10 +61,10 @@ export const Body = styled.div`
 `;
 export const Submit = styled.button`
   border: none;
-  padding: 20px;
+  padding: ${props => 2 * props.theme.unit + "px"};
   font-size: 1.2rem;
   color: ${props => props.theme.white};
-  background-color: ${props => props.theme.transparent1};
+  background-color: ${props => props.theme.transparent};
   & > * {
     text-decoration: none;
   }
@@ -77,11 +77,11 @@ export const Submit = styled.button`
 export const Input = styled.input`
   margin: 0px;
   background-color: ${props => props.theme.transparent4};
-  padding: 20px;
+  padding: ${props => 2 * props.theme.unit + "px"};
   border: none;
   font-size: 1.2rem;
   text-align: center;
-  width: 300px;
+  width: ${props => 36 * props.theme.unit + "px"};
 `;
 export const ShadowWrapper = styled.div`
   box-shadow: 4px 4px ${props => props.theme.gray};
@@ -90,7 +90,8 @@ export const ShadowWrapper = styled.div`
 export const Button = styled.button`
   background: ${props => props.theme.transparent3};
   margin: 0px;
-  padding: 30px 50px;
+  padding: ${props => 2 * props.theme.unit + "px"};
+
   border-radius: 90px;
   border: none;
   font-size: 1.5rem;
@@ -110,7 +111,7 @@ export const Button = styled.button`
   }
 
   & > p {
-    margin-top: 8px;
+    margin-top: ${props => 1 * props.theme.unit + "px"};
   }
 
   &:focus {

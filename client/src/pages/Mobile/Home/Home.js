@@ -1,5 +1,5 @@
 import React from "react";
-import CurrentTrack from "../../../components/CurrentTrack";
+import CurrentTrack from "../../../components/CurrentTrack/CurrentTrack";
 import List from "../../../components/List";
 import AudioVisualizer from "../../../components/AudioVisualizer";
 import { gameOvaImg } from "../../../images";

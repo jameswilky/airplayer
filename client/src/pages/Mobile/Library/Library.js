@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { StyledContainer, StyledChevron } from "./styles";
+import { Container, StyledChevron } from "./styles";
 
 //Components
 import SongList from "../../../components/SongList/SongList";
 import Carousel from "../../../components/Carousel/Carousel";
 
 import useSearch from "../../../hooks/useSearch/useSearch";
-
+import SearchBar from "../../../components/SearchBar/SearchBar";
 export default function Library() {
   const { query, setQuery, queryResults } = useSearch("");
   const { albums, tracks, artists, playlists } = queryResults;
@@ -16,8 +16,9 @@ export default function Library() {
   useEffect(() => setQuery("tobi"));
 
   return (
-    <StyledContainer>
-      <Carousel items={tracks} height="196px"></Carousel>
+    <Container>
+      <SearchBar></SearchBar>
+      <Carousel items={tracks}></Carousel>
       {selected === "" ? (
         <></>
       ) : (
@@ -32,6 +33,6 @@ export default function Library() {
           results: { albums, tracks, artists, playlists }
         }}
       ></SongList>{" "}
-    </StyledContainer>
+    </Container>
   );
 }

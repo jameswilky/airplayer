@@ -1,8 +1,10 @@
 import styled from "styled-components";
-import { Container } from "../../../styles/Container";
 import { Chevron } from "../../../styles/Chevron";
 
-export const StyledContainer = styled(Container)``;
+export const Container = styled.div`
+  height: calc(100vh - 50px);
+  position: relative;
+`;
 
 export const StyledChevron = styled(Chevron)`
   left: 15px;

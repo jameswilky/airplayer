@@ -2,22 +2,22 @@ import styled from "styled-components";
 
 export const StyledList = styled.ul`
   background-color: ${props => props.theme.black};
-  padding: 20px 20px 50px 20px;
+  padding: ${props => 1 * props.theme.unit + "px"};
 `;
 
 export const StyledItem = styled.li`
   font-size: 0.8rem;
   display: grid;
   grid-template-columns: 48px 1fr 48px;
-  padding-bottom: 15px;
+  padding-bottom: ${props => 2 * props.theme.unit + "px"};
   align-items: center;
   width: 100%;
   & img {
-    height: 48px;
-    width: 48px;
+    height: ${props => 6 * props.theme.unit + "px"};
+    width: ${props => 6 * props.theme.unit + "px"};
   }
   & div {
-    padding: 0 0 0 10px;
+    padding: 0 0 0 ${props => 1 * props.theme.unit + "px"};
     overflow: hidden;
     & h3 {
       font-size: 0.8rem;
@@ -26,14 +26,14 @@ export const StyledItem = styled.li`
     }
     & p {
       display: inline;
-      color: rgba(255, 255, 255, 0.7);
+      color: ${props => props.theme.transparent4};
       font-weight: 100;
     }
   }
 
   & button {
-    height: 48px;
-    width: 48px;
+    height: ${props => 6 * props.theme.unit + "px"};
+    width: ${props => 6 * props.theme.unit + "px"};
     background: none;
     border: none;
     color: whitesmoke;

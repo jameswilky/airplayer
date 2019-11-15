@@ -47,7 +47,7 @@ export default function SongList(props) {
     );
 
   return (
-    <StyledContainer top={props.top || "10px"}>
+    <StyledContainer>
       {noQuery ? (
         `Please enter a query`
       ) : noResults ? (
