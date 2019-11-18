@@ -8,6 +8,11 @@ export default {
     rgba(20, 20, 20, 1),
     rgba(20, 20, 20, 0)
   )`,
+  whiteFadeGradient: `linear-gradient(
+    to top,
+    rgba(245, 245, 245, 1),
+    rgba(242, 182, 147, 0 )
+  )`,
   darkestGray: `rgba(30, 30, 30, 1)`,
   darkerGray: `rgba(50, 50, 50, 1)`,
   darkGray: `rgba(120, 120, 120, 1)`,
@@ -27,7 +32,7 @@ export default {
   transparentBlack4: `rgba(20,20,20,0.5)`,
   transparentBlack5: `rgba(20,20,20,0.3)`,
 
-  white: "whitesmoke",
+  white: `rgba(242, 242, 242, 1)`,
 
   breakpoints: {
     mobile: "667px",

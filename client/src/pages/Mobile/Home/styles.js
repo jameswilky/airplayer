@@ -1,7 +1,10 @@
 import styled from "styled-components";
 
 export const StyledList = styled.ul`
-  background-color: ${props => props.theme.black};
+  background-color: ${props =>
+    props.theme.mode === "dark" ? props.theme.black : props.theme.white};
+
+  background-image: ${props => props.theme.gradient};
   padding: ${props => 1 * props.theme.unit + "px"};
 `;
 

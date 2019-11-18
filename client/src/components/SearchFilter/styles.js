@@ -19,4 +19,11 @@ export const Button = styled.div`
   color: ${props => (props.active ? props.theme.black : props.theme.white)};
   background-color: ${props =>
     props.active ? props.theme.white : props.theme.transparent2};
+
+  &:hover {
+    cursor: pointer;
+    color: ${props => props.theme.black};
+    background-color: ${props =>
+      props.active ? props.theme.white : props.theme.transparent4};
+  }
 `;

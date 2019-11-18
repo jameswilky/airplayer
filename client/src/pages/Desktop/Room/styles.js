@@ -7,16 +7,10 @@ export const Container = styled.div`
   display: grid;
   width: 100%;
   color: ${props => props.theme.white};
-  grid-template-columns: ${props => 16 * props.theme.unit + "px"} 1fr;
+  grid-template-columns: ${props => 20 * props.theme.unit + "px"} 1fr;
   grid-template-rows:
     ${props => 6 * props.theme.unit + "px"} calc(100vh - 128px)
-    ${props => 8 * props.theme.unit + "px"};
-`;
-
-export const Sidebar = styled.nav`
-  grid-row: span 2;
-  padding: ${props => 1 * props.theme.unit + "px"};
-  background-color: ${props => props.theme.transparent};
+    ${props => 10 * props.theme.unit + "px"};
 `;
 
 export const Main = styled.main`
@@ -28,30 +22,4 @@ export const Footer = styled.footer`
   grid-column: span 2;
   color: ${props => props.theme.white};
   height: 100%;
-`;
-
-export const Header = styled.header`
-  padding: ${props => 2 * props.theme.unit + "px"};
-  grid-template-columns: 2fr 1fr;
-  display: grid;
-  justify-items: flex-end;
-  align-content: center;
-`;
-
-export const SearchWrapper = styled.div`
-  grid-template-columns: 1fr 1fr;
-  display: grid;
-  justify-self: flex-start;
-  grid-gap: ${props => 1 * props.theme.unit + "px"};
-`;
-
-export const DesktopSearchBar = styled.input`
-  padding: ${props => 1 * props.theme.unit + "px"};
-
-  border-radius: 2px;
-  background-color: ${props => props.theme.transparent4};
-  border: none;
-  display: block;
-  justify-self: start;
-  width: ${props => 34 * props.theme.unit + "px"};
 `;

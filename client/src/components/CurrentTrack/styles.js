@@ -19,7 +19,10 @@ export const ImageWrapper = styled.div`
   height: 100%;
   &::before {
     content: "";
-    background-image: ${props => props.theme.blackFadeGradient};
+    background-image: ${props =>
+      props.theme.mode === "dark"
+        ? props.theme.blackFadeGradient
+        : props.theme.whiteFadeGradient};
     position: absolute;
     height: 37%; /* based on image height*/
     right: 0;
@@ -60,13 +63,19 @@ export const SongInfoContainer = styled.div`
   & > h5 {
     font-weight: 300;
     font-size: 1.7rem;
-    color: ${props => props.theme.transparent4};
+    color: ${props =>
+      props.theme.mode === "dark"
+        ? props.theme.transparent4
+        : props.theme.transparentBlack2};
   }
   & > p {
     font-weight: 100;
     padding-top: ${props => 1 * props.theme.unit + "px"};
     font-size: 1rem;
-    color: ${props => props.theme.transparent3};
+    color: ${props =>
+      props.theme.mode === "dark"
+        ? props.theme.transparent3
+        : props.theme.secondary};
   }
 `;
 

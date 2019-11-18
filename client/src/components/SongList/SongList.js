@@ -27,13 +27,17 @@ export default function SongList(props) {
     results && (!filterOn || selected === title) ? (
       <StyledResult>
         <h2 onClick={() => setSelected(selected === title ? "" : title)}>
-          {filterOn ? "" : title}
+          {filterOn && selected !== title ? "" : title}
         </h2>
         <StyledChevron
           visibility={filterOn ? "hidden" : "visible"}
           onClick={() => setSelected(selected === title ? "" : title)}
         ></StyledChevron>
-        <List items={result} Style={StyledList} limit={limit}>
+        <List
+          items={result}
+          Style={StyledList}
+          limit={selected !== title ? limit : 100}
+        >
           <ListItem
             src={item => item.getImages().default.url}
             name={item => item.name}

@@ -1,21 +1,21 @@
-import React, { useEffect } from "react";
-import {
-  Background,
-  Container,
-  Sidebar,
-  Header,
-  Footer,
-  Main,
-  SearchWrapper,
-  DesktopSearchBar
-} from "./styles";
+// Deps
+import React, { useEffect, useState } from "react";
+import { Route } from "react-router-dom";
+
+// Pages
 import Home from "../Home/Home";
 import Search from "../Search/Search";
 import Library from "../Library/Library";
-import { Route, Link } from "react-router-dom";
 
+// Styles
+import { Background, Container, Footer, Main } from "./styles";
+
+// Components
 import SpotifyWebplayer from "../../../components/SpotifyWebplayer/SpotifyWebplayer";
-import SearchFilter from "../../../components/SearchFilter/SeachFilter";
+import DesktopHeader from "../../../components/DesktopHeader/DesktopHeader";
+import Sidebar from "../../../components/Sidebar/Sidebar.js";
+
+// Hooks
 import useRoom from "../../../hooks/useRoom";
 import useAuth from "../../../hooks/useAuth";
 import useRoomTracks from "../../../hooks/useRoomTracks";
@@ -46,34 +46,18 @@ export default function Room(props) {
   const path = props.match.path;
 
   const { query, setQuery, queryResults } = useSearch("tobi");
+  const [filter, setFilter] = useState("");
 
   return (
     <Background>
       <Container>
-        <Sidebar>
-          <ul>
-            <Link to="/room/5d47d90a191f0f30a0d73414">
-              <li>Home</li>
-            </Link>
-            <Link to="/room/5d47d90a191f0f30a0d73414/search">
-              <li>Search</li>
-            </Link>
-            <Link to="/room/5d47d90a191f0f30a0d73414/library">
-              <li>Library</li>
-            </Link>
-          </ul>
-        </Sidebar>
-        <Header>
-          <SearchWrapper>
-            <DesktopSearchBar
-              value={query}
-              placeholder="Search"
-              onChange={e => setQuery(e.target.value)}
-            ></DesktopSearchBar>
-            <SearchFilter></SearchFilter>
-          </SearchWrapper>
-          <div>Login</div>
-        </Header>
+        <Sidebar></Sidebar>
+        <DesktopHeader
+          filter={filter}
+          setFilter={setFilter}
+          query={query}
+          setQuery={setQuery}
+        ></DesktopHeader>
         <Main>
           {roomReady && (
             <>
@@ -86,7 +70,13 @@ export default function Room(props) {
               <Route
                 path={`${path}/search`}
                 component={() => (
-                  <Search results={queryResults} addTrack={addTrack}></Search>
+                  <Search
+                    results={queryResults}
+                    filter={filter}
+                    setFilter={setFilter}
+                    addTrack={addTrack}
+                    query={query}
+                  ></Search>
                 )}
               ></Route>
               <Route path={`${path}/library`} component={Library}></Route>

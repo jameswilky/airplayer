@@ -2,7 +2,8 @@ import styled from "styled-components";
 import Loader from "react-loader-spinner";
 
 export const Container = styled.div`
-  background-color: transparent;
+  background-color: ${props => props.theme.white};
+
   height: 100%;
   color: ${props => props.theme.black};
   display: grid;
@@ -11,7 +12,7 @@ export const Container = styled.div`
 `;
 
 export const Body = styled.div`
-  background-color: ${props => props.theme.transparent5};
+  height: 100%;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
 `;

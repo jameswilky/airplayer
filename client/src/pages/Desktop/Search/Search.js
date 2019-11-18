@@ -5,7 +5,13 @@ import { IoIosAdd, IoIosCheckmark } from "react-icons/io";
 import StyledListItem from "../../../styles/StyledListItem";
 import styled, { css } from "styled-components";
 import SongList from "../../../components/SongList/SongList";
-export default function Search({ results, addTrack }) {
+export default function Search({
+  results,
+  addTrack,
+  filter,
+  setFilter,
+  query
+}) {
   const Container = styled.div`
     padding: ${props => 2 * props.theme.unit + "px"};
   `;
@@ -27,14 +33,13 @@ export default function Search({ results, addTrack }) {
     ${Icon}
   `;
 
-  const [selected, setSelected] = useState("");
   return (
     <Container>
       <SongList
         {...{
-          query: "test",
-          selected,
-          setSelected,
+          query,
+          selected: filter,
+          setSelected: setFilter,
 
           results: results
         }}
