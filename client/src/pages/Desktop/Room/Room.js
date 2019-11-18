@@ -6,6 +6,7 @@ import {
   Header,
   Footer,
   Main,
+  SearchWrapper,
   DesktopSearchBar
 } from "./styles";
 import Home from "../Home/Home";
@@ -14,7 +15,7 @@ import Library from "../Library/Library";
 import { Route, Link } from "react-router-dom";
 
 import SpotifyWebplayer from "../../../components/SpotifyWebplayer/SpotifyWebplayer";
-
+import SearchFilter from "../../../components/SearchFilter/SeachFilter";
 import useRoom from "../../../hooks/useRoom";
 import useAuth from "../../../hooks/useAuth";
 import useRoomTracks from "../../../hooks/useRoomTracks";
@@ -63,11 +64,14 @@ export default function Room(props) {
           </ul>
         </Sidebar>
         <Header>
-          <DesktopSearchBar
-            value={query}
-            placeholder="Search"
-            onChange={e => setQuery(e.target.value)}
-          ></DesktopSearchBar>
+          <SearchWrapper>
+            <DesktopSearchBar
+              value={query}
+              placeholder="Search"
+              onChange={e => setQuery(e.target.value)}
+            ></DesktopSearchBar>
+            <SearchFilter></SearchFilter>
+          </SearchWrapper>
           <div>Login</div>
         </Header>
         <Main>

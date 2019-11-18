@@ -1,19 +1,5 @@
 import styled from "styled-components";
 
-export const SearchFilterContainer = styled.div`
-  font-size: 0.5em;
-  display: flex;
-  justify-content: space-between;
-  margin-top: ${props => 2 * props.theme.unit + "px"};
-`;
-export const Button = styled.div`
-  border: 1px solid grey;
-  border-radius: 90px;
-  padding: ${props => 1 * props.theme.unit + "px"};
-  color: ${props => (props.active ? props.theme.black : props.theme.white)};
-  background-color: ${props =>
-    props.active ? props.theme.white : props.theme.black};
-`;
 export const Wrapper = styled.div`
   padding-bottom: ${props => 16 * props.theme.unit + "px"};
 `;

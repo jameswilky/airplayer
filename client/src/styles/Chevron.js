@@ -1,11 +1,10 @@
 import styled from "styled-components";
 
 export const Chevron = styled.span`
-  opacity: 0.7;
   position: absolute;
   &:before {
     border-style: solid;
-    border-width: 1px 1px 0 0;
+    border-width: 2px 2px 0 0;
     content: "";
     display: inline-block;
     height: 12px;

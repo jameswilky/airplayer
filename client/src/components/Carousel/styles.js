@@ -6,7 +6,7 @@ export const StyledList = styled.ul`
 `;
 
 export const StyledContainer = styled.div`
-  height: ${props => 25 * props.theme.unit + "px"};
+  height: ${props => 30 * props.theme.unit + "px"};
   overflow: scroll;
   scrollbar-width: none;
   ::-webkit-scrollbar {

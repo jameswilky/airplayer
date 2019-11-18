@@ -1,30 +1,17 @@
 import React from "react";
 import Input from "../Input/Input";
-import { Wrapper, SearchFilterContainer, Button, Container } from "./styles";
+import { Wrapper, Container } from "./styles";
+import SearchFilter from "../SearchFilter/SeachFilter";
 
 export default function SearchBar({ query, setQuery, selected, setSelected }) {
-  const RadioButton = ({ text }) => {
-    return (
-      <Button
-        active={selected === text}
-        onClick={() => {
-          setSelected(selected === text ? "" : text);
-        }}
-      >
-        {text}
-      </Button>
-    );
-  };
   return (
     <Wrapper>
       <Container>
         <Input value={query} setValue={setQuery}></Input>
-        <SearchFilterContainer>
-          <RadioButton text={"Tracks"}></RadioButton>
-          <RadioButton text={"Playlists"}></RadioButton>
-          <RadioButton text={"Artists"}></RadioButton>
-          <RadioButton text={"Albums"}></RadioButton>
-        </SearchFilterContainer>
+        <SearchFilter
+          selected={selected}
+          setSelected={setSelected}
+        ></SearchFilter>
       </Container>
     </Wrapper>
   );

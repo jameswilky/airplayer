@@ -32,10 +32,17 @@ export const Footer = styled.footer`
 
 export const Header = styled.header`
   padding: ${props => 2 * props.theme.unit + "px"};
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 2fr 1fr;
   display: grid;
   justify-items: flex-end;
   align-content: center;
+`;
+
+export const SearchWrapper = styled.div`
+  grid-template-columns: 1fr 1fr;
+  display: grid;
+  justify-self: flex-start;
+  grid-gap: ${props => 1 * props.theme.unit + "px"};
 `;
 
 export const DesktopSearchBar = styled.input`
@@ -46,5 +53,5 @@ export const DesktopSearchBar = styled.input`
   border: none;
   display: block;
   justify-self: start;
-  width: ${props => 30 * props.theme.unit + "px"};
+  width: ${props => 34 * props.theme.unit + "px"};
 `;

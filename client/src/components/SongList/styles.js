@@ -7,16 +7,22 @@ export const StyledChevron = styled(Chevron)`
   &:before {
     transform: rotate(45deg);
   }
+  color: ${props => props.theme.white};
 `;
 
 // TODO add theme to manage colors and padding
 export const StyledContainer = styled.div`
-  padding: ${props => 2 * props.theme.unit + "px"};
-  background-color: ${props => props.theme.black};
+  position:relative;
+  /* padding: ${props => 2 * props.theme.unit + "px"}; */
+  /* background-color: ${props => props.theme.black}; */
 `;
 
 export const StyledResult = styled.div`
   font-size: 1rem;
+
+  & h2 {
+    cursor: pointer;
+  }
 `;
 
 export const StyledList = styled.ul`
