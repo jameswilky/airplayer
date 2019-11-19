@@ -38,7 +38,7 @@ const Spotify = (token, send = true) => {
       );
     } else {
       options.api = api;
-      options.query = query;
+      options.queryString = query;
       return options;
     }
   };
@@ -205,14 +205,16 @@ const Spotify = (token, send = true) => {
             `/me/${typeof query === `string` ? pluralize(query) : query.type}`;
 
           const libraryBody = ({ id, ids }) => (ids ? ids : [id]);
+
           return {
             contains: ({ id, type, ids }) =>
-              `me/${pluralize(type)}/contains?ids=${id ? id : ids}`,
+              get(`me/${pluralize(type)}/contains?ids=${id ? id : ids}`),
             get: query => get(libraryQuery(query)), // not libary.get, refers to function in Spotify() closure
             delete: query => remove(libraryQuery(query), libraryBody(query)),
             add: query => put(libraryQuery(query), libraryBody(query))
           };
-        }
+        },
+        top: type => get(`/me/top/${pluralize(type)}`)
       };
     },
 

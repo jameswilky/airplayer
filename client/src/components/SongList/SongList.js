@@ -30,7 +30,7 @@ export default function SongList(props) {
           {filterOn && selected !== title ? "" : title}
         </h2>
         <StyledChevron
-          visibility={filterOn ? "hidden" : "visible"}
+          direction={filterOn ? "left" : "right"}
           onClick={() => setSelected(selected === title ? "" : title)}
         ></StyledChevron>
         <List
@@ -41,7 +41,7 @@ export default function SongList(props) {
           <ListItem
             src={item => item.getImages().default.url}
             name={item => item.name}
-            labels={item => item.getLabels()}
+            labels={item => item.getLabels().map(label => `${label} `)}
             Style={StyledListItem}
           ></ListItem>
         </List>

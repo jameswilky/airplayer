@@ -6,7 +6,7 @@ export const StyledList = styled.ul`
 `;
 
 export const StyledContainer = styled.div`
-  height: ${props => 30 * props.theme.unit + "px"};
+  height: ${props => 28 * props.theme.unit + "px"};
   overflow: scroll;
   scrollbar-width: none;
   ::-webkit-scrollbar {
@@ -27,7 +27,10 @@ export const StyledItem = styled.li`
   font-size: 0.8rem;
   & p {
     display: inline;
-    color: ${props => props.theme.transparent4};
+    color: ${props =>
+      props.theme.mode === "dark"
+        ? props.theme.transparent4
+        : props.theme.transparentBlack};
     text-transform: capitalize;
   }
 `;

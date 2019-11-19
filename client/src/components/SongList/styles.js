@@ -4,16 +4,18 @@ import { Chevron } from "../../styles/Chevron";
 export const StyledChevron = styled(Chevron)`
   right: ${props => 3 * props.theme.unit + "px"};
   margin-top: ${props => -2.5 * props.theme.unit + "px"};
-  &:before {
-    transform: rotate(45deg);
-  }
-  color: ${props => props.theme.white};
+  transform: ${props =>
+    props.direction === "right" ? "rotate(0deg)" : "rotate(180deg)"};
+
+  transition: transform 1s;
+  color: ${props =>
+    props.theme.mode === "dark" ? props.theme.white : props.theme.primary};
 `;
 
 // TODO add theme to manage colors and padding
 export const StyledContainer = styled.div`
   position:relative;
-  /* padding: ${props => 2 * props.theme.unit + "px"}; */
+  padding: 0 ${props => 2 * props.theme.unit + "px"};
   /* background-color: ${props => props.theme.black}; */
 `;
 
@@ -30,5 +32,7 @@ export const StyledList = styled.ul`
   padding-top: ${props => 2 * props.theme.unit + "px"};
   & li {
     list-style: none;
+    background-color: ${props =>
+      props.theme.mode === "dark" ? "" : props.theme.transparent3};
   }
 `;

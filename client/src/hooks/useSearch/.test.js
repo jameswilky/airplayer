@@ -1,5 +1,5 @@
 import React from "react";
-import useSearch from "./";
+import useSearch from "./useSearch";
 import { act } from "react-dom/test-utils";
 import { testHook } from "../../helpers/TestHook";
 

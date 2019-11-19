@@ -13,10 +13,9 @@ const Container = styled.div`
   color: ${props =>
     props.theme.mode === "dark" ? props.theme.white : props.theme.black};
 
-  /* background-color: ${props =>
-    props.theme.mode === "dark" ? props.theme.black : props.theme.white}; */
+  background-color: ${props =>
+    props.theme.mode === "dark" ? props.theme.black : props.theme.white};
 
-  background-image: ${props => props.theme.white};
   font-size: 1.5rem;
   overflow: scroll;
 `;

@@ -6,10 +6,7 @@ export default function useVolume(player) {
 
   useDebounce(
     () => {
-      if (player)
-        player
-          .setVolume(volume / 100)
-          .then(() => console.log("changed volume"));
+      if (player) player.setVolume(volume / 100);
     },
     200,
     [volume]

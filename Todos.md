@@ -1,21 +1,24 @@
-1. Webplayer
+High Priority
 
-- Functionality
+1. library functionality
+   search for liked tracks/playlist/albums
+   show most recently listed to tracks
+2. feedback after actions commited
+3. buttons for song list and carousel
+4. correct room search functionality
 
-  1. if no tracks left in playlist, restart playlist
-  2. Display users in room members section
-  3. Implement desktop library functionality
-  4. socket authentication
-  5. add feedback notications when actions are commited
-  6. Add buttons for song list
+- search/library
+  - add/remove
+- active playlist
+  - play/ shuffle/remove
 
-  - search/library
-    - add/remove
-  - active playlist
-    - play/ shuffle/remove
+6. create and join real rooms
+7. disallow duplicates in playlist
+8. display users in the room
 
-Housekeeping
+Low Priority
 
-- Add tests
-- Seperate Styling from components
-- FIx warning messages
+1. restart playlist if at end
+2. add scopes
+3. dark mode
+4. show recomended tracks

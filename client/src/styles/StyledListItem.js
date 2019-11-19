@@ -24,8 +24,12 @@ export default styled.li`
     }
     & p {
       display: inline;
-      color: ${props => props.theme.transparent4};
+      color: ${props =>
+        props.theme.mode === "dark"
+          ? props.theme.transparent4
+          : props.theme.transparentBlack};
       font-weight: 100;
+      text-transform: capitalize;
     }
   }
 

@@ -36,7 +36,12 @@ export default function Home() {
         <ItemTemplate
           src={item => item.getImages().default.url}
           name={item => item.name}
-          labels={item => item.getLabels()}
+          labels={item =>
+            item
+              .getLabels()
+              .map(label => `${label} `)
+              .slice(1, 3)
+          }
         ></ItemTemplate>
       </List>
     </Container>

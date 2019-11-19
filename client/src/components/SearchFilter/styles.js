@@ -1,14 +1,12 @@
 import styled from "styled-components";
 
 export const Container = styled.div`
-  font-size: 0.7em;
+  font-size: 0.6em;
   display: grid;
-  grid-template-columns:1fr 1fr 1fr 1fr;
-  align-content:center;
-  align-self:center;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  align-content: center;
+  align-self: center;
   grid-gap: ${props => 1 * props.theme.unit + "px"};
-  
-  /* margin-top: ${props => 2 * props.theme.unit + "px"}; */
 `;
 export const Button = styled.div`
   cursor: pointer;

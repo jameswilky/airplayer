@@ -24,11 +24,12 @@ const Underlay = styled.div`
 `;
 
 const Container = styled.div`
-  height: ${props => 6.1 * props.theme.unit + "px"};
+  height: ${props => 7 * props.theme.unit + "px"};
   width: 100%;
   position: fixed;
   background-color: ${props => props.theme.darkestGray};
-
+  background-image: ${props =>
+    props.theme.mode === "light" && props.theme.gradient};
   & i {
     color: ${props => props.theme.white};
   }
