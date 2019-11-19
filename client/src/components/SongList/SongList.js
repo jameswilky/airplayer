@@ -14,10 +14,11 @@ export default function SongList(props) {
   const { albums, tracks, artists, playlists } = props.results;
   const { query, selected, setSelected, limit = 4, results = {} } = props;
 
+  console.log(tracks);
   const noResults =
-    albums.length < 1 ||
-    tracks.length < 1 ||
-    artists.length < 1 ||
+    albums.length < 1 &&
+    tracks.length < 1 &&
+    artists.length < 1 &&
     playlists.length < 1;
 
   const noQuery = query === "";

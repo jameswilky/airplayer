@@ -19,8 +19,6 @@ const Spotify = (token, send = true) => {
   const api = "https://api.spotify.com/v1/";
 
   const request = (query, type, body = "") => {
-    // TODO make more declarative
-
     const options = {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -38,7 +36,7 @@ const Spotify = (token, send = true) => {
       );
     } else {
       options.api = api;
-      options.queryString = query;
+      options.string = query;
       return options;
     }
   };
@@ -48,12 +46,6 @@ const Spotify = (token, send = true) => {
   const remove = (q, body) => request(q, "DELETE", body);
 
   const merge = (obj, template) => {
-    /*
-    Example
-     obj : {a:1,a:2} 
-     template : (k,v) => `{k}={v}` 
-     returns "a=1b=2"
-    */
     return Object.entries(obj)
       .map(([k, v]) => template(k, v))
       .join(",");
@@ -202,7 +194,7 @@ const Spotify = (token, send = true) => {
 
         library: () => {
           const libraryQuery = query =>
-            `/me/${typeof query === `string` ? pluralize(query) : query.type}`;
+            `me/${typeof query === `string` ? pluralize(query) : query.type}`;
 
           const libraryBody = ({ id, ids }) => (ids ? ids : [id]);
 
@@ -214,7 +206,10 @@ const Spotify = (token, send = true) => {
             add: query => put(libraryQuery(query), libraryBody(query))
           };
         },
-        top: type => get(`/me/top/${pluralize(type)}`)
+        top: type => get(`me/top/${pluralize(type)}`),
+        me: () => get("me"),
+        playlists: () => get("me/playlists"),
+        artists: () => get("me/following?type=artist")
       };
     },
 
