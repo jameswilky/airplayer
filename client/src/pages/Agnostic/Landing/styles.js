@@ -8,19 +8,19 @@ export const Background = styled.div`
   display: grid;
   grid-gap: ${props => 2 * props.theme.unit + "px"};
   padding-top: 15vh;
-  grid-template-rows: ${props => 18 * props.theme.unit + "px"} 1fr;
+  grid-template-rows: ${props => 12 * props.theme.unit + "px"} 1fr;
   color: ${props => props.theme.white};
 `;
 
 export const Head = styled.div`
   text-align: center;
   & > h1 {
-    font-size: 5rem;
+    font-size: 3.9rem;
     text-shadow: 4px 4px ${props => props.theme.gray};
   }
 
   & > p {
-    font-size: 1.5rem;
+    font-size: 1rem;
     padding-top: ${props => 1 * props.theme.unit + "px"};
     color: ${props => props.theme.transparent5};
   }
@@ -50,7 +50,7 @@ export const Body = styled.div`
   text-align: center;
 
   & > p {
-    margin-top: ${props => 6 * props.theme.unit + "px"};
+    margin-top: ${props => 4 * props.theme.unit + "px"};
     color: ${props => props.theme.transparent5};
     cursor: pointer;
   }
@@ -62,7 +62,7 @@ export const Body = styled.div`
 export const Submit = styled.button`
   border: none;
   padding: ${props => 2 * props.theme.unit + "px"};
-  font-size: 1.2rem;
+  font-size: 1rem;
   color: ${props => props.theme.white};
   background-color: ${props => props.theme.transparent};
   & > * {
@@ -79,9 +79,9 @@ export const Input = styled.input`
   background-color: ${props => props.theme.transparent4};
   padding: ${props => 2 * props.theme.unit + "px"};
   border: none;
-  font-size: 1.2rem;
+  font-size: 0.8rem;
   text-align: center;
-  width: ${props => 36 * props.theme.unit + "px"};
+  width: ${props => 26 * props.theme.unit + "px"};
 `;
 export const ShadowWrapper = styled.div`
   box-shadow: 4px 4px ${props => props.theme.gray};
@@ -90,11 +90,11 @@ export const ShadowWrapper = styled.div`
 export const Button = styled.button`
   background: ${props => props.theme.transparent3};
   margin: 0px;
-  padding: ${props => 2 * props.theme.unit + "px"};
+  padding: ${props => 1 * props.theme.unit + "px"};
 
   border-radius: 90px;
   border: none;
-  font-size: 1.5rem;
+  font-size: 0.9rem;
   display: flex;
   cursor: pointer;
   color: ${props => props.theme.black};
@@ -120,7 +120,7 @@ export const Button = styled.button`
 
   text-justify: center;
   & > img {
-    width: 42px;
+    width: 35px;
     margin-right: 10px;
   }
 `;

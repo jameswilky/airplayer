@@ -19,7 +19,7 @@ module.exports = {
 
     // Provides client with login screen
     const scope =
-      "user-follow-read streaming user-read-private user-read-email user-read-playback-state user-modify-playback-state user-library-read playlist-read-private playlist-read-collaborative";
+      "user-top-read user-follow-read streaming user-read-private user-read-email user-read-playback-state user-modify-playback-state user-library-read playlist-read-private playlist-read-collaborative";
     // "streaming user-read-birthdate user-read-private user-read-email user-read-playback-state user-modify-playback-state";
     res.redirect(
       "https://accounts.spotify.com/authorize?" +

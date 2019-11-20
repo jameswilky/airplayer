@@ -1,11 +1,9 @@
 High Priority
 
-1. library functionality
-   search for liked tracks/playlist/albums
-   show most recently listed to tracks
-2. feedback after actions commited
-3. buttons for song list and carousel
-4. correct room search functionality
+1. feedback after actions commited
+2. buttons for song list and carousel
+3. correct room search functionality
+4. add spinners for loading
 
 - search/library
   - add/remove

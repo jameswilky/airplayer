@@ -5,7 +5,7 @@ import { Route } from "react-router-dom";
 // Pages
 import Home from "../Home/Home";
 import Search from "../Search/Search";
-import Library from "../Library/Library";
+import Library from "../../Agnostic/Library/Library";
 
 // Styles
 import { Background, Container, Footer, Main } from "./styles";
@@ -20,12 +20,16 @@ import useRoom from "../../../hooks/useRoom";
 import useAuth from "../../../hooks/useAuth";
 import useRoomTracks from "../../../hooks/useRoomTracks";
 import useSearch from "../../../hooks/useSearch/useSearch";
+import useLibrary from "../../../hooks/useLibrary";
 
 export default function Room(props) {
   const { accessToken } = useAuth();
 
   const room = useRoom();
   const { roomTracks } = useRoomTracks(room);
+
+  const { libraryResults } = useLibrary();
+  const { query, setQuery, queryResults } = useSearch("tobi");
 
   const {
     controller: { joinRoom, addTrack }
@@ -45,7 +49,6 @@ export default function Room(props) {
 
   const path = props.match.path;
 
-  const { query, setQuery, queryResults } = useSearch("tobi");
   const [filter, setFilter] = useState("");
 
   return (
@@ -59,13 +62,19 @@ export default function Room(props) {
           setQuery={setQuery}
         ></DesktopHeader>
         <Main>
-          {roomReady && (
+          {room && libraryResults && libraryResults.topTracks && (
             <>
               {" "}
               <Route
                 exact
                 path={`${path}`}
-                component={() => <Home room={room}></Home>}
+                component={() => (
+                  <Home
+                    room={room}
+                    roomTracks={roomTracks}
+                    topTracks={libraryResults.topTracks}
+                  ></Home>
+                )}
               ></Route>
               <Route
                 path={`${path}/search`}
@@ -79,7 +88,10 @@ export default function Room(props) {
                   ></Search>
                 )}
               ></Route>
-              <Route path={`${path}/library`} component={Library}></Route>
+              <Route
+                path={`${path}/library`}
+                component={() => <Library results={libraryResults}></Library>}
+              ></Route>
             </>
           )}
         </Main>

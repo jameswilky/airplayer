@@ -5,7 +5,6 @@ import List from "../../../components/List";
 export const Background = styled.div`
   background: ${props => props.theme.gradient};
   height: 100vh;
-  justify-content: center;
   justify-items: center;
   align-items: center;
   display: grid;
@@ -15,12 +14,12 @@ export const Background = styled.div`
 export const Container = styled.div`
   display: grid;
   justify-items: center;
-  min-width: ${props => 40 * props.theme.unit + "px"};
+  min-width: ${props => 24 * props.theme.unit + "px"};
   width: 85vw;
   min-height: ${props => 50 * props.theme.unit + "px"};
   height: 85vh;
   background-color: ${props => props.theme.transparent2};
-  grid-template-rows: ${props => 8 * props.theme.unit + "px"} 1fr;
+  grid-template-rows: ${props => 6 * props.theme.unit + "px"} 1fr;
   grid-template-columns: 1fr;
   animation: fadeIn 1s;
   @keyframes fadeIn {
@@ -30,6 +29,10 @@ export const Container = styled.div`
     to {
       opacity: 1;
     }
+  }
+
+  @media (max-width: 320px) {
+    width: 95vw;
   }
 `;
 export const Head = styled.div`
@@ -68,4 +71,7 @@ export const ExtendedStyledListItem = styled(StyledListItem)`
     height: ${props => 5 * props.theme.unit + "px"};
   }
   padding: 0 ${props => 2 * props.theme.unit + "px"};
+  @media (max-width: 320px) {
+    width: 90%;
+  }
 `;

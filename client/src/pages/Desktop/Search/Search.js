@@ -4,9 +4,9 @@ import ListItem from "../../../components/ListItem";
 import { IoIosAdd, IoIosCheckmark } from "react-icons/io";
 import StyledListItem from "../../../styles/StyledListItem";
 import styled, { css } from "styled-components";
-import SongList from "../../../components/SongList/SongList";
+import Results from "../../../components/Results/Results";
 export default function Search({
-  results,
+  results: { albums, tracks, playlists, artists },
   addTrack,
   filter,
   setFilter,
@@ -35,15 +35,20 @@ export default function Search({
 
   return (
     <Container>
-      <SongList
+      <Results
         {...{
           query,
           selected: filter,
           setSelected: setFilter,
 
-          results: results
+          results: [
+            { title: "Albums", items: albums },
+            { title: "Artists", items: artists },
+            { title: "Playlists", items: playlists },
+            { title: "Tracks", items: tracks }
+          ]
         }}
-      ></SongList>
+      ></Results>
       {/* <List items={results.tracks}>
         <ListItem
           Style={StyledListItem}

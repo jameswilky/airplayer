@@ -2,12 +2,14 @@ import styled from "styled-components";
 
 export const StyledList = styled.ul`
   display: flex;
-  padding: ${props => 2 * props.theme.unit + "px"};
+  overflow-y: hidden;
+
+  padding: 0 ${props => 2 * props.theme.unit + "px"};
 `;
 
 export const StyledContainer = styled.div`
-  height: ${props => 28 * props.theme.unit + "px"};
-  overflow: scroll;
+  height: ${props => 25 * props.theme.unit + "px"};
+  overflow-x: scroll;
   scrollbar-width: none;
   ::-webkit-scrollbar {
     width: 0px; /* Remove scrollbar space */

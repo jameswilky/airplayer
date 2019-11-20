@@ -1,19 +1,18 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import Spotify from "../modules/Spotify";
 import useAuth from "./useAuth";
-import { getKey, getNestedProperty } from "../helpers/ObjectUtils";
 import { ItemPrototype } from "../modules/SpotifyHelper/SpotifyHelper";
 
 export default function useLibrary() {
   // Store Access
   const { accessToken } = useAuth();
-  // Local State
-  const [query, setQuery] = useState("tobi");
-  const [queryResults, setQueryResults] = useState({
+
+  const [libraryResults, setQueryResults] = useState({
     tracks: {},
     artists: {},
     playlists: {},
-    albums: {}
+    albums: {},
+    topTracks: {}
   });
 
   // Local Variables
@@ -21,8 +20,8 @@ export default function useLibrary() {
 
   // Search Handler
   useEffect(() => {
-    const getQueries = async query => {
-      const queries = Object.keys(queryResults).map(type => {
+    const getQueries = async () => {
+      const queries = Object.keys(libraryResults).map(type => {
         switch (type) {
           case "tracks":
             return spotify
@@ -38,52 +37,46 @@ export default function useLibrary() {
             return spotify.user().artists();
           case "playlists":
             return spotify.user().playlists();
+          case "topTracks":
+            return spotify.user().top("tracks");
         }
       });
 
       const results = await Promise.all(queries);
 
-      const tracks = results[0].items
-        .map(item => item.track)
-        .filter(
-          track =>
-            track.name.includes(query) ||
-            track.artists.filter(artist => artist.name.includes(query))
-        );
-      const artists = results[1].artists.items.filter(artist =>
-        artist.name.includes(query)
-      );
-      const playlists = results[2].items.filter(playlist =>
-        playlist.name.includes(query)
-      );
-      const albums = results[3].items
-        .map(item => item.album)
-        .filter(album => album.name.includes(query));
+      const tracks = results[0].error
+        ? []
+        : results[0].items.map(item => item.track);
 
-      const nextQueryResults = [tracks, artists, playlists, albums];
+      const artists = results[1].error ? [] : results[1].artists.items;
+      const playlists = results[2].error ? [] : results[2].items;
+      const albums = results[3].error
+        ? []
+        : results[3].items.map(item => item.album);
+
+      const topTracks = results[4].error ? [] : results[4].items;
+
+      const nextQueryResults = [tracks, artists, playlists, albums, topTracks];
       nextQueryResults.forEach(results =>
         results.forEach(item => Reflect.setPrototypeOf(item, ItemPrototype()))
       );
       return Object.assign(
         {},
-        ...Object.keys(queryResults).map((query, i) => {
+        ...Object.keys(libraryResults).map((query, i) => {
           return {
             [query]: nextQueryResults[i]
           };
         })
       );
     };
-    if (query !== "" && accessToken) {
-      getQueries(query).then(nextResults => {
-        console.log(nextResults);
+    if (accessToken) {
+      getQueries().then(nextResults => {
         setQueryResults(nextResults);
       });
     }
-  }, [query, accessToken]);
+  }, [accessToken]);
 
   return {
-    query,
-    setQuery,
-    queryResults
+    libraryResults
   };
 }

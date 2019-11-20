@@ -37,7 +37,7 @@ export default function useRoom() {
       });
     });
     socket.on("ERROR", err => setRoom({ ...room, error: err }));
-  }, [room.state]);
+  }, [room]);
 
   return room;
 }

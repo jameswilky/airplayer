@@ -3,7 +3,7 @@ import { Route } from "react-router-dom";
 
 import Home from "../Home/Home";
 import Search from "../Search/Search";
-import Library from "../Library/Library";
+import Library from "../../Agnostic/Library/Library";
 import Footer from "../../../components/MobileMenu";
 import styled from "styled-components";
 

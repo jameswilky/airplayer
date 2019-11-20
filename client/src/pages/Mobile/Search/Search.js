@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import SongList from "../../../components/SongList/SongList";
+import Results from "../../../components/Results/Results";
 
 import useSearch from "../../../hooks/useSearch/useSearch";
 
@@ -20,15 +20,20 @@ export default function Search() {
         selected={selected}
         setSelected={setSelected}
       ></SearchBar>
-      <SongList
+      <Results
         {...{
           query,
           selected,
           setSelected,
 
-          results: { albums, tracks, artists, playlists }
+          results: [
+            { title: "Albums", items: albums },
+            { title: "Artists", items: artists },
+            { title: "Playlists", items: playlists },
+            { title: "Tracks", items: tracks }
+          ]
         }}
-      ></SongList>
+      ></Results>
     </Container>
   );
 }
