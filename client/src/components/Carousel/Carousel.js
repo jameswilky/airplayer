@@ -4,15 +4,16 @@ import {
   StyledItem,
   StyledOverlay,
   StyledItemContainer,
-  StyledPlayButton,
-  StyledList
+  StyledList,
+  AddIcon,
+  IconUnderlay
 } from "./styles";
 import List from "../List";
 
 export default function Carousel(props) {
-  const { items, height } = props;
+  const { items, height, addTrack } = props;
 
-  const ItemTemplate = ({ src, name, labels }) => {
+  const ItemTemplate = ({ src, name, labels, uri }) => {
     return (
       <StyledItemContainer>
         {" "}
@@ -22,7 +23,8 @@ export default function Carousel(props) {
           {labels && labels.map((label, i) => <p key={i}>{label}</p>)}
         </StyledItem>{" "}
         <StyledOverlay>
-          <StyledPlayButton></StyledPlayButton>
+          <IconUnderlay></IconUnderlay>
+          <AddIcon onClick={() => addTrack(uri)}></AddIcon>
         </StyledOverlay>
       </StyledItemContainer>
     );
@@ -35,6 +37,7 @@ export default function Carousel(props) {
           src={item => item.getImages().default.url}
           name={item => item.name}
           labels={item => item.getLabels()}
+          uri={item => item.uri}
         ></ItemTemplate>
       </List>
     </StyledContainer>

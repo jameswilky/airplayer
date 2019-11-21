@@ -38,9 +38,8 @@ export default function useRoomTracks(room) {
           });
         }
       );
-      console.log(room.state.playlist);
     }
-  }, [room.state.currentSong, room.state.playlist]);
+  }, [room.state]);
 
   return { roomTracks };
 }

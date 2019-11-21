@@ -10,21 +10,21 @@ export default function Search() {
   // Local State
   const { query, setQuery, queryResults } = useSearch("tobi");
   const { albums, tracks, artists, playlists } = queryResults;
-  const [selected, setSelected] = useState("");
+  const [filter, setFilter] = useState("");
 
   return (
     <Container>
       <SearchBar
         query={query}
         setQuery={setQuery}
-        selected={selected}
-        setSelected={setSelected}
+        filter={filter}
+        setFilter={setFilter}
       ></SearchBar>
       <Results
         {...{
           query,
-          selected,
-          setSelected,
+          filter,
+          setFilter,
 
           results: [
             { title: "Albums", items: albums },

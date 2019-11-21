@@ -3,15 +3,12 @@ import Input from "../Input/Input";
 import { Wrapper, Container } from "./styles";
 import SearchFilter from "../SearchFilter/SeachFilter";
 
-export default function SearchBar({ query, setQuery, selected, setSelected }) {
+export default function SearchBar({ query, setQuery, filter, setFilter }) {
   return (
     <Wrapper>
       <Container>
         <Input value={query} setValue={setQuery}></Input>
-        <SearchFilter
-          selected={selected}
-          setSelected={setSelected}
-        ></SearchFilter>
+        <SearchFilter filter={filter} setFilter={setFilter}></SearchFilter>
       </Container>
     </Wrapper>
   );

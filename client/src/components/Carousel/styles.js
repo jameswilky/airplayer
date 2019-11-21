@@ -1,4 +1,23 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
+import { IoIosAdd } from "react-icons/io";
+
+export const AddIcon = styled(IoIosAdd)`
+  position: absolute;
+  font-size: 2.5rem;
+  &:hover {
+    color: ${props => props.theme.transparent4};
+  }
+`;
+
+export const IconUnderlay = styled.div`
+  border: 1px solid transparent;
+  border-radius: 90px;
+  background-color: ${props => props.theme.transparentBlack};
+
+  height: ${props => 6 * props.theme.unit + "px"};
+  width: ${props => 6 * props.theme.unit + "px"};
+  position: relative;
+`;
 
 export const StyledList = styled.ul`
   display: flex;

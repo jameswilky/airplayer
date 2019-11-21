@@ -1,13 +1,13 @@
 import React from "react";
 import { Container, Button } from "./styles";
 
-export default function SeachFilter({ selected, setSelected }) {
+export default function SeachFilter({ filter, setFilter }) {
   const RadioButton = ({ text }) => {
     return (
       <Button
-        active={selected === text}
+        active={filter === text}
         onClick={() => {
-          setSelected(selected === text ? "" : text);
+          setFilter(filter === text ? "" : text);
         }}
       >
         {text}

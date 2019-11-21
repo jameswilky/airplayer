@@ -11,12 +11,6 @@ import useRoomTracks from "../../../hooks/useRoomTracks";
 
 import StyledListItem from "../../../styles/StyledListItem";
 
-// Hooks
-import useSearch from "../../../hooks/useSearch/useSearch";
-
-import useLibrary from "../../../hooks/useLibrary";
-import useRoom from "../../../hooks/useRoom";
-
 export default function Home({ room, roomTracks, topTracks }) {
   const play = (e, item) => {
     room.controller.play(item.uri);
@@ -25,18 +19,27 @@ export default function Home({ room, roomTracks, topTracks }) {
   return (
     <Container>
       <h2>Recommended Tracks</h2>
-      <Carousel items={topTracks}></Carousel>
+      <Carousel
+        items={topTracks}
+        addTrack={room.controller.addTrack}
+      ></Carousel>
 
       <h2>What's up Next</h2>
       {roomTracks.playlist && (
         <List items={roomTracks.playlist}>
           <ListItem
-            Style={StyledListItem} // TODO fix
+            Style={StyledListItem}
             src={item => item.getImages().default.url}
             name={item => item.name}
             labels={item => item.getLabels()}
-            selected={item => item.uri == roomTracks.currentSong.uri}
+            filter={item => item.uri == roomTracks.currentSong.uri}
             onClick={play}
+            button={item => (
+              <button onClick={() => room.controller.removeTrack(item.uri)}>
+                {" "}
+                x
+              </button>
+            )}
           ></ListItem>
         </List>
       )}

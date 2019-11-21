@@ -3,6 +3,7 @@ import { Chevron } from "../../styles/Chevron";
 
 export const Container = styled.div`
   font-size: 1rem;
+  padding: 0 ${props => 2 * props.theme.unit + "px"};
 
   & h2 {
     cursor: pointer;

@@ -11,7 +11,7 @@ export default function DesktopHeader({ filter, setFilter, query, setQuery }) {
           placeholder="Search"
           onChange={e => setQuery(e.target.value)}
         ></SearchBar>
-        <SearchFilter selected={filter} setSelected={setFilter}></SearchFilter>
+        <SearchFilter filter={filter} setFilter={setFilter}></SearchFilter>
       </Wrapper>
       <ProfileIcon></ProfileIcon>
     </Container>

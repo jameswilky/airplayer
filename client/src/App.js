@@ -30,7 +30,7 @@ const INITIAL_STATE = {
 };
 const store = createStore(authReducer, INITIAL_STATE);
 const App = hot(module)(() => {
-  const [breakpoint, setBreakpoint] = useState(theme.breakpoints.mobile);
+  const [breakpoint, setBreakpoint] = useState(theme.breakpoints.desktop);
 
   const handleResize = () => {
     const mobile = theme.breakpoints.mobile.substring(

@@ -9,7 +9,7 @@ function isEmpty(obj) {
   return true;
 }
 export default function Results(props) {
-  const { query, selected, setSelected, limit = 4, results = [] } = props;
+  const { query, filter, setFilter, limit = 4, results = [] } = props;
 
   const noResults = () =>
     results.map(result => isEmpty(result)).filter(bool => bool === false)
@@ -24,18 +24,23 @@ export default function Results(props) {
         : results &&
           results.map(
             (result, i) =>
-              (selected == "" || selected === result.title) &&
+              (filter == "" || filter === result.title) &&
               result.items.length > 1 && (
                 <Result
                   title={result.title}
                   items={result.items}
-                  selected={selected}
-                  setSelected={setSelected}
+                  filter={filter}
+                  setFilter={setFilter}
                   limit={limit}
                   key={i}
+                  actions={result.actions}
+                  path={props.path}
+                  link={result.link}
                 ></Result>
               )
           )}
     </Container>
   );
 }
+
+//TODO remove non tracks from room

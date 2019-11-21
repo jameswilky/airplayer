@@ -8,6 +8,7 @@ import Results from "../../../components/Results/Results";
 export default function Search({
   results: { albums, tracks, playlists, artists },
   addTrack,
+  removeTrack,
   filter,
   setFilter,
   query
@@ -38,32 +39,23 @@ export default function Search({
       <Results
         {...{
           query,
-          selected: filter,
-          setSelected: setFilter,
-
+          filter: filter,
+          setFilter: setFilter,
           results: [
+            {
+              title: "Tracks",
+              items: tracks,
+              actions: [
+                { icon: <>+</>, func: addTrack, type: "ADD" },
+                { icon: <>-</>, func: removeTrack, type: "REMOVE" }
+              ]
+            },
             { title: "Albums", items: albums },
             { title: "Artists", items: artists },
-            { title: "Playlists", items: playlists },
-            { title: "Tracks", items: tracks }
+            { title: "Playlists", items: playlists }
           ]
         }}
       ></Results>
-      {/* <List items={results.tracks}>
-        <ListItem
-          Style={StyledListItem}
-          name={item => item.name}
-          src={item => item.getImages().default.url}
-          labels={item => item.getLabels()}
-          button={item =>
-            selected ? (
-              <TickIcon onClick={() => {}}></TickIcon>
-            ) : (
-              <AddIcon onClick={() => addTrack(item.uri)}></AddIcon>
-            )
-          }
-        ></ListItem>
-      </List> */}
     </Container>
   );
 }

@@ -32,7 +32,7 @@ export default function Room(props) {
   const { query, setQuery, queryResults } = useSearch("tobi");
 
   const {
-    controller: { joinRoom, addTrack }
+    controller: { joinRoom, addTrack, removeTrack }
   } = room;
 
   const playerReady =
@@ -84,13 +84,16 @@ export default function Room(props) {
                     filter={filter}
                     setFilter={setFilter}
                     addTrack={addTrack}
+                    removeTrack={removeTrack}
                     query={query}
                   ></Search>
                 )}
               ></Route>
               <Route
                 path={`${path}/library`}
-                component={() => <Library results={libraryResults}></Library>}
+                component={() => (
+                  <Library results={libraryResults} {...props}></Library>
+                )}
               ></Route>
             </>
           )}

@@ -15,11 +15,15 @@ export default function List(props) {
         .map(([propName, callback]) => {
           // onClick and later other events will pass an evnet and not be fired immediately
           // callbacks are ran immediately
-          const handler = callback;
-          const isEvent = propName.slice(0, 2) === "on";
-          return isEvent
-            ? [propName, (callback = e => handler(e, item))]
-            : [propName, (callback = handler(item))];
+          if (callback) {
+            const handler = callback;
+            const isEvent = propName.slice(0, 2) === "on";
+            return isEvent
+              ? [propName, (callback = e => handler(e, item))]
+              : [propName, (callback = handler(item))];
+          } else {
+            return [propName, null];
+          }
         })
     );
   };

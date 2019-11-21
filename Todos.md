@@ -4,6 +4,8 @@ High Priority
 2. buttons for song list and carousel
 3. correct room search functionality
 4. add spinners for loading
+5. disallow non tracks in playlist
+6. artist/album page
 
 - search/library
   - add/remove
@@ -20,3 +22,18 @@ Low Priority
 2. add scopes
 3. dark mode
 4. show recomended tracks
+
+// Idea
+
+// Verion 1
+
+- remove links to albums and artists and playlists,
+  only allow direct add to tracks
+
+// Version 2
+
+- Desktop:
+  Clicking track creates a drop down with more options
+  drop down contains more data about track
+- Mobile:
+  Clicking track opens fullscren modal giving options to manipulate track and give more information such as similar tracks or artists
