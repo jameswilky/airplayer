@@ -18,12 +18,7 @@ export default function useFind() {
           return getAlbumTracks(uri);
 
         case "artist":
-          return spotify.find({
-            topTracks: {
-              where: { artist: { id: uri } },
-              market: "AU"
-            }
-          });
+          return getArtistTracks(uri);
         default:
           return null;
       }
@@ -39,6 +34,19 @@ export default function useFind() {
       setFoundTracks(null);
     }
   }, [queryString]);
+
+  const getArtistTracks = async uri => {
+    const collection = await spotify.find({
+      topTracks: {
+        where: { artist: { id: uri } },
+        market: "AU"
+      }
+    });
+    collection.tracks.forEach(item => {
+      Reflect.setPrototypeOf(item, ItemPrototype());
+    });
+    return collection.tracks;
+  };
 
   const getAlbumTracks = async uri => {
     const [collection, album] = await Promise.all([
@@ -56,9 +64,6 @@ export default function useFind() {
       item.images = album.images;
       Reflect.setPrototypeOf(item, ItemPrototype());
     });
-
-    console.log(collection.items);
-
     return collection.items;
   };
   return [foundTracks, setQueryString];
