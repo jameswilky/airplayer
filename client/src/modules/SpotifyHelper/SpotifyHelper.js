@@ -29,26 +29,12 @@ const fallbackImages = {
   }
 };
 
-const AlbumItemPrototype = () => {
-  return {
-    getArtists: function() {
-      return this.artists;
-    },
-    getImages: function() {
-      return this.image;
-    },
-    getLabels: function() {
-      return [this.type, ...this.getArtists(artist => artist.name)];
-    }
-  };
-};
-
 const ItemPrototype = () => {
   return {
     getArtists: function() {
       switch (this.type) {
         case "track":
-          return this.album.artists;
+          return this.album ? this.album.artists : this.artists;
         case "album":
           return this.artists;
         case "artists":
@@ -60,9 +46,13 @@ const ItemPrototype = () => {
     getImages: function() {
       switch (this.type) {
         case "track":
-          return this.album.images.length < 1
-            ? arrayToObject(fallbackImages)
-            : arrayToObject(this.album.images, ["large", "medium", "small"]);
+          return this.album
+            ? this.album.images.length < 1
+              ? arrayToObject(fallbackImages)
+              : arrayToObject(this.album.images, ["large", "medium", "small"])
+            : this.images
+            ? arrayToObject(this.images, ["large", "medium", "small"])
+            : arrayToObject(fallbackImages);
         default:
           return this.images.length < 1
             ? arrayToObject(fallbackImages)
@@ -95,4 +85,4 @@ export default function SpotifyHelper(obj) {
   });
 }
 
-export { ItemPrototype, AlbumItemPrototype };
+export { ItemPrototype };

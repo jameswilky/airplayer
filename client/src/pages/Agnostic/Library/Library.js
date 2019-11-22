@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Container } from "./styles";
-import { Route, Switch } from "react-router-dom";
 
 // Components
 import Results from "../../../components/Results/Results";

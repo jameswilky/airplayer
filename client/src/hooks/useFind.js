@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Spotify from "../modules/Spotify";
 import useAuth from "./useAuth";
-import { AlbumItemPrototype } from "../modules/SpotifyHelper/SpotifyHelper";
+import { ItemPrototype } from "../modules/SpotifyHelper/SpotifyHelper";
 
 export default function useFind() {
   const { accessToken } = useAuth();
@@ -14,26 +14,14 @@ export default function useFind() {
   useEffect(() => {
     const getTracks = async (type, uri) => {
       switch (type) {
-        case "album": {
-          const collection = await spotify.find({
-            tracks: {
-              where: { albums: { id: uri } }
-            }
-          });
-          collection.items.forEach(item =>
-            Reflect.setPrototypeOf(item, AlbumItemPrototype())
-          );
-
-          console.log(collection.items);
-
-          return collection.items;
-        }
+        case "album":
+          return getAlbumTracks(uri);
 
         case "artist":
           return spotify.find({
             topTracks: {
               where: { artist: { id: uri } },
-              market: "US"
+              market: "AU"
             }
           });
         default:
@@ -51,5 +39,27 @@ export default function useFind() {
       setFoundTracks(null);
     }
   }, [queryString]);
+
+  const getAlbumTracks = async uri => {
+    const [collection, album] = await Promise.all([
+      spotify.find({
+        tracks: {
+          where: { albums: { id: uri } }
+        }
+      }),
+      spotify.find({
+        album: { where: { id: uri } }
+      })
+    ]);
+
+    collection.items.forEach(item => {
+      item.images = album.images;
+      Reflect.setPrototypeOf(item, ItemPrototype());
+    });
+
+    console.log(collection.items);
+
+    return collection.items;
+  };
   return [foundTracks, setQueryString];
 }
