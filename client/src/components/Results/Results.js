@@ -35,7 +35,7 @@ export default function Results(props) {
                   key={i}
                   actions={result.actions}
                   path={props.path}
-                  link={result.link}
+                  onClick={result.onClick ? result.onClick : () => {}}
                 ></Result>
               )
           )}

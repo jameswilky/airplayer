@@ -21,7 +21,9 @@ import useAuth from "../../../hooks/useAuth";
 import useRoomTracks from "../../../hooks/useRoomTracks";
 import useSearch from "../../../hooks/useSearch/useSearch";
 import useLibrary from "../../../hooks/useLibrary";
+import useFind from "../../../hooks/useFind";
 
+// TODO remove useAuth dependency in useSearch, useLibrary and useFind
 export default function Room(props) {
   const { accessToken } = useAuth();
 
@@ -30,6 +32,7 @@ export default function Room(props) {
 
   const { libraryResults } = useLibrary();
   const { query, setQuery, queryResults } = useSearch("tobi");
+  const [foundTracks, setQueryString] = useFind();
 
   const {
     controller: { joinRoom, addTrack, removeTrack }
@@ -92,7 +95,12 @@ export default function Room(props) {
               <Route
                 path={`${path}/library`}
                 component={() => (
-                  <Library results={libraryResults} {...props}></Library>
+                  <Library
+                    results={libraryResults}
+                    foundTracks={foundTracks}
+                    setQueryString={setQueryString}
+                    {...props}
+                  ></Library>
                 )}
               ></Route>
             </>

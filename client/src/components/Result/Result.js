@@ -11,7 +11,7 @@ export default function Result({
   setFilter,
   limit,
   actions,
-  link
+  onClick
 }) {
   const Button = ({ item }) => {
     const action = actions.filter(action => action.type === "ADD")[0];
@@ -39,7 +39,7 @@ export default function Result({
           labels={item => item.getLabels().map(label => `${label} `)}
           Style={StyledListItem}
           button={actions ? item => <Button item={item}></Button> : null}
-          link={link}
+          onClick={onClick}
         ></ListItem>
       </List>
     </Container>

@@ -29,6 +29,20 @@ const fallbackImages = {
   }
 };
 
+const AlbumItemPrototype = () => {
+  return {
+    getArtists: function() {
+      return this.artists;
+    },
+    getImages: function() {
+      return this.image;
+    },
+    getLabels: function() {
+      return [this.type, ...this.getArtists(artist => artist.name)];
+    }
+  };
+};
+
 const ItemPrototype = () => {
   return {
     getArtists: function() {
@@ -81,4 +95,4 @@ export default function SpotifyHelper(obj) {
   });
 }
 
-export { ItemPrototype };
+export { ItemPrototype, AlbumItemPrototype };
