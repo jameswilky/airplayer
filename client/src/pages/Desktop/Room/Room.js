@@ -43,7 +43,6 @@ export default function Room(props) {
     roomTracks &&
     roomTracks.currentSong;
 
-  const roomReady = room && room.state;
   useEffect(() => {
     joinRoom("5d47d90a191f0f30a0d73414");
   }, []); // should be outside this component
@@ -87,6 +86,9 @@ export default function Room(props) {
                     addTrack={addTrack}
                     removeTrack={removeTrack}
                     query={query}
+                    foundTracksName={findResult.name}
+                    foundTracks={findResult.tracks}
+                    setFindQuery={setFindQuery}
                   ></Search>
                 )}
               ></Route>
@@ -94,13 +96,14 @@ export default function Room(props) {
                 path={`${path}/library`}
                 component={() => (
                   <Library
+                    filter={filter}
+                    setFilter={setFilter}
                     results={libraryResults}
                     foundTracks={findResult.tracks}
                     setFindQuery={setFindQuery}
                     addTrack={addTrack}
                     removeTrack={removeTrack}
                     foundTracksName={findResult.name}
-                    {...props}
                   ></Library>
                 )}
               ></Route>
