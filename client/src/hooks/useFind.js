@@ -19,6 +19,9 @@ export default function useFind() {
 
         case "artist":
           return getArtistTracks(uri);
+
+        case "playlist":
+          return getPlaylistTracks(uri);
         default:
           return null;
       }
@@ -48,6 +51,18 @@ export default function useFind() {
     return collection.tracks;
   };
 
+  const getPlaylistTracks = async uri => {
+    const collection = await spotify.find({
+      tracks: { where: { playlist: { id: uri } } }
+    });
+
+    const tracks = collection.items.map(item => item.track);
+    tracks.forEach(track => {
+      Reflect.setPrototypeOf(track, ItemPrototype());
+    });
+
+    return tracks;
+  };
   const getAlbumTracks = async uri => {
     const [collection, album] = await Promise.all([
       spotify.find({

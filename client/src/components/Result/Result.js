@@ -39,7 +39,7 @@ export default function Result({
           labels={item => item.getLabels().map(label => `${label} `)}
           Style={StyledListItem}
           button={actions ? item => <Button item={item}></Button> : null}
-          onClick={onClick}
+          onClick={onClick ? onClick : () => {}}
         ></ListItem>
       </List>
     </Container>

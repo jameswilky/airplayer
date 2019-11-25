@@ -70,6 +70,16 @@ describe("Spotify Web API Module", () => {
     });
   });
   describe("find", () => {
+    describe("playlists", () => {
+      it("should find all the tracks in a playlist given a playlist id", () => {
+        const query = spotify.find({
+          tracks: { where: { playlist: { id: "21THa8j9TaSGuXYNBU5tsC" } } }
+        });
+
+        expect(query.string).toBe("playlists/21THa8j9TaSGuXYNBU5tsC/tracks");
+      });
+    });
+
     describe("albums", () => {
       it("should find an album matching the given id", () => {
         const query = spotify.find({

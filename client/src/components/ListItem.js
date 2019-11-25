@@ -19,18 +19,12 @@ export default function ListItem({
   );
 
   return (
-    <Style
-      filter={filter}
-      button={button}
-      onClick={(e, item) => onClick(e, item)}
-      on
-    >
+    <Style filter={filter} onClick={(e, item) => onClick(e, item)}>
       {src && <img src={src}></img>}
       <div>
         <h3>{name}</h3>
         {labels && <Labels></Labels>}
       </div>
-
       {button}
     </Style>
   );
