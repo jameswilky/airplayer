@@ -6,8 +6,8 @@ import { ItemPrototype } from "../modules/SpotifyHelper/SpotifyHelper";
 export default function useFind() {
   const { accessToken } = useAuth();
 
-  const [queryString, setQueryString] = useState("");
-  const [foundTracks, setFoundTracks] = useState(null);
+  const [findQuery, setFindQuery] = useState({ uri: "", name: "" });
+  const [findResult, setFindResult] = useState({ tracks: [], name: "" });
 
   const spotify = Spotify(accessToken);
 
@@ -27,16 +27,17 @@ export default function useFind() {
       }
     };
 
-    if (queryString !== "") {
+    if (findQuery.uri !== "") {
       // e.g spotify:albums:123abc => [albums, 123abc]
-      const [type, uri] = queryString.split(":").slice(-2);
+      const [type, uri] = findQuery.uri.split(":").slice(-2);
       getTracks(type, uri).then(tracks => {
-        setFoundTracks(tracks);
+        console.log(findQuery.name);
+        setFindResult({ tracks: tracks, name: findQuery.name });
       });
     } else {
-      setFoundTracks(null);
+      setFindResult({ tracks: null, name: null });
     }
-  }, [queryString]);
+  }, [findQuery]);
 
   const getArtistTracks = async uri => {
     const collection = await spotify.find({
@@ -81,5 +82,5 @@ export default function useFind() {
     });
     return collection.items;
   };
-  return [foundTracks, setQueryString];
+  return [findResult, setFindQuery];
 }

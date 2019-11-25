@@ -4,9 +4,8 @@ import useAuth from "../useAuth";
 import { getKey, getNestedProperty } from "../../helpers/ObjectUtils";
 import SpotifyHelper from "../../modules/SpotifyHelper/SpotifyHelper";
 
-export default function useSearch() {
+export default function useSearch(accessToken) {
   // Store Access
-  const { accessToken } = useAuth();
   // Local State
   const [query, setQuery] = useState("tobi");
   const [queryResults, setQueryResults] = useState({

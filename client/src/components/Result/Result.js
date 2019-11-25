@@ -8,10 +8,10 @@ export default function Result({
   title,
   items,
   filter,
-  setFilter,
   limit,
   actions,
-  onClick
+  handleItemClick = () => {},
+  handleHeaderClick = () => {}
 }) {
   const Button = ({ item }) => {
     const action = actions.filter(action => action.type === "ADD")[0];
@@ -21,12 +21,12 @@ export default function Result({
   };
   return (
     <Container>
-      <h2 onClick={() => setFilter(filter === title ? "" : title)}>
+      <h2 onClick={e => handleHeaderClick(e, { title })}>
         {filter !== "" && filter !== title ? "" : title}
       </h2>
       <StyledChevron
         direction={filter !== "" ? "left" : "right"}
-        onClick={() => setFilter(filter === title ? "" : title)}
+        onClick={e => handleHeaderClick(e, { title })}
       ></StyledChevron>
       <List
         items={items}
@@ -39,7 +39,7 @@ export default function Result({
           labels={item => item.getLabels().map(label => `${label} `)}
           Style={StyledListItem}
           button={actions ? item => <Button item={item}></Button> : null}
-          onClick={onClick ? onClick : () => {}}
+          onClick={handleItemClick ? handleItemClick : () => {}}
         ></ListItem>
       </List>
     </Container>

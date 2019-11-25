@@ -1,11 +1,9 @@
 import { useState, useEffect } from "react";
 import Spotify from "../modules/Spotify";
-import useAuth from "./useAuth";
 import { ItemPrototype } from "../modules/SpotifyHelper/SpotifyHelper";
 
-export default function useLibrary() {
+export default function useLibrary(accessToken) {
   // Store Access
-  const { accessToken } = useAuth();
 
   const [libraryResults, setQueryResults] = useState({
     tracks: {},

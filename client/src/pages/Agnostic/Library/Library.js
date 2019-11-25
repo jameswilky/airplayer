@@ -6,12 +6,16 @@ import Results from "../../../components/Results/Results";
 import Result from "../../../components/Result/Result";
 import Carousel from "../../../components/Carousel/Carousel";
 
-// Hooks
-
 export default function Library(props) {
   const [filter, setFilter] = useState("");
   const { albums, tracks, artists, playlists, topTracks } = props.results;
-  const { foundTracks, setQueryString } = props;
+  const {
+    foundTracks,
+    setFindQuery,
+    foundTracksName,
+    addTrack,
+    removeTrack
+  } = props;
 
   // TODO if path contains playlists/albums/artists search for the items in that item
   // pass that to the result
@@ -21,14 +25,16 @@ export default function Library(props) {
   const FoundTracks = () => (
     <Result
       {...{
-        title: "Album name",
+        title: foundTracksName,
         items: foundTracks,
         filter,
-        setFilter,
         actions: [
-          { icon: <>+</>, func: () => {}, type: "ADD" },
-          { icon: <>-</>, func: () => {}, type: "REMOVE" }
-        ]
+          { icon: <>+</>, func: addTrack, type: "ADD" },
+          { icon: <>-</>, func: removeTrack, type: "REMOVE" }
+        ],
+        handleHeaderClick: function(e) {
+          setFindQuery({ name: "", uri: "" });
+        }
       }}
     ></Result>
   );
@@ -37,30 +43,45 @@ export default function Library(props) {
     <Results
       {...{
         filter,
-        setFilter,
         results: [
           {
             title: "Tracks",
             items: tracks,
             actions: [
-              { icon: <>+</>, func: () => {}, type: "ADD" },
-              { icon: <>-</>, func: () => {}, type: "REMOVE" }
-            ]
+              { icon: <>+</>, func: addTrack, type: "ADD" },
+              { icon: <>-</>, func: removeTrack, type: "REMOVE" }
+            ],
+            onHeaderClick: function(e, { title }) {
+              setFilter(filter === title ? "" : title);
+            }
           },
           {
             title: "Albums",
             items: albums,
-            onClick: (e, item) => setQueryString(item.uri)
+            onItemClick: (e, item) =>
+              setFindQuery({ uri: item.uri, name: item.name }),
+            onHeaderClick: function(e, { title }) {
+              setFilter(filter === title ? "" : title);
+            }
           },
           {
             title: "Artists",
             items: artists,
-            onClick: (e, item) => setQueryString(item.uri)
+            onItemClick: (e, item) =>
+              setFindQuery({ uri: item.uri, name: item.name }),
+
+            onHeaderClick: function(e, { title }) {
+              setFilter(filter === title ? "" : title);
+            }
           },
           {
             title: "Playlists",
             items: playlists,
-            onClick: (e, item) => setQueryString(item.uri)
+            onItemClick: (e, item) =>
+              setFindQuery({ uri: item.uri, name: item.name }),
+            onHeaderClick: function(e, { title }) {
+              setFilter(filter === title ? "" : title);
+            }
           }
         ]
       }}

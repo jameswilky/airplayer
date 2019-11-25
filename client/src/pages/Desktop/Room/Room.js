@@ -17,22 +17,20 @@ import Sidebar from "../../../components/Sidebar/Sidebar.js";
 
 // Hooks
 import useRoom from "../../../hooks/useRoom";
-import useAuth from "../../../hooks/useAuth";
 import useRoomTracks from "../../../hooks/useRoomTracks";
 import useSearch from "../../../hooks/useSearch/useSearch";
 import useLibrary from "../../../hooks/useLibrary";
 import useFind from "../../../hooks/useFind";
 
-// TODO remove useAuth dependency in useSearch, useLibrary and useFind
 export default function Room(props) {
-  const { accessToken } = useAuth();
-
+  const accessToken = props.accessToken;
   const room = useRoom();
   const { roomTracks } = useRoomTracks(room);
 
-  const { libraryResults } = useLibrary();
-  const { query, setQuery, queryResults } = useSearch("tobi");
-  const [foundTracks, setQueryString] = useFind();
+  const { libraryResults } = useLibrary(accessToken);
+  // TODO change to searchQuery
+  const { query, setQuery, queryResults } = useSearch(accessToken);
+  const [findResult, setFindQuery] = useFind(accessToken);
 
   const {
     controller: { joinRoom, addTrack, removeTrack }
@@ -48,7 +46,7 @@ export default function Room(props) {
   const roomReady = room && room.state;
   useEffect(() => {
     joinRoom("5d47d90a191f0f30a0d73414");
-  }, []);
+  }, []); // should be outside this component
 
   const path = props.match.path;
 
@@ -97,8 +95,11 @@ export default function Room(props) {
                 component={() => (
                   <Library
                     results={libraryResults}
-                    foundTracks={foundTracks}
-                    setQueryString={setQueryString}
+                    foundTracks={findResult.tracks}
+                    setFindQuery={setFindQuery}
+                    addTrack={addTrack}
+                    removeTrack={removeTrack}
+                    foundTracksName={findResult.name}
                     {...props}
                   ></Library>
                 )}

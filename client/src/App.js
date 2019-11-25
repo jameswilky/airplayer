@@ -17,6 +17,8 @@ import authReducer from "./reducers/authReducer";
 import MobileRoom from "./pages/Mobile/Room/Room";
 import DesktopRoom from "./pages/Desktop/Room/Room";
 
+import useAuth from "./hooks/useAuth";
+
 //Styles
 import "./global.css";
 
@@ -49,6 +51,7 @@ const App = hot(module)(() => {
   });
 
   useEffect(() => handleResize(), []);
+  const { accessToken } = useAuth();
 
   return (
     <Provider store={store}>
@@ -60,7 +63,14 @@ const App = hot(module)(() => {
           <Route
             path="/room/:roomid"
             component={
-              breakpoint === theme.breakpoints.mobile ? MobileRoom : DesktopRoom
+              breakpoint === theme.breakpoints.mobile
+                ? () => <MobileRoom></MobileRoom>
+                : props => (
+                    <DesktopRoom
+                      {...props}
+                      accessToken={accessToken}
+                    ></DesktopRoom>
+                  )
             }
           />
 

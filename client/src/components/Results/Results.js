@@ -30,12 +30,16 @@ export default function Results(props) {
                   title={result.title}
                   items={result.items}
                   filter={filter}
-                  setFilter={setFilter}
                   limit={limit}
                   key={i}
                   actions={result.actions}
                   path={props.path}
-                  onClick={result.onClick ? result.onClick : () => {}}
+                  handleItemClick={
+                    result.onItemClick ? result.onItemClick : () => {}
+                  }
+                  handleHeaderClick={
+                    result.onHeaderClick ? result.onHeaderClick : () => {}
+                  }
                 ></Result>
               )
           )}
