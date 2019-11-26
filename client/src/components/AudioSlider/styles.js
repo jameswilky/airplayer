@@ -1,7 +1,10 @@
 import styled from "styled-components";
 
 export const Slider = styled.div`
-  background: ${props => props.theme.lighterGray};
+  background: ${props =>
+    props.theme.mode === "dark"
+      ? props.theme.transparent2
+      : props.theme.transparentBlack5};
   position: absolute;
   bottom: 80px;
   width: 100%;

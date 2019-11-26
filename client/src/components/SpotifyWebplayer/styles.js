@@ -2,7 +2,8 @@ import styled from "styled-components";
 import Loader from "react-loader-spinner";
 
 export const Container = styled.div`
-  background-color: ${props => props.theme.white};
+  background-color: ${props =>
+    props.theme.mode === "dark" ? props.theme.transparent : props.theme.white};
 
   height: 100%;
   color: ${props => props.theme.black};
@@ -30,8 +31,11 @@ export const Left = styled.div`
     padding-left: 15px;
     font-size: 0.8rem;
 
-    & > h5 {
-      color: ${props => props.theme.darkestGray};
+    & > h3 {
+      color: ${props =>
+        props.theme.mode === "dark"
+          ? props.theme.white
+          : props.theme.darkestGray};
     }
 
     & > p {
@@ -54,5 +58,6 @@ export const Right = styled.div`
 export const Spinner = styled(Loader)`
   padding-top: 5px;
   text-align: center;
-  background-color: ${props => props.theme.white};
+  background-color: ${props =>
+    props.theme.mode === "dark" ? props.theme.transparent : props.theme.white};
 `;

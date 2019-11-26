@@ -3,7 +3,8 @@ import styled from "styled-components";
 import List from "../../../components/List";
 
 export const Background = styled.div`
-  background: ${props => props.theme.gradient};
+  background: ${props =>
+    props.theme.mode == "dark" ? props.theme.black : props.theme.gradient};
   height: 100vh;
   justify-items: center;
   align-items: center;

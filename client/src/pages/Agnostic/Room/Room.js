@@ -10,13 +10,12 @@ import useRoomTracks from "../../../hooks/useRoomTracks";
 import useSearch from "../../../hooks/useSearch/useSearch";
 import useLibrary from "../../../hooks/useLibrary";
 import useFind from "../../../hooks/useFind";
-
+import useBreakpoint from "../../../hooks/useBreakpoint";
 export default function Room(props) {
   const accessToken = props.accessToken;
   const room = useRoom();
   const { roomTracks } = useRoomTracks(accessToken, room);
 
-  const breakpoint = "mobile";
   const { libraryResults } = useLibrary(accessToken);
   // TODO change to searchQuery
   const { query, setQuery, queryResults } = useSearch(accessToken);
@@ -28,6 +27,8 @@ export default function Room(props) {
     room.state.currentSong &&
     roomTracks &&
     roomTracks.currentSong;
+
+  const { breakpoint } = useBreakpoint();
 
   useEffect(() => {
     room.controller.joinRoom("5d47d90a191f0f30a0d73414");
@@ -50,10 +51,10 @@ export default function Room(props) {
   return (
     <>
       {room && roomTracks && roomTracks.currentSong ? (
-        breakpoint === "desktop" ? (
-          <DesktopView {...viewProps}></DesktopView>
-        ) : (
+        breakpoint === "mobile" ? (
           <MobileView {...viewProps}></MobileView>
+        ) : (
+          <DesktopView {...viewProps}></DesktopView>
         )
       ) : (
         <div>loading</div>

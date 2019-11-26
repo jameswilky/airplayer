@@ -17,7 +17,10 @@ const HoverArea = styled.div`
 `;
 
 const SliderBackground = styled.div`
-  background: ${props => props.theme.white};
+  background: ${props =>
+    props.theme.mode === "dark"
+      ? props.theme.transparentBlack
+      : props.theme.white};
   opacity: ${props => (props.show ? 1 : 0)};
   height: ${props => (props.show ? "160px" : 0)};
   width: 40px;

@@ -41,7 +41,6 @@ export default function useAuth(auth) {
       : null
   );
 
-  // TODO fix timers
   //Updated boolean to let consumer now that we are authenticated
   useEffect(() => {
     if (authData.accessToken) setIsAuthenticated(true);

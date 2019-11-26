@@ -36,7 +36,7 @@ export default function Home(props) {
         AudioVisualizer={AudioVisualizer}
         title={currentSong.name}
         artist={currentSong.artists[0].name}
-        image={currentSong.getImages().medium.url}
+        image={currentSong.getImages().medium}
         nextTrack={{ artist: nextTrack.artist, title: nextTrack.name }}
       ></CurrentTrack>
       <List items={playlist} Style={StyledList}>

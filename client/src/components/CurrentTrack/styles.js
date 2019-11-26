@@ -10,7 +10,10 @@ export const ImageContainer = styled.div`
   /* Used to position Image */
   position: relative;
   top: 0px;
-  height: 320px; /* based on image height*/
+  height: ${props => props.height * 1.2 + "px"};
+  width: ${props => props.width + "px"};
+  margin: 0 auto;
+  padding: 32px 0;
 `;
 
 export const ImageWrapper = styled.div`
@@ -24,10 +27,12 @@ export const ImageWrapper = styled.div`
         ? props.theme.blackFadeGradient
         : props.theme.whiteFadeGradient};
     position: absolute;
-    height: 37%; /* based on image height*/
-    right: 0;
-    bottom: 0;
-    left: 0;
+    height: 50%; /* based on image height*/
+
+    /* 1 less pixel than padding amount */
+    right: -1px;
+    bottom: 31px;
+    left: -1px;
   }
   &::after {
     content: "";
@@ -46,7 +51,7 @@ export const Overlay = styled.div`
 
   position: absolute;
   min-height: ${props => 12 * props.theme.unit + "px"};
-  height: calc(100vh - 48px - 320px); /* Determined by input picture*/
+  height: ${props => `calc(100vh - 24px - ${props.height}px)`};
   width: 100%;
   bottom: 0px;
   display: grid;

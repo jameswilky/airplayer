@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Container,
   ImageContainer,
@@ -11,15 +11,14 @@ import {
 
 export default function CurrentTrack(props) {
   const { AudioVisualizer, title, artist, nextTrack, image } = props;
-
   return (
     <Container>
-      <ImageContainer>
+      <ImageContainer width={image.width} height={image.height}>
         <ImageWrapper>
-          <Image src={image} />
+          <Image src={image.url} />
         </ImageWrapper>
       </ImageContainer>
-      <Overlay>
+      <Overlay height={image.height}>
         <SongInfoContainer>
           <AudioVisualizer />
           <h1>{title}</h1>

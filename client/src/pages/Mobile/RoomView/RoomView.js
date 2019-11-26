@@ -35,7 +35,6 @@ export default function RoomView(props) {
     match
   } = props;
 
-  console.log(roomTracks);
   return (
     <Container>
       <Route

@@ -1,7 +1,8 @@
 import styled from "styled-components";
 
 export const Background = styled.div`
-  background: ${props => props.theme.gradient};
+  background: ${props =>
+    props.theme.mode === "dark" ? props.theme.black : props.theme.gradient};
 `;
 export const Container = styled.div`
   display: grid;

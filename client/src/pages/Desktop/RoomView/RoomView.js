@@ -28,7 +28,9 @@ export default function RoomView(props) {
     setFindQuery,
     playerReady,
     accessToken,
-    match
+    match,
+    setActiveTheme,
+    activeTheme
   } = props;
 
   return (

@@ -1,5 +1,5 @@
 // Dependencies
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { hot } from "react-hot-loader"; // used to fix hot reload issues with styled components during development
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import { ThemeProvider } from "styled-components";
@@ -20,25 +20,6 @@ import useAuth from "./hooks/useAuth";
 import "./global.css";
 
 const App = hot(module)(() => {
-  const [breakpoint, setBreakpoint] = useState(theme.breakpoints.desktop);
-
-  const handleResize = () => {
-    const mobile = theme.breakpoints.mobile.substring(
-      0,
-      theme.breakpoints.mobile.length - 2
-    );
-    if (window.innerWidth < mobile) {
-      setBreakpoint(theme.breakpoints.mobile);
-    } else {
-      setBreakpoint(theme.breakpoints.tablet);
-    }
-  };
-  useEffect(() => {
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  });
-
-  useEffect(() => handleResize(), []);
   const {
     accessToken,
     login,
@@ -47,8 +28,9 @@ const App = hot(module)(() => {
     isAuthenticated
   } = useAuth();
 
+  const [activeTheme, setActiveTheme] = useState(theme);
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={activeTheme}>
       <Router>
         <Route
           exact
@@ -68,7 +50,12 @@ const App = hot(module)(() => {
         <Route
           path="/room/:roomid"
           component={props => (
-            <Room {...props} accessToken={accessToken}></Room>
+            <Room
+              {...props}
+              accessToken={accessToken}
+              setActiveTheme={setActiveTheme}
+              activeTheme={activeTheme}
+            ></Room>
           )}
         />
 
