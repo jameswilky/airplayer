@@ -1,6 +1,5 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import useAuth from "../../../hooks/useAuth";
 
 import spotifyLogo from "../../../images/spotifyLogo.png";
 
@@ -15,7 +14,7 @@ import {
 } from "./styles";
 
 export default function Landing(props) {
-  const { login, logout, isAuthenticated } = useAuth();
+  const { login, logout, isAuthenticated } = props;
 
   return (
     <Background>

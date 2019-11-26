@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import useAuth from "../../../hooks/useAuth";
 import List from "../../../components/List";
 import ListItem from "../../../components/ListItem";
 
@@ -13,7 +12,7 @@ import {
 } from "./styles";
 
 export default function Home(props) {
-  const { login, logout } = useAuth();
+  const { login, logout } = props;
 
   const api = "http://localhost:8888/api/";
   const [rooms, setRooms] = useState([]);

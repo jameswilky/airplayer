@@ -1,8 +1,6 @@
 // Dependencies
 import React, { useEffect, useState } from "react";
 import { hot } from "react-hot-loader"; // used to fix hot reload issues with styled components during development
-import { createStore } from "redux";
-import { Provider } from "react-redux";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import { ThemeProvider } from "styled-components";
 import theme from "./theme";
@@ -13,24 +11,14 @@ import Callback from "./pages/Agnostic/Callback";
 import RoomSearch from "./pages/Agnostic/RoomSearch/RoomSearch";
 
 //Reducers
-import authReducer from "./reducers/authReducer";
-import MobileRoom from "./pages/Mobile/Room/Room";
-import DesktopRoom from "./pages/Desktop/Room/Room";
+
+import Room from "./pages/Agnostic/Room/Room";
 
 import useAuth from "./hooks/useAuth";
 
 //Styles
 import "./global.css";
 
-// Refactor authentication into a hook instead of using redux
-const INITIAL_STATE = {
-  auth: {
-    refreshToken: null,
-    accessToken: null,
-    isAuthenticated: false
-  }
-};
-const store = createStore(authReducer, INITIAL_STATE);
 const App = hot(module)(() => {
   const [breakpoint, setBreakpoint] = useState(theme.breakpoints.desktop);
 
@@ -51,33 +39,47 @@ const App = hot(module)(() => {
   });
 
   useEffect(() => handleResize(), []);
-  const { accessToken } = useAuth();
+  const {
+    accessToken,
+    login,
+    logout,
+    setAuthData,
+    isAuthenticated
+  } = useAuth();
 
   return (
-    <Provider store={store}>
-      <ThemeProvider theme={theme}>
-        <Router>
-          <Route exact path="/" component={Landing} />
-          <Route path="/roomsearch" component={RoomSearch} />
+    <ThemeProvider theme={theme}>
+      <Router>
+        <Route
+          exact
+          path="/"
+          component={props => (
+            <Landing
+              {...props}
+              login={login}
+              logout={logout}
+              accessToken={accessToken}
+              isAuthenticated={isAuthenticated}
+            ></Landing>
+          )}
+        />
+        <Route path="/roomsearch" component={RoomSearch} />
 
-          <Route
-            path="/room/:roomid"
-            component={
-              breakpoint === theme.breakpoints.mobile
-                ? () => <MobileRoom></MobileRoom>
-                : props => (
-                    <DesktopRoom
-                      {...props}
-                      accessToken={accessToken}
-                    ></DesktopRoom>
-                  )
-            }
-          />
+        <Route
+          path="/room/:roomid"
+          component={props => (
+            <Room {...props} accessToken={accessToken}></Room>
+          )}
+        />
 
-          <Route path="/auth/callback" component={Callback} />
-        </Router>
-      </ThemeProvider>
-    </Provider>
+        <Route
+          path="/auth/callback"
+          component={props => (
+            <Callback {...props} setAuthData={setAuthData}></Callback>
+          )}
+        />
+      </Router>
+    </ThemeProvider>
   );
 });
 

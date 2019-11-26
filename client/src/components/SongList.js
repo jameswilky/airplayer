@@ -51,6 +51,7 @@ export default function SongList(props) {
                   { icon: <>+</>, func: addTrack, type: "ADD" },
                   { icon: <>-</>, func: removeTrack, type: "REMOVE" }
                 ],
+                onItemClick: (e, item) => console.log(item.id),
                 onHeaderClick: function(e, { title }) {
                   setFilter(filter === title ? "" : title);
                 }

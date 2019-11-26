@@ -6,7 +6,7 @@ export default function ListItem({
   name,
   labels,
   Style = styled.li``,
-  filter = false,
+  filter = "",
   onClick = () => {},
   button = <></>
 }) {

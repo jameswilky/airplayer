@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import useAuth from "../../hooks/useAuth";
 
 const getHashParams = () => {
   let hashParams = {};
@@ -15,7 +14,7 @@ const getHashParams = () => {
 };
 
 export default function Callback(props) {
-  const { authData, setAuthData } = useAuth();
+  const { setAuthData } = props;
 
   useEffect(() => {
     const nextAuthData = {

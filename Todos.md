@@ -1,17 +1,10 @@
 High Priority
 
-1. feedback after actions commited
-2. buttons for song list and carousel
+1. fix Mobile layout
+2. feedback after actions commited
 3. correct room search functionality
 4. add spinners for loading
 5. disallow non tracks in playlist
-6. artist/album page
-
-- search/library
-  - add/remove
-- active playlist
-  - play/ shuffle/remove
-
 6. create and join real rooms
 7. disallow duplicates in playlist
 8. display users in the room

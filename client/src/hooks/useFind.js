@@ -1,11 +1,8 @@
 import React, { useState, useEffect } from "react";
 import Spotify from "../modules/Spotify";
-import useAuth from "./useAuth";
 import { ItemPrototype } from "../modules/SpotifyHelper/SpotifyHelper";
 
-export default function useFind() {
-  const { accessToken } = useAuth();
-
+export default function useFind(accessToken) {
   const [findQuery, setFindQuery] = useState({ uri: "", name: "" });
   const [findResult, setFindResult] = useState({ tracks: [], name: "" });
 

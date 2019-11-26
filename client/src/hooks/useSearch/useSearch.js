@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import Spotify from "../../modules/Spotify";
-import useAuth from "../useAuth";
 import { getKey, getNestedProperty } from "../../helpers/ObjectUtils";
 import SpotifyHelper from "../../modules/SpotifyHelper/SpotifyHelper";
 

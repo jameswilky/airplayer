@@ -8,10 +8,7 @@ import useSearch from "../../../hooks/useSearch/useSearch";
 import { StyledItem, StyledList } from "./styles";
 
 // TODO use paralax https://www.youtube.com/watch?v=P5zGTEGPpu4
-export default function Home() {
-  const { query, setQuery, queryResults } = useSearch("");
-  const { albums, tracks, artists, playlists } = queryResults;
-
+export default function Home(props) {
   const ItemTemplate = ({ src, name, labels }) => (
     <StyledItem>
       {src && <img src={src}></img>}
@@ -23,16 +20,26 @@ export default function Home() {
       <button>{"+"}</button>
     </StyledItem>
   );
+
+  const { playlist, currentSong } = props.roomTracks;
+
+  const nextTrack =
+    playlist[
+      playlist.indexOf(
+        playlist.filter(track => track.uri === currentSong.uri)[0]
+      ) + 1
+    ];
+
   return (
     <Container>
       <CurrentTrack
         AudioVisualizer={AudioVisualizer}
-        title="Game Ova"
-        artist="Tobi Lou"
-        image={gameOvaImg}
-        nextTrack={{ artist: "Darude", title: "Sandstorm" }}
+        title={currentSong.name}
+        artist={currentSong.artists[0].name}
+        image={currentSong.getImages().medium.url}
+        nextTrack={{ artist: nextTrack.artist, title: nextTrack.name }}
       ></CurrentTrack>
-      <List items={tracks} Style={StyledList}>
+      <List items={playlist} Style={StyledList}>
         <ItemTemplate
           src={item => item.getImages().default.url}
           name={item => item.name}

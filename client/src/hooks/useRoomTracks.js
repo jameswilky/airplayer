@@ -1,11 +1,9 @@
 import React, { useState, useEffect, useCallback } from "react";
 import Spotify from "../modules/Spotify";
-import useAuth from "../hooks/useAuth";
 import { ItemPrototype } from "../modules/SpotifyHelper/SpotifyHelper";
 
-export default function useRoomTracks(room) {
+export default function useRoomTracks(accessToken, room) {
   // Store Access
-  const { accessToken } = useAuth();
   // Local State
 
   // Local Variables
