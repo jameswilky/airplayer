@@ -25,19 +25,19 @@ let options = {
 const birthday = {
   name: "birthday",
   playlist: [
-    { trackId: "spotify:track:123" },
-    { trackId: "spotify:track:456" }
+    { uri: "spotify:track:123" },
+    { uri: "spotify:track:456" }
   ],
-  currentSong: { playing: true, trackId: "spotify:track:123" }
+  currentSong: { playing: true, uri: "spotify:track:123" }
 };
 const wedding = {
   name: "wedding",
   playlist: [
-    { trackId: "spotify:track:098" },
-    { trackId: "spotify:track:4as" },
-    { trackId: "spotify:track:baodiu" }
+    { uri: "spotify:track:098" },
+    { uri: "spotify:track:4as" },
+    { uri: "spotify:track:baodiu" }
   ],
-  currentSong: { playing: false, trackId: "spotify:track:4as" }
+  currentSong: { playing: false, uri: "spotify:track:4as" }
 };
 
 // used to wait an arbitrary amount of time for all events to fire on a socket
@@ -130,7 +130,7 @@ describe("Sockets backend", () => {
       const john = io.connect(url, options);
 
       john.on("connect", () => {
-        john.emit("ADD_TRACK", { trackId: "spotify:track:newSong" });
+        john.emit("ADD_TRACK", { uri: "spotify:track:newSong" });
         john.on("ROOM_UPDATED", state => {
           johnState = state;
         });
@@ -154,11 +154,11 @@ describe("Sockets backend", () => {
       });
 
       await waitFor(25);
-      john.emit("ADD_TRACK", { trackId: "spotify:track:newSong" });
+      john.emit("ADD_TRACK", { uri: "spotify:track:newSong" });
 
       await waitFor(25);
       expect(johnState.playlist.length).to.eql(3);
-      expect(johnState.playlist[2].trackId).to.eql("spotify:track:newSong");
+      expect(johnState.playlist[2].uri).to.eql("spotify:track:newSong");
     });
   });
 
@@ -200,11 +200,11 @@ describe("Sockets backend", () => {
     //     await waitFor(10);
     //     john.emit("PAUSE", null);
 
-    //     john.emit("PLAY", { trackId: "spotify:track:789" });
+    //     john.emit("PLAY", { uri: "spotify:track:789" });
 
-    //     john.emit("UPDATE_PLAYLIST", [{ trackId: "spotify:track:101112" }]);
+    //     john.emit("UPDATE_PLAYLIST", [{ uri: "spotify:track:101112" }]);
 
-    //     john.emit("REMOVE_TRACK", { trackId: "spotify:track:123" });
+    //     john.emit("REMOVE_TRACK", { uri: "spotify:track:123" });
     //     john.on("ERROR", msg => errors.push(msg));
     //   });
 
@@ -259,12 +259,12 @@ describe("Sockets backend", () => {
       });
       await waitFor(20);
 
-      john.emit("PLAY", { token: token, trackId: "spotify:track:123" });
+      john.emit("PLAY", { token: token, uri: "spotify:track:123" });
       await waitFor(20);
 
       expect(token).to.be.a("string");
       expect(johnState).to.be.a("object");
-      expect(johnState.currentSong.trackId).to.eql("spotify:track:123");
+      expect(johnState.currentSong.uri).to.eql("spotify:track:123");
       expect(johnState.currentSong.playing).to.eql(true);
       expect(token).to.be.a("string");
     });
@@ -290,7 +290,7 @@ describe("Sockets backend", () => {
 
           mary.on("connect", async function() {
             await waitFor(50);
-            john.emit("ADD_TRACK", { trackId: "spotify:track:test" });
+            john.emit("ADD_TRACK", { uri: "spotify:track:test" });
           });
 
           mary.on("ROOM_UPDATED", state => {
@@ -309,8 +309,8 @@ describe("Sockets backend", () => {
       await waitFor(100);
       expect(JSON.stringify(johnState)).to.eql(JSON.stringify(aliceState));
       expect(JSON.stringify(johnState)).to.not.eql(JSON.stringify(maryState));
-      expect(johnState.playlist[2].trackId).to.eql("spotify:track:test");
-      expect(maryState.playlist[2].trackId).to.eql("spotify:track:baodiu");
+      expect(johnState.playlist[2].uri).to.eql("spotify:track:test");
+      expect(maryState.playlist[2].uri).to.eql("spotify:track:baodiu");
       john.disconnect();
       alice.disconnect();
       mary.disconnect();

@@ -1,20 +1,18 @@
 High Priority
 
-1. fix Mobile layout
-2. feedback after actions commited
-3. correct room search functionality
-4. add spinners for loading
-5. disallow non tracks in playlist
-6. create and join real rooms
-7. disallow duplicates in playlist
-8. display users in the room
+1. feedback after actions commited
+2. correct room search functionality
+3. add spinners for loading
+4. disallow non tracks in playlist
+5. create and join real rooms
+6. disallow duplicates in playlist
+7. display users in the room
 
 Low Priority
 
 1. restart playlist if at end
 2. add scopes
-3. dark mode
-4. show recomended tracks
+3. show recomended tracks
 
 // Idea
 

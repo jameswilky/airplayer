@@ -15,13 +15,15 @@ export default function useRoomTracks(accessToken, room) {
 
   useEffect(() => {
     if (room && room.state.currentSong && room.state.playlist) {
+      console.log(room.state.playlist);
+
       const currentSongPromise = spotify.find({
-        track: { where: { id: room.state.currentSong.trackId.split(":")[2] } }
+        track: { where: { id: room.state.currentSong.uri.split(":")[2] } }
       });
       const playlistPromise = Promise.all(
         room.state.playlist.map(track =>
           spotify.find({
-            track: { where: { id: track.trackId.split(":")[2] } }
+            track: { where: { id: track.uri.split(":")[2] } }
           })
         )
       );

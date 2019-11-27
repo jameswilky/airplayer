@@ -17,8 +17,8 @@ const {
 // Mock Data
 const birthday = {
   name: "birthday",
-  playlist: [{ trackId: "123" }, { trackId: "456" }],
-  currentSong: { playing: true, trackId: "123" }
+  playlist: [{ uri: "123" }, { uri: "456" }],
+  currentSong: { playing: true, uri: "123" }
 };
 
 describe("Room Data Access Object", () => {
@@ -58,7 +58,7 @@ describe("Room Data Access Object", () => {
     it("should return a copy of the newly updated room on success", async () => {
       const room = await createRoom(birthday);
       room.name = "wedding";
-      room.playlist.push({ trackId: "789" });
+      room.playlist.push({ uri: "789" });
       const res = await updateRoom(room);
       expect(res).to.be.a("object");
       expect(res.id).to.eql(room.id);

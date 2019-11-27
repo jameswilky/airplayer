@@ -21,7 +21,9 @@ export default function usePlay(deviceState, start, room, token) {
 
   // Load the first track in the roomstate
   useEffect(() => {
-    room.controller.play(room.state.playlist[0].trackId);
+    if (room.state.playlist.length > 0) {
+      room.controller.play(room.state.playlist[0].uri);
+    }
   }, []);
 
   // Play loaded track

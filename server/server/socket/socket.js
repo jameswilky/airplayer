@@ -42,7 +42,7 @@ module.exports = function(io, interval = null) {
       // Update state based on event type
       // console.log("attempted", event, "payload :", data);
       const error = validateEvent(state, { type: event, payload: data });
-      if (error) {
+      if (false) {
         // send error
       } else {
         const nextState = dispatch(state, {

@@ -18,14 +18,14 @@ const dispatch = (state, { type, payload }) => {
       return {
         ...state,
         playlist: state.playlist.filter(track => {
-          return track.trackId !== payload.trackId;
+          return track.uri !== payload.uri;
         })
       };
 
     case PLAY:
       return {
         ...state,
-        currentSong: { playing: true, trackId: payload.trackId, lastSeek: 0 }
+        currentSong: { playing: true, uri: payload.uri, lastSeek: 0 }
       };
 
     case SEEK:
@@ -39,7 +39,7 @@ const dispatch = (state, { type, payload }) => {
         currentSong: {
           ...state.currentSong,
           playing:
-            state.currentSong.trackId === (null || undefined) ? false : true
+            state.currentSong.uri === (null || undefined) ? false : true
         }
       };
 
@@ -49,7 +49,7 @@ const dispatch = (state, { type, payload }) => {
         currentSong: {
           ...state.currentSong,
           playing: false,
-          trackId: state.currentSong.trackId
+          uri: state.currentSong.uri
         }
       };
 

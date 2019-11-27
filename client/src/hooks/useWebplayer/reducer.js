@@ -11,9 +11,9 @@ export default (state, action) => {
       const roomState = action.payload.roomState;
       return {
         ...state,
-        currentSong: roomState.currentSong.trackId,
+        currentSong: roomState.currentSong.uri,
         paused: !roomState.currentSong.playing,
-        playlist: roomState.playlist.map(track => track.trackId),
+        playlist: roomState.playlist.map(track => track.uri),
         lastSeek: roomState.currentSong.lastSeek
       };
     }

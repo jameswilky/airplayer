@@ -59,8 +59,8 @@ describe("Room route handlers", () => {
       // Load in test room
       const newRoom = new Room({
         name: "room1",
-        playlist: [{ trackId: "123" }, { trackId: "456" }],
-        currentSong: { playing: true, trackId: "123" },
+        playlist: [{ uri: "123" }, { uri: "456" }],
+        currentSong: { playing: true, uri: "123" },
         createdAt: new Date()
       });
 
@@ -80,8 +80,8 @@ describe("Room route handlers", () => {
       // Create test room
       const newRoom = new Room({
         name: "room1",
-        playlist: [{ trackId: "123" }, { trackId: "456" }],
-        currentSong: { playing: true, trackId: "123" },
+        playlist: [{ uri: "123" }, { uri: "456" }],
+        currentSong: { playing: true, uri: "123" },
         createdAt: new Date()
       });
 
@@ -99,8 +99,8 @@ describe("Room route handlers", () => {
       res.should.have.status(200);
       res.body.room.should.have.property("name").eql("room3");
       res.body.room.currentSong.should.have
-        .property("trackId")
-        .eql(room.currentSong.trackId);
+        .property("uri")
+        .eql(room.currentSong.uri);
       res.body.message.should.eql("Room updated");
     });
   });
@@ -111,8 +111,8 @@ describe("Room route handlers", () => {
       // Create test room
       const newRoom = new Room({
         name: "room1",
-        playlist: [{ trackId: "123" }, { trackId: "456" }],
-        currentSong: { playing: true, trackId: "123" },
+        playlist: [{ uri: "123" }, { uri: "456" }],
+        currentSong: { playing: true, uri: "123" },
         createdAt: new Date()
       });
 

@@ -40,13 +40,13 @@ export default function MusicController({
 }) {
   const isFirstTrack =
     room.state.playlist
-      .map(track => track.trackId)
-      .indexOf(room.state.currentSong.trackId) === 0;
+      .map(track => track.uri)
+      .indexOf(room.state.currentSong.uri) === 0;
 
   const isLastTrack =
     room.state.playlist
-      .map(track => track.trackId)
-      .indexOf(room.state.currentSong.trackId) ===
+      .map(track => track.uri)
+      .indexOf(room.state.currentSong.uri) ===
     room.state.playlist.length - 1;
 
   return (

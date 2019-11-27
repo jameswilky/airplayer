@@ -11,10 +11,10 @@ export default function useRoom() {
     return {
       joinRoom: (id, password = null) =>
         socket.emit("JOIN_ROOM", { id, password }),
-      addTrack: id => socket.emit("ADD_TRACK", { trackId: id }),
-      removeTrack: id => socket.emit("REMOVE_TRACK", { trackId: id }),
+      addTrack: id => socket.emit("ADD_TRACK", { uri: id }),
+      removeTrack: id => socket.emit("REMOVE_TRACK", { uri: id }),
       updatePlaylist: playlist => socket.emit("UPDATE_PLAYLIST", playlist),
-      play: id => socket.emit("PLAY", { trackId: id }),
+      play: id => socket.emit("PLAY", { uri: id }),
       pause: () => socket.emit("PAUSE", null),
       resume: () => socket.emit("RESUME", null),
       seek: destination => socket.emit("SEEK", destination)

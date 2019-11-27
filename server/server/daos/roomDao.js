@@ -7,7 +7,7 @@ module.exports = {
   createRoom: async ({
     name,
     playlist = [],
-    currentSong = { playing: false, trackId: null },
+    currentSong = { playing: false, uri: null },
     password = null
   }) => {
     const newRoom = new Room({
