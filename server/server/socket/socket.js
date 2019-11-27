@@ -8,6 +8,7 @@ const { createHost } = require("../daos/hostDao");
 
 const { ALL, HOST } = require("../actions/scopes");
 const dispatch = require("../reducers/roomReducer");
+const validateEvent = require("../middleware/validateEvent");
 
 const inARoom = socket => {
   // A socket always has 1 room attached as a room is naturally created on connection
@@ -39,15 +40,20 @@ module.exports = function(io, interval = null) {
 
     const handleEvent = (event, data) => {
       // Update state based on event type
-      console.log("attempted", event, "payload :", data);
-      const nextState = dispatch(state, {
-        type: event,
-        payload: data
-      });
-      Object.assign(state, nextState);
-      // After each update, send updated room to each socket in room
-      io.in(state.id).emit("ROOM_UPDATED", state);
-      updateRoom(state);
+      // console.log("attempted", event, "payload :", data);
+      const error = validateEvent(state, { type: event, payload: data });
+      if (error) {
+        // send error
+      } else {
+        const nextState = dispatch(state, {
+          type: event,
+          payload: data
+        });
+        Object.assign(state, nextState);
+        // After each update, send updated room to each socket in room
+        io.in(state.id).emit("ROOM_UPDATED", state);
+        updateRoom(state);
+      }
     };
 
     socket.on(
