@@ -41,9 +41,11 @@ module.exports = function(io, interval = null) {
     const handleEvent = (event, data) => {
       // Update state based on event type
       // console.log("attempted", event, "payload :", data);
-      const error = validateEvent(state, { type: event, payload: data });
-      if (false) {
-        // send error
+      // const error = validateEvent(state, { type: event, payload: data });
+      // TEMP
+      if (event === "ADD_TRACK" && data && data.uri === "INVALID_URI") {
+        console.log("invalid uri");
+        socket.emit("ERROR", "failed");
       } else {
         const nextState = dispatch(state, {
           type: event,

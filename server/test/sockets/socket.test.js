@@ -24,10 +24,7 @@ let options = {
 // Mock Data
 const birthday = {
   name: "birthday",
-  playlist: [
-    { uri: "spotify:track:123" },
-    { uri: "spotify:track:456" }
-  ],
+  playlist: [{ uri: "spotify:track:123" }, { uri: "spotify:track:456" }],
   currentSong: { playing: true, uri: "spotify:track:123" }
 };
 const wedding = {
@@ -185,7 +182,7 @@ describe("Sockets backend", () => {
   });
 
   describe("Room Scopes", () => {
-    // it("should return an error if no token is provided when attemptning to  perform host actions", async () => {
+    // it("should return an error if no token is provided when attempting to  perform host actions", async () => {
     //   const birthdayRoom = await createRoom(birthday);
     //   const john = io.connect(url, options);
     //   let johnState;
@@ -269,6 +266,47 @@ describe("Sockets backend", () => {
       expect(token).to.be.a("string");
     });
 
+    it("should only pass errors to the user that attempted an action", async () => {
+      let john, alice, mary;
+      let johnError, aliceError, maryError;
+
+      const birthdayRoom = await createRoom(birthday);
+      const weddingRoom = await createRoom(wedding);
+
+      john = io.connect(url, options);
+
+      john.on("connect", function() {
+        john.on("ERROR", err => (johnError = err));
+
+        john.emit("JOIN_ROOM", { id: birthdayRoom.id });
+
+        alice = io.connect(url, options);
+        alice.on("ERROR", err => (aliceError = err));
+        alice.emit("JOIN_ROOM", { id: birthdayRoom.id });
+
+        alice.on("connect", function() {
+          mary = io.connect(url, options);
+          mary.emit("JOIN_ROOM", { id: weddingRoom.id });
+
+          mary.on("connect", async function() {
+            mary.on("ERROR", err => (maryError = err));
+
+            await waitFor(50);
+            john.emit("ADD_TRACK", { uri: "INVALID_URI" });
+          });
+        });
+      });
+
+      await waitFor(200);
+
+      expect(johnError).to.be.a("string");
+      expect(maryError).to.eql(undefined);
+      expect(aliceError).to.eql(undefined);
+
+      john.disconnect();
+      alice.disconnect();
+      mary.disconnect();
+    });
     it("should update the state of the room for all users in that room after an action", async () => {
       let john, alice, mary;
       let johnState, aliceState, maryState;
