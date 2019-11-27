@@ -11,19 +11,13 @@ const {
 module.exports = (state, { type, payload }) => {
   switch (type) {
     case ADD_TRACK: {
-      const error = "ADD_TRACK failed. payload is not a track";
-      if (!payload.uri) {
-        return error;
-      }
-      const uri = payload.uri.split(":");
-      console.log(uri);
+      const re = /spotify:track:[$\d|$\w]+/;
       if (
-        uri.length !== 3 ||
-        uri[0] !== "spotify" ||
-        uri[1] !== "track" ||
-        uri[2] !== ""
+        !payload.uri ||
+        !re.test(payload.uri) ||
+        !/\w/.test(payload.uri[payload.uri.length - 1])
       ) {
-        return error;
+        return "ADD_TRACK failed. payload is not a valid track uri";
       }
     }
     default:

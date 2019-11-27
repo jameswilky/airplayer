@@ -42,9 +42,9 @@ module.exports = function(io, interval = null) {
       // Update state based on event type
       // console.log("attempted", event, "payload :", data);
       // const error = validateEvent(state, { type: event, payload: data });
-      // TEMP
+
+      // TEMP swap with validation
       if (event === "ADD_TRACK" && data && data.uri === "INVALID_URI") {
-        console.log("invalid uri");
         socket.emit("ERROR", "failed");
       } else {
         const nextState = dispatch(state, {
@@ -54,6 +54,7 @@ module.exports = function(io, interval = null) {
         Object.assign(state, nextState);
         // After each update, send updated room to each socket in room
         io.in(state.id).emit("ROOM_UPDATED", state);
+        // socket.emit("SUCCESS", "Track successfully added")
         updateRoom(state);
       }
     };
