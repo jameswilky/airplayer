@@ -72,4 +72,22 @@ describe("validateEvent", () => {
       expect(error).to.eql(null);
     });
   });
+  describe("REMOVE_TRACK", () => {
+    it("will return null if track is in playlist", () => {
+      const error = validateEvent(state, {
+        type: "REMOVE_TRACK",
+        payload: { uri: "spotify:track:123" }
+      });
+
+      expect(error).to.eql(null);
+    });
+    it("will return a string if track is not in playlist", () => {
+      const error = validateEvent(state, {
+        type: "REMOVE_TRACK",
+        payload: { uri: "spotify:track:1111" }
+      });
+
+      expect(error).to.be.a("string");
+    });
+  });
 });

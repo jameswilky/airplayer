@@ -20,13 +20,21 @@ const isInPlaylist = (uri, playlist) =>
 module.exports = (state, { type, payload }) => {
   switch (type) {
     case ADD_TRACK: {
-      if (
-        isInvalidTrack(payload) ||
-        isInPlaylist(payload.uri, state.playlist)
-      ) {
+      if (isInvalidTrack(payload)) {
         return "ADD_TRACK failed. track URI is invalid";
       }
+      if (isInPlaylist(payload.uri, state.playlist)) {
+        return "ADD_TRACK failed. track is already in playlist";
+      }
+      return null;
     }
+    case REMOVE_TRACK: {
+      if (!isInPlaylist(payload.uri, state.playlist)) {
+        return "REMOVE_TRACK failed. track is not in playlist";
+      }
+      return null;
+    }
+
     default:
       return null;
   }
