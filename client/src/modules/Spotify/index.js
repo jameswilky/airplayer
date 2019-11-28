@@ -31,7 +31,6 @@ const Spotify = (token, send = true) => {
       options.body = JSON.stringify(body);
     }
     if (send) {
-      console.log(encodeURI(`${api}${query}`));
       return fetch(encodeURI(`${api}${query}`), options).then(res =>
         res.json()
       );

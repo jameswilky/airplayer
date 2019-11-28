@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Spotify from "../../modules/Spotify";
-import { getKey, getNestedProperty } from "../../helpers/ObjectUtils";
+import useDebounce from "../useDebounce";
+import { getKey } from "../../helpers/ObjectUtils";
 import SpotifyHelper from "../../modules/SpotifyHelper/SpotifyHelper";
 
 export default function useSearch(accessToken) {
@@ -17,13 +18,11 @@ export default function useSearch(accessToken) {
   // Local Variables
   const spotify = Spotify(accessToken);
 
-  // Search Handler
-  useEffect(() => {
-    const getQueries = async query => {
+  const getQueries = useCallback(
+    async query => {
       const queries = Object.keys(queryResults).map(type =>
         spotify.search({ query, type })
       );
-      console.log(spotify.search({ query, type: "track" }));
       const results = await Promise.all(queries);
       return Object.assign(
         {},
@@ -34,13 +33,22 @@ export default function useSearch(accessToken) {
           };
         })
       );
-    };
-    if (query !== "" && accessToken) {
-      getQueries(query).then(nextResults => {
-        setQueryResults(nextResults);
-      });
-    }
-  }, [query, accessToken]);
+    },
+    [query, queryResults]
+  );
+
+  // Search handler, triggers when query updates, with 200 millisecond delay, and using the latest query to send
+  useDebounce(
+    () => {
+      if (query !== "" && accessToken) {
+        getQueries(query).then(nextResults => {
+          setQueryResults(nextResults);
+        });
+      }
+    },
+    200,
+    [query, accessToken]
+  );
 
   return {
     query,
