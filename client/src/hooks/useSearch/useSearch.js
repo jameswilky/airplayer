@@ -23,6 +23,7 @@ export default function useSearch(accessToken) {
       const queries = Object.keys(queryResults).map(type =>
         spotify.search({ query, type })
       );
+      console.log(spotify.search({ query, type: "track" }));
       const results = await Promise.all(queries);
       return Object.assign(
         {},

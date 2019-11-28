@@ -11,8 +11,6 @@ const waitFor = ms => {
   });
 };
 
-const token =
-  "BQB08ysiMIuoVX6AOL9wl0biXs7XQoL6cNV3rUO52xo_9hddVELfS6-fz_zzxDH8R1PQnJsXkPlQEevLKpjW7p_hObCD6eOFnaiCtXttCrMKQ8MJ9CK6-BrndkMzcoYGsHn7860jQZyy-Jh-lVKvhkL7as_hGOIe82r4yE-3l3UZpWo3U1OQ";
 describe("useSearch", () => {
   it("should run without crashing", () => {
     let result;

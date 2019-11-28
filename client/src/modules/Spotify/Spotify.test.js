@@ -60,6 +60,13 @@ describe("Spotify Web API Module", () => {
       expect(query.string).toBe(`search?q=doom%20metal&type=playlist`);
     });
 
+    it("should search for tracks matching the query", () => {
+      const query = spotify.search({
+        query: "cha cha",
+        type: "track"
+      });
+      expect(query.string).toBe("search?q=cha%20cha&type=track");
+    });
     it("should search for tracks available only in a specific market", () => {
       const query = spotify.search({
         query: "abba",

@@ -31,12 +31,13 @@ const Spotify = (token, send = true) => {
       options.body = JSON.stringify(body);
     }
     if (send) {
+      console.log(encodeURI(`${api}${query}`));
       return fetch(encodeURI(`${api}${query}`), options).then(res =>
         res.json()
       );
     } else {
       options.api = api;
-      options.string = query;
+      options.string = encodeURI(query);
       return options;
     }
   };
@@ -137,14 +138,12 @@ const Spotify = (token, send = true) => {
           ? appendConditions(query)
           : "";
 
-      const queryString = encodeURI(
-        `search?q=${buildQuery()}${appendOptions({
-          type: dePluralize(type),
-          limit,
-          offset,
-          market
-        })}`
-      );
+      const queryString = `search?q=${buildQuery()}${appendOptions({
+        type: dePluralize(type),
+        limit,
+        offset,
+        market
+      })}`;
 
       return get(queryString);
     },

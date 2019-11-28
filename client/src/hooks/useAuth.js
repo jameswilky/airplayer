@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import { useState } from "react";
 import useInterval from "./useInterval";
 
 export default function useAuth(auth) {
