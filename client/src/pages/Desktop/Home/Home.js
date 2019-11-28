@@ -34,7 +34,12 @@ export default function Home({ room, roomTracks, topTracks }) {
             }
             onClick={play}
             button={item => (
-              <button onClick={() => room.controller.removeTrack(item.uri)}>
+              <button
+                onClick={e => {
+                  e.stopPropagation();
+                  room.controller.removeTrack(item.uri);
+                }}
+              >
                 {" "}
                 x
               </button>

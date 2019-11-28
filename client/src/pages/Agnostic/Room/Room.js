@@ -13,7 +13,7 @@ import useFind from "../../../hooks/useFind";
 import useBreakpoint from "../../../hooks/useBreakpoint";
 export default function Room(props) {
   const accessToken = props.accessToken;
-  const room = useRoom();
+  const { room, roomSuccess, roomError } = useRoom();
   const { roomTracks } = useRoomTracks(accessToken, room);
 
   const { libraryResults } = useLibrary(accessToken);
@@ -45,6 +45,8 @@ export default function Room(props) {
     queryResults,
     libraryResults,
     accessToken,
+    roomSuccess,
+    roomError,
     ...props
   };
 

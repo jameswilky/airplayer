@@ -15,8 +15,6 @@ export default function useRoomTracks(accessToken, room) {
 
   useEffect(() => {
     if (room && room.state.currentSong && room.state.playlist) {
-      console.log(room.state.playlist);
-
       const currentSongPromise = spotify.find({
         track: { where: { id: room.state.currentSong.uri.split(":")[2] } }
       });

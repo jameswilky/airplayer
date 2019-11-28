@@ -13,6 +13,7 @@ import { Background, Container, Footer, Main } from "./styles";
 import SpotifyWebplayer from "../../../components/SpotifyWebplayer/SpotifyWebplayer";
 import DesktopHeader from "../../../components/DesktopHeader/DesktopHeader";
 import Sidebar from "../../../components/Sidebar/Sidebar.js";
+import Message from "../../../components/Message/Message";
 
 export default function RoomView(props) {
   const [filter, setFilter] = useState("");
@@ -29,8 +30,8 @@ export default function RoomView(props) {
     playerReady,
     accessToken,
     match,
-    setActiveTheme,
-    activeTheme
+    roomSuccess,
+    roomError
   } = props;
 
   return (
@@ -90,6 +91,7 @@ export default function RoomView(props) {
           </>
         </Main>
         <Footer>
+          <Message success={roomSuccess} error={roomError}></Message>
           {playerReady && (
             <SpotifyWebplayer
               token={accessToken}

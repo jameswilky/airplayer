@@ -52,7 +52,7 @@ module.exports = function(io, interval = null) {
         Object.assign(state, nextState);
         // After each update, send updated room to each socket in room
         io.in(state.id).emit("ROOM_UPDATED", state);
-        socket.emit("SUCCESS", "Track successfully added");
+        socket.emit("SUCCESS", { type: event, payload: data });
         updateRoom(state);
       }
     };

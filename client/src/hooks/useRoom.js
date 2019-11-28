@@ -5,6 +5,9 @@ export default function useRoom() {
   const url = "http://localhost:8888";
   const socket = io.connect(url);
 
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState({ type: "", payload: "" });
+
   const Controller = socket => {
     // This function is used to create a new controller to manage the room.
     // It has to recreated to inherit the socket closure after a room as been joined
@@ -36,8 +39,9 @@ export default function useRoom() {
         controller: Controller(socket)
       });
     });
-    socket.on("ERROR", err => setRoom({ ...room, error: err }));
+    socket.on("ERROR", err => setError(err));
+    socket.on("SUCCESS", ({ type, payload }) => setSuccess({ type, payload }));
   }, [room]);
 
-  return room;
+  return { room, roomError: error, roomSuccess: success };
 }

@@ -23,12 +23,11 @@ export default function Home(props) {
 
   const { playlist, currentSong } = props.roomTracks;
 
-  const nextTrack =
-    playlist[
-      playlist.indexOf(
-        playlist.filter(track => track.uri === currentSong.uri)[0]
-      ) + 1
-    ];
+  const nextTrack = playlist[
+    playlist.indexOf(
+      playlist.filter(track => track.uri === currentSong.uri)[0]
+    ) + 1
+  ] || { artist: null, title: null };
 
   return (
     <Container>

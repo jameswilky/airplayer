@@ -20,6 +20,9 @@ export default {
   lightGray: `rgba(200, 200, 200, 1)`,
   lighterGray: `rgba(225, 225, 225, 1)`,
 
+  green: `rgba(20, 215, 20, 0.7)`,
+  red: `rgba(242, 20, 20, 0.7)`,
+
   transparent5: `rgba(255, 255, 255, 0.8)`,
   transparent4: `rgba(255, 255, 255, 0.6)`,
   transparent3: `rgba(255, 255, 255, 0.3)`,
