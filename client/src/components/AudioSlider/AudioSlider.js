@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { ProgressBar, Slider } from "./styles";
 import "../../global.css";
 
@@ -11,34 +11,33 @@ export default function AudioSlider({
   duration,
   seek
 }) {
-  const [seekPosition, setSeekPosition] = useState(0);
-  const [trackPosition, setTrackPosition] = useState(0);
+  const [trackPosition, setTrackPosition] = useState();
+
+  const prevSeek = lastSeek;
+  useInterval(
+    () => {
+      if (prevSeek !== lastSeek) setTrackPosition(trackPosition + 100);
+    },
+    playing ? 100 : null
+  );
 
   useEffect(() => {
     setTrackPosition(lastSeek);
   }, [lastSeek, currentSong]);
 
-  useInterval(
-    () => setTrackPosition(trackPosition + 100),
-    playing ? 100 : null
-  );
-
-  useEffect(() => {
-    const position = (trackPosition / duration) * 300;
-    setSeekPosition(position < 300 ? position : 0);
-  }, [duration, trackPosition]);
-
   return (
     <Slider>
       <ProgressBar
-        width={seekPosition ? seekPosition / 3 + "%" : 0}
+        width={
+          trackPosition && duration ? (trackPosition / duration) * 100 + "%" : 0
+        }
       ></ProgressBar>
       <input
         type="range"
         min="0"
         max="300"
         className="slider"
-        value={seekPosition}
+        value={trackPosition && duration ? (trackPosition / duration) * 300 : 0}
         onChange={e => {
           if (duration) {
             const seekDestinationMs = Math.round(

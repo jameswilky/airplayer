@@ -1,14 +1,15 @@
 High Priority
 
-1. implement client side success system
-2. implement client side error system
+1. implement client side error system
+2. clicking a track doesnt play on the first click
+3. fix audio slider issue
 
-3. add spinners for loading
-4. correct color issues on front end
-5. correctly implement dark mode toggle
+4. add spinners for loading
+5. correct color issues on front end
+6. correctly implement dark mode toggle
 
-6. create and join real rooms
-7. display users in the room on client side
+7. create and join real rooms
+8. display users in the room on client side
 
 Low Priority
 
