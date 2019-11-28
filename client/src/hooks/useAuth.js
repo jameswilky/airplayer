@@ -2,23 +2,31 @@ import React, { useEffect, useState, useCallback } from "react";
 import useInterval from "./useInterval";
 
 export default function useAuth(auth) {
+  const anHour = 3600000; // in milliseconds
+
   const initialState = {
     accessToken: null,
     refreshToken: null,
     accessTokenCreationTime: null
   };
 
-  const [authData, setAuthData] = useState(auth ? auth : initialState);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [authData, setAuthData] = useState(
+    auth
+      ? {
+          ...auth,
+          isAuthenticated: Date.now() - auth.accessTokenCreationTime < anHour
+        }
+      : initialState
+  );
 
-  const anHour = 3600000; // in milliseconds
   const server = "http://localhost:8888";
 
+  // pushed into App.js, test later
   //Check local storage for authentication data
-  useEffect(() => {
-    const prevAuthData = JSON.parse(localStorage.getItem("authData"));
-    if (prevAuthData) setAuthData(prevAuthData);
-  }, []);
+  // useEffect(() => {
+  //   const prevAuthData = JSON.parse(localStorage.getItem("authData"));
+  //   if (prevAuthData) setAuthData(prevAuthData);
+  // }, []);
 
   const refreshToken = () =>
     fetch(`${server}/auth/refreshToken?refresh_token=${authData.refreshToken}`)
@@ -30,7 +38,7 @@ export default function useAuth(auth) {
           accessTokenCreationTime: Date.now()
         };
         localStorage.setItem("authData", JSON.stringify(nextAuthData));
-        setAuthData(nextAuthData);
+        setAuthData({ ...nextAuthData, isAuthenticated: true });
       });
 
   // Refresh token after an hour
@@ -41,11 +49,11 @@ export default function useAuth(auth) {
       : null
   );
 
-  //Updated boolean to let consumer now that we are authenticated
-  useEffect(() => {
-    if (authData.accessToken) setIsAuthenticated(true);
-    else setIsAuthenticated(false);
-  }, [authData.accessToken]);
+  // //Updated boolean to let consumer now that we are authenticated
+  // useEffect(() => {
+  //   if (authData.accessToken) setIsAuthenticated(true);
+  //   else setIsAuthenticated(false);
+  // }, [authData.accessToken]);
 
   const login = () => {
     window.location.href = server + "/auth/login";
@@ -71,7 +79,7 @@ export default function useAuth(auth) {
     logout,
     authData,
     setAuthData,
-    isAuthenticated,
+    isAuthenticated: authData.isAuthenticated,
     accessToken: authData.accessToken
   };
 }

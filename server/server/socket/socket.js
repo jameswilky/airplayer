@@ -43,7 +43,7 @@ module.exports = function(io, interval = null) {
       // console.log("attempted", event, "payload :", data);
       const error = validateEvent(state, { type: event, payload: data });
       if (error) {
-        socket.emit("ERROR", "failed");
+        socket.emit("ERROR", error);
       } else {
         const nextState = dispatch(state, {
           type: event,
@@ -52,7 +52,7 @@ module.exports = function(io, interval = null) {
         Object.assign(state, nextState);
         // After each update, send updated room to each socket in room
         io.in(state.id).emit("ROOM_UPDATED", state);
-        // socket.emit("SUCCESS", "Track successfully added")
+        socket.emit("SUCCESS", "Track successfully added");
         updateRoom(state);
       }
     };
@@ -79,7 +79,7 @@ module.exports = function(io, interval = null) {
       }
     );
 
-    socket.on("JOIN_ROOM", async ({ id, password = null }) => {
+    socket.on("JOIN_ROOM", async ({ id, password = null, userId = null }) => {
       /**
        * @param {obj} room {id,name,playlist,subscribers,currentSong}
        */
@@ -95,6 +95,9 @@ module.exports = function(io, interval = null) {
         password
       });
       if (authorized) {
+        if (userId) {
+          nextState.subscribers.push({ userId });
+        }
         Object.assign(state, nextState);
         socket.join(state.id);
         io.in(state.id).emit("ROOM_UPDATED", state);

@@ -25,7 +25,7 @@ export default function Callback(props) {
 
     localStorage.setItem("authData", JSON.stringify(nextAuthData));
 
-    setAuthData(nextAuthData);
+    setAuthData({ ...nextAuthData, isAuthenticated: true });
     props.history.goBack();
   });
 

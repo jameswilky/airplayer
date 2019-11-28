@@ -1,18 +1,20 @@
 High Priority
 
-1. feedback after actions commited
-2. correct room search functionality
-3. add spinners for loading
-4. disallow non tracks in playlist
-5. create and join real rooms
-6. disallow duplicates in playlist
-7. display users in the room
+1. correct room search functionality
+2. add spinners for loading
+3. create and join real rooms
+4. display users in the room on client side
+5. implement client side success system
+6. implement client side error system
+7. correct color issues on front end
+8. correctly implement dark mode toggle
 
 Low Priority
 
 1. restart playlist if at end
 2. add scopes
 3. show recomended tracks
+4. unified error/success message standard
 
 // Idea
 

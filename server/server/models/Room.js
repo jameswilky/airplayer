@@ -10,7 +10,7 @@ const RoomSchema = new Schema({
     type: Date,
     default: Date.now
   },
-  subscribers: [{ type: Schema.Types.ObjectId, ref: "users" }],
+  subscribers: [{ userId: String }],
   host: { socketId: String },
   password: String
 });

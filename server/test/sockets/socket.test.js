@@ -25,7 +25,8 @@ let options = {
 const birthday = {
   name: "birthday",
   playlist: [{ uri: "spotify:track:123" }, { uri: "spotify:track:456" }],
-  currentSong: { playing: true, uri: "spotify:track:123" }
+  currentSong: { playing: true, uri: "spotify:track:123" },
+  subscribers: []
 };
 const wedding = {
   name: "wedding",
@@ -34,7 +35,8 @@ const wedding = {
     { uri: "spotify:track:4as" },
     { uri: "spotify:track:baodiu" }
   ],
-  currentSong: { playing: false, uri: "spotify:track:4as" }
+  currentSong: { playing: false, uri: "spotify:track:4as" },
+  subscribers: []
 };
 
 // used to wait an arbitrary amount of time for all events to fire on a socket
@@ -118,6 +120,23 @@ describe("Sockets backend", () => {
       await waitFor(50);
       expect(johnState).to.eql(undefined);
       expect(err).to.eql("join attempt failed, invalid password");
+    });
+
+    it("should add the users ID to the subscribers array after joining", async () => {
+      const room = await createRoom(birthday);
+      const john = await Mocket.connectClient(url);
+      let johnState;
+      john.emit("JOIN_ROOM", {
+        id: room.id,
+        password: null,
+        userId: "john123"
+      });
+      john.on("ROOM_UPDATED", state => {
+        johnState = state;
+      });
+
+      await waitFor(50);
+      expect(johnState.subscribers[0].userId).to.eql("john123");
     });
   });
 
@@ -266,6 +285,46 @@ describe("Sockets backend", () => {
       expect(token).to.be.a("string");
     });
 
+    it("should only pass success messages to the user that attempted the action", async () => {
+      let john, alice, mary;
+      let johnMsg, aliceMsg, maryMsg;
+
+      const birthdayRoom = await createRoom(birthday);
+      const weddingRoom = await createRoom(wedding);
+
+      john = io.connect(url, options);
+
+      john.on("connect", function() {
+        john.on("SUCCESS", msg => (johnMsg = msg));
+
+        john.emit("JOIN_ROOM", { id: birthdayRoom.id });
+
+        alice = io.connect(url, options);
+        alice.on("SUCCESS", msg => (aliceMsg = msg));
+        alice.emit("JOIN_ROOM", { id: birthdayRoom.id });
+
+        alice.on("connect", function() {
+          mary = io.connect(url, options);
+          mary.emit("JOIN_ROOM", { id: weddingRoom.id });
+
+          mary.on("connect", async function() {
+            mary.on("SUCCESS", msg => (maryMsg = msg));
+
+            await waitFor(50);
+            john.emit("ADD_TRACK", { uri: "spotify:track:0129382asd" });
+          });
+        });
+      });
+
+      await waitFor(200);
+      expect(johnMsg).to.be.a("string");
+      expect(maryMsg).to.eql(undefined);
+      expect(aliceMsg).to.eql(undefined);
+
+      john.disconnect();
+      alice.disconnect();
+      mary.disconnect();
+    });
     it("should only pass errors to the user that attempted an action", async () => {
       let john, alice, mary;
       let johnError, aliceError, maryError;

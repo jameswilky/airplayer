@@ -18,15 +18,12 @@ import useAuth from "./hooks/useAuth";
 
 //Styles
 import "./global.css";
+const prevAuthData = JSON.parse(localStorage.getItem("authData"));
 
 const App = hot(module)(() => {
-  const {
-    accessToken,
-    login,
-    logout,
-    setAuthData,
-    isAuthenticated
-  } = useAuth();
+  const { accessToken, login, logout, setAuthData, isAuthenticated } = useAuth(
+    prevAuthData
+  );
 
   const [activeTheme, setActiveTheme] = useState(theme);
   return (

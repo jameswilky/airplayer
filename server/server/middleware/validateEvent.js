@@ -34,6 +34,12 @@ module.exports = (state, { type, payload }) => {
       }
       return null;
     }
+    case SEEK: {
+      if (typeof payload !== "number") {
+        return "SEEK failed. payload passed was not an integer";
+      }
+      return null;
+    }
 
     default:
       return null;
