@@ -1,13 +1,12 @@
 High Priority
 
-1. clicking a track doesnt play on the first click
+1. add spinners for loading
+2. correct color issues on front end
+3. correctly implement dark mode toggle
 
-2. add spinners for loading
-3. correct color issues on front end
-4. correctly implement dark mode toggle
-
-5. create and join real rooms
-6. display users in the room on client side
+4. create and join real rooms
+5. display users in the room on client side
+6. fix incorrect db room state being passed when searching for room
 
 Low Priority
 
@@ -15,6 +14,9 @@ Low Priority
 2. restart playlist if at end
 3. add scopes
 4. show recomended tracks
+5. enter geo-location feature
+6. tweak gray colors
+7. change color scheme
 
 // Idea
 

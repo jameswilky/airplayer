@@ -73,7 +73,7 @@ export default function RoomView(props) {
           ></Library>
         )}
       ></Route>
-      <Footer />
+      <Footer path={match.url} />
     </Container>
   );
 }

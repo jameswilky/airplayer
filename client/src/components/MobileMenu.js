@@ -35,7 +35,7 @@ const Container = styled.div`
   }
 `;
 
-export default function MobileMenu() {
+export default function MobileMenu({ path }) {
   return (
     <Container>
       <Body>
@@ -44,13 +44,13 @@ export default function MobileMenu() {
           <span>|</span>
           <span>|</span>
         </Underlay>
-        <Link to="/room/5d47d90a191f0f30a0d73414">
+        <Link to={path}>
           <i className="fas fa-music" />
         </Link>
-        <Link to="/room/5d47d90a191f0f30a0d73414/search">
+        <Link to={`${path}/search`}>
           <i className="fas fa-search" />
         </Link>
-        <Link to="/room/5d47d90a191f0f30a0d73414/library">
+        <Link to={`${path}/library`}>
           <i className="fas fa-heart" />
         </Link>
       </Body>

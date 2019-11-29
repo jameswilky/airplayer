@@ -2,6 +2,7 @@ export default {
   primary: "rgba(242, 162, 176)",
   secondary: "rgba(242,182,147)",
   black: `rgba(20, 20, 20, 1)`,
+
   gradient: `linear-gradient(to top left, rgba(242, 182, 147), rgba(242, 162, 176))`,
   blackFadeGradient: `linear-gradient(
     to top,

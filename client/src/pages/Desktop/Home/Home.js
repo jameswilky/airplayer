@@ -12,7 +12,6 @@ export default function Home({ room, roomTracks, topTracks, setStartAudio }) {
   const play = (e, item) => {
     room.controller.play(item.uri);
     setStartAudio(true);
-    // room.controller.resume();
   };
 
   return (

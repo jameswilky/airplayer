@@ -1,18 +1,19 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Container, HomeIcon, SearchIcon, LibraryIcon } from "./styles";
-export default function Sidebar() {
+export default function Sidebar({ path }) {
+  console.log(path);
   return (
     <Container>
-      <Link to="/room/5d47d90a191f0f30a0d73414">
+      <Link to={path}>
         <HomeIcon></HomeIcon>
         <p>Home</p>
       </Link>
-      <Link to="/room/5d47d90a191f0f30a0d73414/search">
+      <Link to={`${path}/search`}>
         <SearchIcon></SearchIcon>
         <p>Search</p>{" "}
       </Link>
-      <Link to="/room/5d47d90a191f0f30a0d73414/library">
+      <Link to={`${path}/library`}>
         <LibraryIcon></LibraryIcon>
         <p>Library</p>
       </Link>

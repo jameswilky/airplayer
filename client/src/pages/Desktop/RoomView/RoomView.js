@@ -38,7 +38,7 @@ export default function RoomView(props) {
   return (
     <Background>
       <Container>
-        <Sidebar></Sidebar>
+        <Sidebar path={match.url}></Sidebar>
         <DesktopHeader
           filter={filter}
           setFilter={setFilter}

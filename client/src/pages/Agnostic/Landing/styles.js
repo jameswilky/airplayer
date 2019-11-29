@@ -17,11 +17,11 @@ export const Head = styled.div`
   text-align: center;
   & > h1 {
     font-size: 3.9rem;
-    text-shadow: 4px 4px
+    text-shadow: 3px 3px
       ${props =>
         props.theme.mode === "dark"
           ? props.theme.transparent
-          : props.theme.gray};
+          : props.theme.transparentBlack5};
     background: ${props =>
       props.theme.mode === "dark" ? props.theme.gradient : "none"};
     -webkit-background-clip: ${props =>

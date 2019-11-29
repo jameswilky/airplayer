@@ -2,13 +2,15 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import List from "../../../components/List";
 import ListItem from "../../../components/ListItem";
+import { IoIosAdd, IoIosLogIn } from "react-icons/io";
 
 import {
   Background,
   Container,
   Head,
   Body,
-  ExtendedStyledListItem
+  ExtendedStyledListItem,
+  Button
 } from "./styles";
 
 export default function Home(props) {
@@ -16,7 +18,6 @@ export default function Home(props) {
 
   const api = "http://localhost:8888/api/";
   const [rooms, setRooms] = useState([]);
-  console.log(rooms);
 
   useEffect(() => {
     fetch(api + "rooms")
@@ -24,18 +25,27 @@ export default function Home(props) {
       .then(data => setRooms(data));
   }, []);
 
+  // TODO fix _.id being returned
   const JoinButton = item => (
-    <Link to={`/room/5d47d90a191f0f30a0d73414`}>
-      <button>Join Room</button>
-    </Link>
+    <Button>
+      <Link to={`/room/${item._id}`}>
+        <IoIosLogIn></IoIosLogIn>
+      </Link>
+    </Button>
   );
 
   return (
     <Background>
+      <h1>Airplayer</h1>
+      <p>Join a room or create your own</p>
       <Container>
         <Head>
           <input placeholder="Enter a party Name" type="text" />
           <input placeholder="Change your location" type="text" />
+          <div>
+            <IoIosAdd></IoIosAdd>
+            <p>Create Room</p>
+          </div>
         </Head>
         <Body>
           <List items={rooms}>

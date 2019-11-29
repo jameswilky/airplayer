@@ -7,18 +7,43 @@ export const Background = styled.div`
     props.theme.mode == "dark" ? props.theme.black : props.theme.gradient};
   height: 100vh;
   justify-items: center;
-  align-items: center;
+  /* align-items: center; */
   display: grid;
-  color: ${props => props.theme.black};
+  grid-template-rows: 5.5rem 2rem 1fr;
+  color: ${props => props.theme.white};
+
+  & > h1 {
+    font-size: 3.9rem;
+    text-shadow: 3px 3px
+      ${props =>
+        props.theme.mode === "dark"
+          ? props.theme.transparent
+          : props.theme.transparentBlack5};
+    background: ${props =>
+      props.theme.mode === "dark" ? props.theme.gradient : "none"};
+    -webkit-background-clip: ${props =>
+      props.theme.mode === "dark" ? "text" : "none"};
+    background-clip: ${props =>
+      props.theme.mode === "dark" ? "text" : "none"};
+    -webkit-text-fill-color: ${props =>
+      props.theme.mode === "dark" ? "transparent" : "none"};
+    padding: 8px 0;
+  }
+  & > p {
+    color: ${props => props.theme.transparent5};
+    padding-bottom: 16px;
+  }
 `;
 
 export const Container = styled.div`
   display: grid;
-  justify-items: center;
+  justify-content: center;
+  align-content: center;
   min-width: ${props => 24 * props.theme.unit + "px"};
   width: 85vw;
   min-height: ${props => 50 * props.theme.unit + "px"};
-  height: 85vh;
+  /* height: 70vh; */
+  margin-bottom: 8vh;
   background-color: ${props => props.theme.transparent2};
   grid-template-rows: ${props => 6 * props.theme.unit + "px"} 1fr;
   grid-template-columns: 1fr;
@@ -32,18 +57,39 @@ export const Container = styled.div`
     }
   }
 
-  @media (max-width: 320px) {
-    width: 95vw;
+  @media (max-width: 440px) {
+    width: 98vw;
   }
 `;
 export const Head = styled.div`
   display: grid;
   width: 100%;
 
-  grid-template-columns: 2fr 1fr;
+  grid-template-columns: 2fr 1fr 1fr;
 
   & > input {
-    padding: ${props => 1 * props.theme.unit + "px"};
+    padding: ${props => 2 * props.theme.unit + "px"};
+    border: none;
+    border-right: 1px solid ${props => props.theme.transparentBlack4};
+    background-color: ${props => props.theme.transparent4};
+  }
+
+  & > div {
+    display: grid;
+    cursor: pointer;
+
+    grid-template-columns: 1fr 3fr;
+    align-items: center;
+    background-color: ${props => props.theme.transparentBlack4};
+
+    & :first-child {
+      justify-self: flex-end;
+      font-size: 2.3rem;
+    }
+    & :nth-child(2) {
+      justify-self: flex-start;
+      font-size: 1.2rem;
+    }
   }
 `;
 
@@ -74,5 +120,20 @@ export const ExtendedStyledListItem = styled(StyledListItem)`
   padding: 0 ${props => 2 * props.theme.unit + "px"};
   @media (max-width: 320px) {
     width: 90%;
+  }
+`;
+
+export const Button = styled.div`
+  & * {
+    text-decoration: none;
+    color: ${props => props.theme.transparent4};
+    margin-top: 8px;
+  }
+  font-size: 2.5rem;
+  width: 100%;
+  & :hover {
+    & * {
+      color: ${props => props.theme.transparentBlack3};
+    }
   }
 `;
