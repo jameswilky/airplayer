@@ -5,9 +5,9 @@ export default function useTogglePause(deviceState, player) {
   useEffect(() => {
     if (deviceState.ready && deviceState.currentSong) {
       if (deviceState.paused) {
-        player.pause();
+        player.pause().then(() => console.log("not playing"));
       } else {
-        player.resume();
+        player.resume().then(() => console.log("playing"));
       }
     }
   }, [deviceState.ready, deviceState.currentSong, deviceState.paused]);

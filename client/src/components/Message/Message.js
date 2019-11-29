@@ -5,6 +5,7 @@ import useTimeout from "../../hooks/useTimeout";
 export default function Message({ success, error }) {
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [message, setMessage] = useState({ success: "", error: "" });
 
   const generateSuccessMessage = success => {
     switch (success.type) {
@@ -16,36 +17,57 @@ export default function Message({ success, error }) {
         return "";
     }
   };
+  const generateErrorMessage = error => "error";
 
   // set SUccess message when successful event occurs
   useEffect(() => {
-    if (success) setSuccessMessage(generateSuccessMessage(success));
+    if (success) {
+      setMessage({ success: generateSuccessMessage(success), error: "" });
+    }
   }, [success]);
+
+  useEffect(() => {
+    if (error) {
+      setMessage({ success: "", error: generateErrorMessage(error) });
+    }
+  }, [error]);
 
   // After 3 seconds remove success message
   useTimeout(() => {
-    if (successMessage) {
-      console.log("test");
-      setSuccessMessage("");
+    if (message) {
+      setMessage({ error: "", success: "" });
     }
-  }, successMessage && 3000);
+  }, (message.success || message.error) && 3000);
 
-  // Set Error Message when error occurs
-  useEffect(() => {
-    if (error) setErrorMessage(`Error : ${error}`);
-  }, [error]);
+  // // set SUccess message when successful event occurs
+  // useEffect(() => {
+  //   if (success) setSuccessMessage(generateSuccessMessage(success));
+  // }, [success]);
 
-  // After 3 seconds, remove error
-  useTimeout(() => {
-    if (errorMessage) {
-      setErrorMessage("");
-    }
-  }, errorMessage && 3000);
+  // // After 3 seconds remove success message
+  // useTimeout(() => {
+  //   if (successMessage) {
+  //     setSuccessMessage("");
+  //   }
+  // }, successMessage && 3000);
+
+  // console.log(error);
+  // // Set Error Message when error occurs
+  // useEffect(() => {
+  //   if (error) setErrorMessage(generateErrorMessage(error));
+  // }, [error]);
+
+  // // After 3 seconds, remove error
+  // useTimeout(() => {
+  //   if (errorMessage) {
+  //     setErrorMessage("");
+  //   }
+  // }, errorMessage && 3000);
 
   return (
-    <Container active={successMessage || errorMessage}>
-      <Error>{errorMessage}</Error>
-      <Success>{successMessage}</Success>
+    <Container>
+      <Error active={message.error}>{message.error}</Error>
+      <Success active={message.success}>{message.success}</Success>
     </Container>
   );
 }

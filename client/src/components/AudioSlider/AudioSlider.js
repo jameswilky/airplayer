@@ -14,12 +14,21 @@ export default function AudioSlider({
   const [trackPosition, setTrackPosition] = useState();
 
   const prevSeek = lastSeek;
+  // TODO create new hook that takes in previous state as an argument
   useInterval(
     () => {
-      if (prevSeek !== lastSeek) setTrackPosition(trackPosition + 100);
+      // Necassary due to stale closure
+
+      // If we have seeked, we move 100ms from last seek
+      // if we havent seeked we move 100ms from last trackposition
+      setTrackPosition(lastSeek =>
+        lastSeek !== prevSeek ? trackPosition + 100 : prevSeek + 100
+      );
     },
     playing ? 100 : null
   );
+
+  useEffect(() => {}, [lastSeek]);
 
   useEffect(() => {
     setTrackPosition(lastSeek);

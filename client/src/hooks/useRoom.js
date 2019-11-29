@@ -39,8 +39,12 @@ export default function useRoom() {
         controller: Controller(socket)
       });
     });
-    socket.on("ERROR", err => setError(err));
-    socket.on("SUCCESS", ({ type, payload }) => setSuccess({ type, payload }));
+    socket.on("ERROR", ({ type, payload, message, code }) =>
+      setError({ type, payload, message, code })
+    );
+    socket.on("SUCCESS", ({ type, payload, message }) =>
+      setSuccess({ type, payload, message })
+    );
   }, [room]);
 
   return { room, roomError: error, roomSuccess: success };
