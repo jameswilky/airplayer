@@ -43,7 +43,12 @@ module.exports = function(io, interval = null) {
       // console.log("attempted", event, "payload :", data);
       const error = validateEvent(state, { type: event, payload: data });
       if (error) {
-        socket.emit("ERROR", error);
+        socket.emit("ERROR", {
+          type: event,
+          payload: data,
+          message: error,
+          code: 400
+        });
       } else {
         const nextState = dispatch(state, {
           type: event,
@@ -57,27 +62,29 @@ module.exports = function(io, interval = null) {
       }
     };
 
-    socket.on(
-      "CREATE_ROOM",
-      async ({ name, spotifyUserId, password = null }) => {
-        const nextState = await createRoom({ name, password });
-        if (!nextState) {
-          socket.emit("ERROR", "room creation attempt failed");
-        } else {
-          const { token } = await createHost({
-            spotifyUserId: spotifyUserId,
-            roomId: nextState.roomId
-          });
-          // On Room Creation, we create a Host entry in the database
-          // This will require a spotify user ID and will return a token that will be assigned to the host
-          Object.assign(host, { token: token });
-          Object.assign(state, nextState);
-          const payload = { token: host.token, roomId: state.id };
-          socket.emit("ROOM_CREATED", payload);
-        }
-        // Once created, client should emit a join room request with the new room id
+    socket.on("CREATE_ROOM", async ({ name, userId, password = null }) => {
+      const nextState = await createRoom({ name, password });
+      if (!nextState) {
+        socket.emit("ERROR", {
+          type: "CREATE_ROOM",
+          payload: { userId, name },
+          message: "room creation attempt failed",
+          code: 502
+        });
+      } else {
+        const { token } = await createHost({
+          spotifyUserId: userId,
+          roomId: nextState.roomId
+        });
+        // On Room Creation, we create a Host entry in the database
+        // This will require a spotify user ID and will return a token that will be assigned to the host
+        Object.assign(host, { token: token });
+        Object.assign(state, nextState);
+        const payload = { token: host.token, roomId: state.id };
+        socket.emit("ROOM_CREATED", payload);
       }
-    );
+      // Once created, client should emit a join room request with the new room id
+    });
 
     socket.on("JOIN_ROOM", async ({ id, password = null, userId = null }) => {
       /**
@@ -87,7 +94,12 @@ module.exports = function(io, interval = null) {
 
       const nextState = await getRoom(id);
       if (!nextState) {
-        socket.emit("ERROR", `join attempt failed, room not found`);
+        socket.emit("ERROR", {
+          type: "JOIN_ROOM",
+          payload: { id, userId },
+          message: `join attempt failed, room not found`,
+          code: 404
+        });
         return;
       }
       const authorized = await passwordDoesMatch({
@@ -102,7 +114,12 @@ module.exports = function(io, interval = null) {
         socket.join(state.id);
         io.in(state.id).emit("ROOM_UPDATED", state);
       } else {
-        socket.emit("ERROR", `join attempt failed, invalid password`);
+        socket.emit("ERROR", {
+          type: "JOIN_ROOM",
+          payload: { id, userId },
+          message: `join attempt failed, invalid password`,
+          code: 403
+        });
       }
     });
 
@@ -112,10 +129,12 @@ module.exports = function(io, interval = null) {
         if (inARoom(socket)) {
           handleEvent(event, data);
         } else {
-          socket.emit(
-            "ERROR",
-            `${event} failed, can only be used inside a room`
-          );
+          socket.emit("ERROR", {
+            type: event,
+            payload: data,
+            message: `${event} failed, can only be used inside a room`,
+            code: 405
+          });
         }
       });
     });
@@ -139,13 +158,20 @@ module.exports = function(io, interval = null) {
           }
           // TODO on client side, make sure host will attempt a reconnect after reciving this error
           else {
-            socket.emit("ERROR", `${event} failed, not authorized`);
+            socket.emit("ERROR", {
+              type: event,
+              payload: data,
+              message: `${event} failed, not authorized`,
+              code: 401
+            });
           }
         } else {
-          socket.emit(
-            "ERROR",
-            `${event} failed, can only be used inside a room`
-          );
+          socket.emit("ERROR", {
+            type: event,
+            payload: data,
+            message: `${event} failed, can only be used inside a room`,
+            code: 405
+          });
         }
       });
     });

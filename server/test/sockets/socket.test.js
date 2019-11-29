@@ -68,10 +68,10 @@ describe("Sockets backend", () => {
       john.on("ROOM_UPDATED", state => {
         johnState = state;
       });
-      john.on("ERROR", msg => (error = msg));
+      john.on("ERROR", ({ code }) => (error = code));
 
       await waitFor(50);
-      expect(error).to.eql("join attempt failed, room not found");
+      expect(error).to.eql(404);
       expect(johnState).to.eql(undefined);
     });
     it("should join room if the room exists", async () => {
@@ -113,13 +113,13 @@ describe("Sockets backend", () => {
       john.on("ROOM_UPDATED", state => {
         johnState = state;
       });
-      john.on("ERROR", msg => {
-        err = msg;
+      john.on("ERROR", ({ code }) => {
+        err = code;
       });
 
       await waitFor(50);
       expect(johnState).to.eql(undefined);
-      expect(err).to.eql("join attempt failed, invalid password");
+      expect(err).to.eql(403);
     });
 
     it("should add the users ID to the subscribers array after joining", async () => {
@@ -150,13 +150,13 @@ describe("Sockets backend", () => {
         john.on("ROOM_UPDATED", state => {
           johnState = state;
         });
-        john.on("ERROR", msg => {
-          error = msg;
+        john.on("ERROR", ({ code }) => {
+          error = code;
         });
       });
 
       await waitFor(50);
-      expect(error).to.eql("ADD_TRACK failed, can only be used inside a room");
+      expect(error).to.eql(405);
       expect(johnState).to.eql(undefined);
     }); // TODO add after authorization
     it("updates the state for the sender after emiting ADD_TRACK", async () => {
@@ -264,7 +264,7 @@ describe("Sockets backend", () => {
       const john = io.connect(url, options);
       let token,
         johnState = null;
-      john.emit("CREATE_ROOM", { name: "testRoom", spotifyUserId: "testUser" });
+      john.emit("CREATE_ROOM", { name: "testRoom", userId: "testUser" });
       john.on("ROOM_CREATED", payload => {
         token = payload.token;
         john.emit("JOIN_ROOM", { id: payload.roomId });
@@ -295,12 +295,12 @@ describe("Sockets backend", () => {
       john = io.connect(url, options);
 
       john.on("connect", function() {
-        john.on("SUCCESS", msg => (johnMsg = msg));
+        john.on("SUCCESS", ({ type }) => (johnMsg = type));
 
         john.emit("JOIN_ROOM", { id: birthdayRoom.id });
 
         alice = io.connect(url, options);
-        alice.on("SUCCESS", msg => (aliceMsg = msg));
+        alice.on("SUCCESS", ({ type }) => (aliceMsg = type));
         alice.emit("JOIN_ROOM", { id: birthdayRoom.id });
 
         alice.on("connect", function() {
@@ -308,7 +308,7 @@ describe("Sockets backend", () => {
           mary.emit("JOIN_ROOM", { id: weddingRoom.id });
 
           mary.on("connect", async function() {
-            mary.on("SUCCESS", msg => (maryMsg = msg));
+            mary.on("SUCCESS", ({ type }) => (maryMsg = type));
 
             await waitFor(50);
             john.emit("ADD_TRACK", { uri: "spotify:track:0129382asd" });
@@ -335,12 +335,12 @@ describe("Sockets backend", () => {
       john = io.connect(url, options);
 
       john.on("connect", function() {
-        john.on("ERROR", err => (johnError = err));
+        john.on("ERROR", ({ code }) => (johnError = code));
 
         john.emit("JOIN_ROOM", { id: birthdayRoom.id });
 
         alice = io.connect(url, options);
-        alice.on("ERROR", err => (aliceError = err));
+        alice.on("ERROR", ({ code }) => (aliceError = code));
         alice.emit("JOIN_ROOM", { id: birthdayRoom.id });
 
         alice.on("connect", function() {
@@ -348,7 +348,7 @@ describe("Sockets backend", () => {
           mary.emit("JOIN_ROOM", { id: weddingRoom.id });
 
           mary.on("connect", async function() {
-            mary.on("ERROR", err => (maryError = err));
+            mary.on("ERROR", ({ code }) => (maryError = code));
 
             await waitFor(50);
             john.emit("ADD_TRACK", { uri: "INVALID_URI" });
@@ -358,7 +358,7 @@ describe("Sockets backend", () => {
 
       await waitFor(200);
 
-      expect(johnError).to.be.a("string");
+      expect(johnError).to.eql(400);
       expect(maryError).to.eql(undefined);
       expect(aliceError).to.eql(undefined);
 
