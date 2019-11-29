@@ -1,14 +1,13 @@
 High Priority
 
-1. implement client side error system
-2. clicking a track doesnt play on the first click
+1. clicking a track doesnt play on the first click
 
-3. add spinners for loading
-4. correct color issues on front end
-5. correctly implement dark mode toggle
+2. add spinners for loading
+3. correct color issues on front end
+4. correctly implement dark mode toggle
 
-6. create and join real rooms
-7. display users in the room on client side
+5. create and join real rooms
+6. display users in the room on client side
 
 Low Priority
 
@@ -16,7 +15,6 @@ Low Priority
 2. restart playlist if at end
 3. add scopes
 4. show recomended tracks
-5. unified error/success message standard
 
 // Idea
 

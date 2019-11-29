@@ -17,6 +17,7 @@ import Message from "../../../components/Message/Message";
 
 export default function RoomView(props) {
   const [filter, setFilter] = useState("");
+  const [startAudio, setStartAudio] = useState(false);
 
   const {
     query,
@@ -52,6 +53,7 @@ export default function RoomView(props) {
               component={() => (
                 <Home
                   room={room}
+                  setStartAudio={setStartAudio}
                   roomTracks={roomTracks}
                   topTracks={libraryResults.topTracks}
                 ></Home>
@@ -97,6 +99,8 @@ export default function RoomView(props) {
               token={accessToken}
               room={room}
               roomTracks={roomTracks}
+              start={startAudio}
+              setStart={setStartAudio}
             ></SpotifyWebplayer>
           )}
         </Footer>

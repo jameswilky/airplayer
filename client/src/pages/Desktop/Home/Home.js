@@ -8,9 +8,11 @@ import ListItem from "../../../components/ListItem";
 
 import StyledListItem from "../../../styles/StyledListItem";
 
-export default function Home({ room, roomTracks, topTracks }) {
+export default function Home({ room, roomTracks, topTracks, setStartAudio }) {
   const play = (e, item) => {
     room.controller.play(item.uri);
+    setStartAudio(true);
+    // room.controller.resume();
   };
 
   return (

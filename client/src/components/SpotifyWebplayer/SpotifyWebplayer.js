@@ -9,12 +9,16 @@ import { Container, Body, Left, Right, Spinner } from "./styles";
 
 import MusicController from "../MusicController";
 
-export default function SpotifyWebplayer({ token, room, roomTracks }) {
+export default function SpotifyWebplayer({
+  token,
+  room,
+  roomTracks,
+  start,
+  setStart
+}) {
   const [scriptState, setScriptState] = useState({
     error: false
   });
-
-  const [start, setStart] = useState(false);
 
   const duration = roomTracks.currentSong.duration_ms;
 
