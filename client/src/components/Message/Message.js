@@ -17,7 +17,14 @@ export default function Message({ success, error }) {
         return "";
     }
   };
-  const generateErrorMessage = error => "error";
+  const generateErrorMessage = error => {
+    switch (error.type) {
+      case "ADD_TRACK":
+        return "Track already in playlist";
+      case "REMOVE_TRACK":
+        return "Track not in playlist";
+    }
+  };
 
   // set SUccess message when successful event occurs
   useEffect(() => {
@@ -32,37 +39,12 @@ export default function Message({ success, error }) {
     }
   }, [error]);
 
-  // After 3 seconds remove success message
+  // After 3 seconds remove success/error message
   useTimeout(() => {
-    if (message) {
+    if (message.success || message.error) {
       setMessage({ error: "", success: "" });
     }
   }, (message.success || message.error) && 3000);
-
-  // // set SUccess message when successful event occurs
-  // useEffect(() => {
-  //   if (success) setSuccessMessage(generateSuccessMessage(success));
-  // }, [success]);
-
-  // // After 3 seconds remove success message
-  // useTimeout(() => {
-  //   if (successMessage) {
-  //     setSuccessMessage("");
-  //   }
-  // }, successMessage && 3000);
-
-  // console.log(error);
-  // // Set Error Message when error occurs
-  // useEffect(() => {
-  //   if (error) setErrorMessage(generateErrorMessage(error));
-  // }, [error]);
-
-  // // After 3 seconds, remove error
-  // useTimeout(() => {
-  //   if (errorMessage) {
-  //     setErrorMessage("");
-  //   }
-  // }, errorMessage && 3000);
 
   return (
     <Container>
