@@ -7,9 +7,8 @@ export const Background = styled.div`
     props.theme.mode == "dark" ? props.theme.black : props.theme.gradient};
   height: 100vh;
   justify-items: center;
-  /* align-items: center; */
   display: grid;
-  grid-template-rows: 5.5rem 2rem 1fr;
+  grid-template-rows: 5rem 2rem 1fr;
   color: ${props => props.theme.white};
 
   & > h1 {
@@ -37,6 +36,7 @@ export const Background = styled.div`
 
 export const Container = styled.div`
   display: grid;
+  position: relative;
   justify-content: center;
   align-content: center;
   min-width: ${props => 24 * props.theme.unit + "px"};
@@ -60,6 +60,11 @@ export const Container = styled.div`
   @media (max-width: 440px) {
     width: 98vw;
   }
+
+  /* When modal shown*/
+  transition: border-radius 0.5s;
+  border-radius: ${props => (props.roundBorder ? "2rem" : 0)};
+  overflow: ${props => (props.roundBorder ? "hidden" : "default")};
 `;
 export const Head = styled.div`
   display: grid;
@@ -89,6 +94,14 @@ export const Head = styled.div`
     & :nth-child(2) {
       justify-self: flex-start;
       font-size: 1.2rem;
+    }
+  }
+
+  @media (max-width: 667px) {
+    grid-template-columns: 2fr 1fr;
+
+    & > div {
+      display: none;
     }
   }
 `;
@@ -135,5 +148,31 @@ export const Button = styled.div`
     & * {
       color: ${props => props.theme.transparentBlack3};
     }
+  }
+`;
+
+export const CreateButton = styled.div`
+  opacity: ${props => (props.show ? 1 : 0)};
+  transition: opacity 0.5s;
+  position: absolute;
+  bottom: 5rem;
+  right: 5rem;
+
+  & :hover {
+    color: ${props => props.theme.primary};
+  }
+  & > [type="circle"] {
+    background-color: ${props => props.theme.transparentBlack3};
+    width: 5rem;
+    height: 5rem;
+    position: absolute;
+    border-radius: 100%;
+  }
+  & > [type="icon"] {
+    font-size: 5rem;
+    position: absolute;
+  }
+  @media (min-width: 667px) {
+    display: none;
   }
 `;

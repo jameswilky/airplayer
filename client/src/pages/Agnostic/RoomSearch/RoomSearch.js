@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import List from "../../../components/List";
 import ListItem from "../../../components/ListItem";
 import { IoIosAdd, IoIosLogIn } from "react-icons/io";
+import Modal from "../../../components/Modal/Modal";
 
 import {
   Background,
@@ -10,12 +11,11 @@ import {
   Head,
   Body,
   ExtendedStyledListItem,
-  Button
+  Button,
+  CreateButton
 } from "./styles";
 
-export default function Home(props) {
-  const { login, logout } = props;
-
+export default function RoomSearch(props) {
   const api = "http://localhost:8888/api/";
   const [rooms, setRooms] = useState([]);
 
@@ -34,14 +34,17 @@ export default function Home(props) {
     </Button>
   );
 
+  const [showModal, setShowModal] = useState(false);
+
   return (
     <Background>
       <h1>Airplayer</h1>
       <p>Join a room or create your own</p>
-      <Container>
+      <Container roundBorder={showModal}>
         <Head>
           <input placeholder="Enter a party Name" type="text" />
-          <input placeholder="Change your location" type="text" />
+          <input placeholder="Change your location" type="text" />{" "}
+          {/* Desktop only */}
           <div>
             <IoIosAdd></IoIosAdd>
             <p>Create Room</p>
@@ -60,6 +63,15 @@ export default function Home(props) {
             ></ListItem>
           </List>
         </Body>
+        {/* Mobile only */}
+        <CreateButton show={!showModal} onClick={() => setShowModal(true)}>
+          <div type="circle"></div>
+          <IoIosAdd type="icon"></IoIosAdd>
+        </CreateButton>
+
+        <Modal show={showModal} title="Create a Room" setShow={setShowModal}>
+          <div>Test</div>
+        </Modal>
       </Container>
     </Background>
   );

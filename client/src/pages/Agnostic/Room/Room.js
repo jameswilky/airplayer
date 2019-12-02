@@ -30,9 +30,10 @@ export default function Room(props) {
 
   const { breakpoint } = useBreakpoint();
 
+  // pass room id from roomsearch
   useEffect(() => {
     room.controller.joinRoom("5d47d90a191f0f30a0d73414");
-  }, []); // should be outside this component
+  }, []);
 
   const viewProps = {
     playerReady,

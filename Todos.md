@@ -4,7 +4,7 @@ High Priority
 2. correct color issues on front end
 3. correctly implement dark mode toggle
 
-4. create and join real rooms
+4. create rooms
 5. display users in the room on client side
 6. fix incorrect db room state being passed when searching for room
 
