@@ -21,7 +21,7 @@ module.exports = function(io, interval = null) {
     const state = {
       name: null,
       id: null,
-      playlist: [],
+      playlist: [{ uri: "spotify:track:2W2eaLVKv9NObcLXlYRZZo" }],
       // Temp
       currentSong: {
         playing: false,
@@ -42,10 +42,14 @@ module.exports = function(io, interval = null) {
     // a delay for the users actions
     // The down side is, if the user deletes the token they wont be able to reconnect as host
 
-    const handleEvent = (event, data) => {
+    const handleEvent = async (event, data) => {
       // Update state based on event type
       // console.log("attempted", event, "payload :", data);
-      const error = validateEvent(state, { type: event, payload: data });
+      let state = await getRoom(data.id);
+      console.log(data.id, state);
+      let { id, ...payload } = data;
+      console.log(payload);
+      const error = validateEvent(state, { type: event, payload });
       if (error) {
         socket.emit("ERROR", {
           type: event,

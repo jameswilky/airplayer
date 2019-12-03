@@ -38,8 +38,7 @@ const dispatch = (state, { type, payload }) => {
         ...state,
         currentSong: {
           ...state.currentSong,
-          playing:
-            state.currentSong.uri === (null || undefined) ? false : true
+          playing: state.currentSong.uri === (null || undefined) ? false : true
         }
       };
 

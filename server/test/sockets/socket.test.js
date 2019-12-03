@@ -366,6 +366,62 @@ describe("Sockets backend", () => {
       alice.disconnect();
       mary.disconnect();
     });
+    it.only("should read from the same state", async () => {
+      let john, alice;
+      let johnStates = [];
+      let aliceStates = [];
+      let johnSuccesss = [];
+      let aliceSuccesss = [];
+      let johnErrors = [];
+      let aliceErrors = [];
+
+      const birthdayRoom = await createRoom(birthday);
+
+      john = io.connect(url, options);
+
+      john.on("connect", function() {
+        john.emit("JOIN_ROOM", { id: birthdayRoom.id });
+
+        alice = io.connect(url, options);
+        alice.emit("JOIN_ROOM", { id: birthdayRoom.id });
+
+        alice.on("connect", async function() {
+          await waitFor(100);
+          john.emit("ADD_TRACK", {
+            uri: "spotify:track:test",
+            id: birthdayRoom.id
+          });
+          await waitFor(500);
+          alice.emit("REMOVE_TRACK", {
+            uri: "spotify:track:test",
+            id: birthdayRoom.id
+          });
+        });
+
+        john.on("ROOM_UPDATED", state => johnStates.push(state));
+        alice.on("ROOM_UPDATED", state => aliceStates.push(state));
+
+        john.on("ERROR", ({ code }) => johnErrors.push(code));
+        john.on("SUCCESS", ({ type }) => johnSuccesss.push(type));
+
+        alice.on("ERROR", ({ code }) => aliceErrors.push(code));
+        alice.on("SUCCESS", ({ type }) => aliceSuccesss.push(type));
+      });
+
+      await waitFor(2000);
+      console.log(
+        "johnStates: " + johnStates.map(state => state.playlist.length)
+      );
+      console.log("john errors:" + johnErrors);
+      console.log("john success:" + johnSuccesss);
+
+      console.log("===========");
+      console.log(
+        "aliceStates: " + aliceStates.map(state => state.playlist.length)
+      );
+      console.log("alice errors:" + aliceErrors);
+      console.log("alice success:" + aliceSuccesss);
+    });
     it("should update the state of the room for all users in that room after an action", async () => {
       let john, alice, mary;
       let johnState, aliceState, maryState;
