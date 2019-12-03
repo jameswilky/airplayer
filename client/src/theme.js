@@ -24,11 +24,11 @@ export default {
   green: `rgba(20, 215, 20, 0.7)`,
   red: `rgba(242, 20, 20, 0.7)`,
 
-  transparent5: `rgba(255, 255, 255, 0.8)`,
-  transparent4: `rgba(255, 255, 255, 0.6)`,
-  transparent3: `rgba(255, 255, 255, 0.3)`,
-  transparent2: `rgba(255, 255, 255, 0.15)`,
-  transparent: `rgba(255, 255, 255, 0.07)`,
+  transparent5: `rgba(245, 245, 245, 0.8)`,
+  transparent4: `rgba(245, 245, 245, 0.6)`,
+  transparent3: `rgba(245, 245, 245, 0.3)`,
+  transparent2: `rgba(245, 245, 245, 0.15)`,
+  transparent: `rgba(245, 245, 245, 0.07)`,
 
   transparentBlack: `rgba(20,20,20,0.8)`,
   transparentBlack2: `rgba(20,20,20,0.7)`,
@@ -36,7 +36,7 @@ export default {
   transparentBlack4: `rgba(20,20,20,0.5)`,
   transparentBlack5: `rgba(20,20,20,0.3)`,
 
-  white: `rgba(242, 242, 242, 1)`,
+  white: `rgba(245, 245, 245, 1)`,
 
   breakpoints: {
     mobile: "667px",

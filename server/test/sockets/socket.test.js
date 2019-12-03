@@ -273,10 +273,10 @@ describe("Sockets backend", () => {
       john.on("ROOM_UPDATED", state => {
         johnState = state;
       });
-      await waitFor(20);
+      await waitFor(50);
 
       john.emit("PLAY", { token: token, uri: "spotify:track:123" });
-      await waitFor(20);
+      await waitFor(50);
 
       expect(token).to.be.a("string");
       expect(johnState).to.be.a("object");
@@ -386,7 +386,7 @@ describe("Sockets backend", () => {
           mary.emit("JOIN_ROOM", { id: weddingRoom.id });
 
           mary.on("connect", async function() {
-            await waitFor(50);
+            await waitFor(100);
             john.emit("ADD_TRACK", { uri: "spotify:track:test" });
           });
 
@@ -403,7 +403,7 @@ describe("Sockets backend", () => {
         });
       });
 
-      await waitFor(100);
+      await waitFor(200);
       expect(JSON.stringify(johnState)).to.eql(JSON.stringify(aliceState));
       expect(JSON.stringify(johnState)).to.not.eql(JSON.stringify(maryState));
       expect(johnState.playlist[2].uri).to.eql("spotify:track:test");

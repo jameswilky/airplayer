@@ -2,13 +2,14 @@ import styled from "styled-components";
 
 export const Container = styled.div`
   background-color: ${props => props.theme.white};
-  border-radius: 2rem;
+  border-radius: ${props => (props.show ? "0" : "2rem")};
   width: ${props => (props.show ? "100%" : "0%")};
   height: ${props => (props.show ? "100%" : "0%")};
   bottom: ${props => (props.show ? "0" : "2.5rem")};
   right: ${props => (props.show ? "0" : "2.5rem")};
   position: absolute;
   overflow: hidden;
+  box-shadow: 2px 3px ${props => props.theme.transparentBlack5};
 
   transition: width 0.5s, height 0.5s, bottom 0.5s, right 0.5s;
   & > * {

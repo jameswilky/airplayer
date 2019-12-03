@@ -24,6 +24,7 @@ module.exports = function(app, express, io) {
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use(bodyParser.text());
   app.use(bodyParser.json({ type: "application/json" }));
+
   app.use(cookieParser());
   app.use(cors());
   // Add headers
@@ -53,6 +54,7 @@ module.exports = function(app, express, io) {
 
   // Connect Routes
   const router = express.Router();
+
   app.use("/", router);
 
   require("./routes/router")(router);

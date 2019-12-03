@@ -5,12 +5,13 @@ import DesktopView from "../../Desktop/RoomView/RoomView";
 import MobileView from "../../Mobile/RoomView/RoomView";
 
 // Hooks
-import useRoom from "../../../hooks/useRoom";
 import useRoomTracks from "../../../hooks/useRoomTracks";
 import useSearch from "../../../hooks/useSearch/useSearch";
 import useLibrary from "../../../hooks/useLibrary";
 import useFind from "../../../hooks/useFind";
 import useBreakpoint from "../../../hooks/useBreakpoint";
+import useRoom from "../../../hooks/useRoom";
+
 export default function Room(props) {
   const accessToken = props.accessToken;
   const { room, roomSuccess, roomError } = useRoom();
@@ -30,11 +31,11 @@ export default function Room(props) {
 
   const { breakpoint } = useBreakpoint();
 
-  // pass room id from roomsearch
   useEffect(() => {
-    room.controller.joinRoom("5d47d90a191f0f30a0d73414");
+    const id = props.location.pathname.split("/")[2];
+    room.controller.joinRoom(id, "");
   }, []);
-
+  console.log(roomTracks);
   const viewProps = {
     playerReady,
     room,
@@ -53,7 +54,7 @@ export default function Room(props) {
 
   return (
     <>
-      {room && roomTracks && roomTracks.currentSong ? (
+      {room ? (
         breakpoint === "mobile" ? (
           <MobileView {...viewProps}></MobileView>
         ) : (

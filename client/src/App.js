@@ -26,6 +26,7 @@ const App = hot(module)(() => {
   );
 
   const [activeTheme, setActiveTheme] = useState(theme);
+
   return (
     <ThemeProvider theme={activeTheme}>
       <Router>
@@ -42,7 +43,10 @@ const App = hot(module)(() => {
             ></Landing>
           )}
         />
-        <Route path="/roomsearch" component={RoomSearch} />
+        <Route
+          path="/roomsearch"
+          component={props => <RoomSearch {...props}></RoomSearch>}
+        />
 
         <Route
           path="/room/:roomid"

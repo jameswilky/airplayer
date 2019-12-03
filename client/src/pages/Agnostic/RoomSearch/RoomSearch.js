@@ -4,6 +4,7 @@ import List from "../../../components/List";
 import ListItem from "../../../components/ListItem";
 import { IoIosAdd, IoIosLogIn } from "react-icons/io";
 import Modal from "../../../components/Modal/Modal";
+import CreateRoomForm from "../../../components/CreateRoomForm/CreateRoomForm";
 
 import {
   Background,
@@ -18,6 +19,8 @@ import {
 export default function RoomSearch(props) {
   const api = "http://localhost:8888/api/";
   const [rooms, setRooms] = useState([]);
+
+  const { room, roomSuccess, roomError } = props;
 
   useEffect(() => {
     fetch(api + "rooms")
@@ -34,13 +37,12 @@ export default function RoomSearch(props) {
     </Button>
   );
 
-  const [showModal, setShowModal] = useState(false);
-
+  const [showModal, setShowModal] = useState(true);
   return (
     <Background>
       <h1>Airplayer</h1>
       <p>Join a room or create your own</p>
-      <Container roundBorder={showModal}>
+      <Container>
         <Head>
           <input placeholder="Enter a party Name" type="text" />
           <input placeholder="Change your location" type="text" />{" "}
@@ -70,7 +72,12 @@ export default function RoomSearch(props) {
         </CreateButton>
 
         <Modal show={showModal} title="Create a Room" setShow={setShowModal}>
-          <div>Test</div>
+          <CreateRoomForm
+            history={props.history}
+            room={room}
+            roomSuccess={roomSuccess}
+            roomError={roomError}
+          ></CreateRoomForm>
         </Modal>
       </Container>
     </Background>

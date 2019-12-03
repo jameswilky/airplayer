@@ -9,6 +9,9 @@ module.exports = {
     err ? res.send(err) : res.json(rooms);
   },
   createRoom: async (req, res) => {
+    try {
+      req.body = JSON.parse(req.body);
+    } catch (err) {}
     const newRoom = new Room(req.body);
     const [err, room] = await to(newRoom.save());
     err ? res.send(err) : res.json({ message: `Room created`, room });

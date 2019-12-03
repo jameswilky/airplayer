@@ -18,7 +18,6 @@ module.exports = {
       password: password,
       requiresPassword: password === null ? false : true
     });
-
     const [err, room] = await to(newRoom.save());
     return err || room === null ? null : room.toClient();
   },

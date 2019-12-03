@@ -23,33 +23,41 @@ export default function Home(props) {
 
   const { playlist, currentSong } = props.roomTracks;
 
-  const nextTrack = playlist[
-    playlist.indexOf(
-      playlist.filter(track => track.uri === currentSong.uri)[0]
-    ) + 1
-  ] || { artist: null, title: null };
+  const nextTrack = (playlist &&
+    playlist[
+      playlist.indexOf(
+        playlist.filter(track => track.uri === currentSong.uri)[0]
+      ) + 1
+    ]) || { artist: null, title: null };
 
   return (
     <Container>
-      <CurrentTrack
-        AudioVisualizer={AudioVisualizer}
-        title={currentSong.name}
-        artist={currentSong.artists[0].name}
-        image={currentSong.getImages().medium}
-        nextTrack={{ artist: nextTrack.artist, title: nextTrack.name }}
-      ></CurrentTrack>
-      <List items={playlist} Style={StyledList}>
-        <ItemTemplate
-          src={item => item.getImages().default.url}
-          name={item => item.name}
-          labels={item =>
-            item
-              .getLabels()
-              .map(label => `${label} `)
-              .slice(1, 3)
-          }
-        ></ItemTemplate>
-      </List>
+      {currentSong && playlist ? (
+        <>
+          {" "}
+          <CurrentTrack
+            AudioVisualizer={AudioVisualizer}
+            title={currentSong.name}
+            artist={currentSong.artists[0].name}
+            image={currentSong.getImages().medium}
+            nextTrack={{ artist: nextTrack.artist, title: nextTrack.name }}
+          ></CurrentTrack>{" "}
+          <List items={playlist} Style={StyledList}>
+            <ItemTemplate
+              src={item => item.getImages().default.url}
+              name={item => item.name}
+              labels={item =>
+                item
+                  .getLabels()
+                  .map(label => `${label} `)
+                  .slice(1, 3)
+              }
+            ></ItemTemplate>
+          </List>
+        </>
+      ) : (
+        <div>Please Select as song</div>
+      )}
     </Container>
   );
 }

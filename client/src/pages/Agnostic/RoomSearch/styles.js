@@ -60,11 +60,6 @@ export const Container = styled.div`
   @media (max-width: 440px) {
     width: 98vw;
   }
-
-  /* When modal shown*/
-  transition: border-radius 0.5s;
-  border-radius: ${props => (props.roundBorder ? "2rem" : 0)};
-  overflow: ${props => (props.roundBorder ? "hidden" : "default")};
 `;
 export const Head = styled.div`
   display: grid;

@@ -12,6 +12,8 @@ export default function useRoom() {
     // This function is used to create a new controller to manage the room.
     // It has to recreated to inherit the socket closure after a room as been joined
     return {
+      createRoom: (name, password = null) =>
+        socket.emit("CREATE_ROOM", { name, userId: "123" }),
       joinRoom: (id, password = null) =>
         socket.emit("JOIN_ROOM", { id, password }),
       addTrack: id => socket.emit("ADD_TRACK", { uri: id }),
@@ -31,7 +33,9 @@ export default function useRoom() {
   });
 
   useEffect(() => {
-    socket.on("ROOM_CREATED", payload => console.log(payload));
+    socket.on("ROOM_CREATED", payload =>
+      setSuccess({ type: "ROOM_CREATED", payload, message: "Room Created" })
+    );
     socket.on("ROOM_UPDATED", nextRoomState => {
       setRoom({
         ...room,
