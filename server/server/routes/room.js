@@ -12,6 +12,11 @@ module.exports = {
     try {
       req.body = JSON.parse(req.body);
     } catch (err) {}
+    // TODO pass this in on request or use roomdao
+    req.body.currentSong = {
+      playing: false,
+      uri: "spotify:track:2W2eaLVKv9NObcLXlYRZZo"
+    };
     const newRoom = new Room(req.body);
     const [err, room] = await to(newRoom.save());
     err ? res.send(err) : res.json({ message: `Room created`, room });

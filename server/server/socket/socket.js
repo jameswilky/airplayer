@@ -21,7 +21,7 @@ module.exports = function(io, interval = null) {
     const state = {
       name: null,
       id: null,
-      playlist: [{ uri: "spotify:track:2W2eaLVKv9NObcLXlYRZZo" }],
+      playlist: [],
       // Temp
       currentSong: {
         playing: false,
@@ -44,12 +44,11 @@ module.exports = function(io, interval = null) {
 
     const handleEvent = async (event, data) => {
       // Update state based on event type
-      // console.log("attempted", event, "payload :", data);
-      let state = await getRoom(data.id);
-      console.log(data.id, state);
-      let { id, ...payload } = data;
-      console.log(payload);
-      const error = validateEvent(state, { type: event, payload });
+      const roomId = Object.entries(socket.rooms)[1][1];
+      const state = await getRoom(roomId);
+      console.log(roomId, state);
+      const error = validateEvent(state, { type: event, payload: data });
+      console.log(error);
       if (error) {
         socket.emit("ERROR", {
           type: event,

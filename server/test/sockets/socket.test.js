@@ -366,7 +366,7 @@ describe("Sockets backend", () => {
       alice.disconnect();
       mary.disconnect();
     });
-    it.only("should read from the same state", async () => {
+    it("should read from the same state", async () => {
       let john, alice;
       let johnStates = [];
       let aliceStates = [];
@@ -388,13 +388,11 @@ describe("Sockets backend", () => {
         alice.on("connect", async function() {
           await waitFor(100);
           john.emit("ADD_TRACK", {
-            uri: "spotify:track:test",
-            id: birthdayRoom.id
+            uri: "spotify:track:test"
           });
-          await waitFor(500);
+          await waitFor(200);
           alice.emit("REMOVE_TRACK", {
-            uri: "spotify:track:test",
-            id: birthdayRoom.id
+            uri: "spotify:track:test"
           });
         });
 
@@ -408,19 +406,13 @@ describe("Sockets backend", () => {
         alice.on("SUCCESS", ({ type }) => aliceSuccesss.push(type));
       });
 
-      await waitFor(2000);
-      console.log(
-        "johnStates: " + johnStates.map(state => state.playlist.length)
-      );
-      console.log("john errors:" + johnErrors);
-      console.log("john success:" + johnSuccesss);
-
-      console.log("===========");
-      console.log(
-        "aliceStates: " + aliceStates.map(state => state.playlist.length)
-      );
-      console.log("alice errors:" + aliceErrors);
-      console.log("alice success:" + aliceSuccesss);
+      await waitFor(500);
+      expect(johnStates[3].playlist.length).to.eql(2);
+      expect(aliceStates[2].playlist.length).to.eql(2);
+      expect(johnErrors).to.be.empty;
+      expect(aliceErrors).to.be.empty;
+      expect(johnSuccesss).to.contain("ADD_TRACK");
+      expect(aliceSuccesss).to.contain("REMOVE_TRACK");
     });
     it("should update the state of the room for all users in that room after an action", async () => {
       let john, alice, mary;
