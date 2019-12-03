@@ -22,7 +22,11 @@ module.exports = function(io, interval = null) {
       name: null,
       id: null,
       playlist: [],
-      currentSong: null
+      // Temp
+      currentSong: {
+        playing: false,
+        uri: "spotify:track:2W2eaLVKv9NObcLXlYRZZo"
+      }
     };
 
     const host = { token: null };
