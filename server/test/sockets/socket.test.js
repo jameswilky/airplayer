@@ -64,7 +64,7 @@ describe("Sockets backend", () => {
     it("Should return an error if room does not exist", async () => {
       const john = await Mocket.connectClient(url);
       let error, johnState;
-      john.emit("JOIN_ROOM", { id: "0" });
+      john.emit("JOIN_ROOM", { id: "0", userId: "john" });
       john.on("ROOM_UPDATED", state => {
         johnState = state;
       });
@@ -78,7 +78,7 @@ describe("Sockets backend", () => {
       const room = await createRoom(birthday);
       const john = await Mocket.connectClient(url);
       let johnState;
-      john.emit("JOIN_ROOM", { id: room.id });
+      john.emit("JOIN_ROOM", { id: room.id, userId: "john" });
       john.on("ROOM_UPDATED", state => {
         johnState = state;
       });
@@ -93,7 +93,11 @@ describe("Sockets backend", () => {
       const room = await createRoom(privateBirthday);
       const john = await Mocket.connectClient(url);
       let johnState;
-      john.emit("JOIN_ROOM", { id: room.id, password: "secret" });
+      john.emit("JOIN_ROOM", {
+        userId: "john",
+        id: room.id,
+        password: "secret"
+      });
       john.on("ROOM_UPDATED", state => {
         johnState = state;
       });
@@ -109,7 +113,11 @@ describe("Sockets backend", () => {
       const room = await createRoom(privateBirthday);
       const john = await Mocket.connectClient(url);
       let johnState, err;
-      john.emit("JOIN_ROOM", { id: room.id, password: "wrongSecret" });
+      john.emit("JOIN_ROOM", {
+        userId: "john",
+        id: room.id,
+        password: "wrongSecret"
+      });
       john.on("ROOM_UPDATED", state => {
         johnState = state;
       });
@@ -164,7 +172,7 @@ describe("Sockets backend", () => {
       const john = await Mocket.connectClient(url);
       let johnState;
 
-      john.emit("JOIN_ROOM", { id: room.id });
+      john.emit("JOIN_ROOM", { userId: "john", id: room.id });
       john.on("ROOM_UPDATED", state => {
         johnState = state;
       });
@@ -208,7 +216,7 @@ describe("Sockets backend", () => {
     //   let errors = [];
 
     //   john.on("connect", async () => {
-    //     john.emit("JOIN_ROOM", { id: birthdayRoom.id });
+    //     john.emit("JOIN_ROOM", { userId:'john', id: birthdayRoom.id });
     //     john.on("ROOM_UPDATED", state => {
     //       johnState = state;
     //     });
@@ -246,7 +254,7 @@ describe("Sockets backend", () => {
     //   let johnState, error;
 
     //   john.on("connect", async () => {
-    //     john.emit("JOIN_ROOM", { id: birthdayRoom.id });
+    //     john.emit("JOIN_ROOM", { userId:'john', id: birthdayRoom.id });
     //     john.on("ROOM_UPDATED", state => {
     //       johnState = state;
     //     });
@@ -267,7 +275,7 @@ describe("Sockets backend", () => {
     //   john.emit("CREATE_ROOM", { name: "testRoom", userId: "testUser" });
     //   john.on("ROOM_CREATED", payload => {
     //     token = payload.token;
-    //     john.emit("JOIN_ROOM", { id: payload.roomId });
+    //     john.emit("JOIN_ROOM", { userId:'john', id: payload.roomId });
     //   });
 
     //   john.on("ROOM_UPDATED", state => {
@@ -298,15 +306,15 @@ describe("Sockets backend", () => {
         john.on("SUCCESS", ({ type }) => (johnMsg = type));
         john.on("ERROR", x => (johnMsg = x));
 
-        john.emit("JOIN_ROOM", { id: birthdayRoom.id });
+        john.emit("JOIN_ROOM", { userId: "john", id: birthdayRoom.id });
 
         alice = io.connect(url, options);
         alice.on("SUCCESS", ({ type }) => (aliceMsg = type));
-        alice.emit("JOIN_ROOM", { id: birthdayRoom.id });
+        alice.emit("JOIN_ROOM", { id: birthdayRoom.id, userId: "alice" });
 
         alice.on("connect", function() {
           mary = io.connect(url, options);
-          mary.emit("JOIN_ROOM", { id: weddingRoom.id });
+          mary.emit("JOIN_ROOM", { id: weddingRoom.id, userId: "mary" });
 
           mary.on("connect", async function() {
             mary.on("SUCCESS", ({ type }) => (maryMsg = type));
@@ -338,15 +346,15 @@ describe("Sockets backend", () => {
       john.on("connect", function() {
         john.on("ERROR", ({ code }) => (johnError = code));
 
-        john.emit("JOIN_ROOM", { id: birthdayRoom.id });
+        john.emit("JOIN_ROOM", { userId: "john", id: birthdayRoom.id });
 
         alice = io.connect(url, options);
         alice.on("ERROR", ({ code }) => (aliceError = code));
-        alice.emit("JOIN_ROOM", { id: birthdayRoom.id });
+        alice.emit("JOIN_ROOM", { id: birthdayRoom.id, userId: "alice" });
 
         alice.on("connect", function() {
           mary = io.connect(url, options);
-          mary.emit("JOIN_ROOM", { id: weddingRoom.id });
+          mary.emit("JOIN_ROOM", { id: weddingRoom.id, userId: "mary" });
 
           mary.on("connect", async function() {
             mary.on("ERROR", ({ code }) => (maryError = code));
@@ -381,10 +389,10 @@ describe("Sockets backend", () => {
       john = io.connect(url, options);
 
       john.on("connect", function() {
-        john.emit("JOIN_ROOM", { id: birthdayRoom.id });
+        john.emit("JOIN_ROOM", { userId: "john", id: birthdayRoom.id });
 
         alice = io.connect(url, options);
-        alice.emit("JOIN_ROOM", { id: birthdayRoom.id });
+        alice.emit("JOIN_ROOM", { id: birthdayRoom.id, userId: "alice" });
 
         alice.on("connect", async function() {
           await waitFor(100);
@@ -425,14 +433,14 @@ describe("Sockets backend", () => {
       john = io.connect(url, options);
 
       john.on("connect", function() {
-        john.emit("JOIN_ROOM", { id: birthdayRoom.id });
+        john.emit("JOIN_ROOM", { userId: "john", id: birthdayRoom.id });
 
         alice = io.connect(url, options);
-        alice.emit("JOIN_ROOM", { id: birthdayRoom.id });
+        alice.emit("JOIN_ROOM", { id: birthdayRoom.id, userId: "alice" });
 
         alice.on("connect", function() {
           mary = io.connect(url, options);
-          mary.emit("JOIN_ROOM", { id: weddingRoom.id });
+          mary.emit("JOIN_ROOM", { id: weddingRoom.id, userId: "mary" });
 
           mary.on("connect", async function() {
             await waitFor(100);

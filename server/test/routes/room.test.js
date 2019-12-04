@@ -31,9 +31,10 @@ describe("Room route handlers", () => {
   });
 
   describe("/POST room", () => {
-    it("should POST a room", async () => {
+    it.only("should POST a room", async () => {
       const room = {
-        name: "Test"
+        name: "Test",
+        userId: "someUser"
       };
       const [err, res] = await to(
         chai

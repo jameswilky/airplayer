@@ -20,8 +20,7 @@ module.exports = {
     req.body.currentSong = { playing: false, uri: req.body.playlist[0].uri };
 
     if (!req.body.playlist || !req.body.currentSong || !req.body.userId)
-      return null;
-
+      res.send(null);
     const newRoom = new Room(req.body);
     const [err, room] = await to(newRoom.save());
     const { token } = await createHost({

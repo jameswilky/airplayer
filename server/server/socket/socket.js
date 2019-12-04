@@ -50,7 +50,7 @@ module.exports = function(io, interval = null) {
       }
     };
 
-    socket.on("JOIN_ROOM", async ({ id, password = null, userId }) => {
+    socket.on("JOIN_ROOM", async ({ id, password = null, userId, token }) => {
       /**
        * @param {obj} room {id,name,playlist,subscribers,currentSong}
        */
@@ -72,6 +72,9 @@ module.exports = function(io, interval = null) {
         password
       });
       if (authorized) {
+        // Check db against token, if it matches set scope to Host
+        // add {socketid, token} field to room
+
         const newUser = {
           userId: userId,
           socketId: socket.id,
@@ -82,7 +85,8 @@ module.exports = function(io, interval = null) {
         rooms[id].subscribers.push(newUser);
 
         socket.join(id);
-        io.in(id).emit("ROOM_UPDATED", rooms[id]);
+        const { token, ...nextState } = rooms[id];
+        io.in(id).emit("ROOM_UPDATED", nextState);
       } else {
         socket.emit("ERROR", {
           type: "JOIN_ROOM",
@@ -112,6 +116,8 @@ module.exports = function(io, interval = null) {
     //Handles events that only hosts can use
     Object.keys(HOST).forEach(event => {
       socket.on(event, data => {
+        // check the incoming socket to see if it matches the token, if so user is host
+
         // TODO un comment this after to get authentication working
         // if (!data || !data.hasOwnProperty("token")) {
         //   socket.emit(

@@ -14,7 +14,7 @@ let state;
 const onConnect = socket => {
   console.log("connected to socket : " + socket.id);
   if (reconnect) {
-    socket.emit("JOIN_ROOM", { id: roomid, token: "test" });
+    socket.emit("JOIN_ROOM", { id: roomid, userId: "123", token: "test" });
 
     socket.on("ROOM_UPDATED", state => {
       console.log("room updated");
