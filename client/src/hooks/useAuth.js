@@ -46,14 +46,8 @@ export default function useAuth(auth) {
     () => refreshToken(),
     authData.accessTokenCreationTime
       ? authData.accessTokenCreationTime - Date.now() + anHour
-      : null
+      : 5000
   );
-
-  // //Updated boolean to let consumer now that we are authenticated
-  // useEffect(() => {
-  //   if (authData.accessToken) setIsAuthenticated(true);
-  //   else setIsAuthenticated(false);
-  // }, [authData.accessToken]);
 
   const login = () => {
     window.location.href = server + "/auth/login";

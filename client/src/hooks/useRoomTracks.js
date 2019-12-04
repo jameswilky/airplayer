@@ -13,7 +13,6 @@ export default function useRoomTracks(accessToken, room) {
   });
   const spotify = Spotify(accessToken);
 
-  console.log(room);
   useEffect(() => {
     if (room && room.state && room.state.currentSong && room.state.playlist) {
       const currentSongPromise = spotify.find({

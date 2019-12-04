@@ -32,7 +32,8 @@ export default function RoomView(props) {
     accessToken,
     match,
     roomSuccess,
-    roomError
+    roomError,
+    isHost
   } = props;
 
   return (
@@ -94,7 +95,7 @@ export default function RoomView(props) {
         </Main>
         <Footer>
           <Message success={roomSuccess} error={roomError}></Message>
-          {playerReady && (
+          {playerReady && isHost && (
             <SpotifyWebplayer
               token={accessToken}
               room={room}

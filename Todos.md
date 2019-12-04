@@ -1,22 +1,24 @@
 High Priority
 
-1. add spinners for loading
-2. correct color issues on front end
-3. correctly implement dark mode toggle
+1. Remove closure based state referencing on server
+2. add scopes
+3. pass in playlist and default tracks when creating a room
+4. add spinners for loading
+5. correct color issues on front end
+6. correctly implement dark mode toggle
 
-4. room validation
-5. display users in the room on client side
-6. fix incorrect db room state being passed when searching for room
+7. room validation
+8. display users in the room on client side
+9. fix incorrect db room state being passed when searching for room
 
 Low Priority
 
 1. sync audio slider with actual audio. not room
 2. restart playlist if at end
-3. add scopes
-4. show recomended tracks
-5. enter geo-location feature
-6. tweak gray colors
-7. change color scheme
+3. show recomended tracks
+4. enter geo-location feature
+5. tweak gray colors
+6. change color scheme
 
 // Idea
 

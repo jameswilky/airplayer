@@ -35,7 +35,9 @@ export default function Room(props) {
     const id = props.location.pathname.split("/")[2];
     room.controller.joinRoom(id, "");
   }, []);
-  console.log(roomTracks);
+
+  const [isHost, setIsHost] = useState(false);
+
   const viewProps = {
     playerReady,
     room,
@@ -49,16 +51,25 @@ export default function Room(props) {
     accessToken,
     roomSuccess,
     roomError,
+    isHost,
     ...props
   };
 
+  useEffect(() => {
+    console.log(room.state);
+  }, [room.state]);
   return (
     <>
       {room ? (
         breakpoint === "mobile" ? (
           <MobileView {...viewProps}></MobileView>
         ) : (
-          <DesktopView {...viewProps}></DesktopView>
+          <>
+            <button onClick={() => setIsHost(!isHost)}>
+              {isHost ? "hosting" : "client"}
+            </button>
+            <DesktopView {...viewProps}></DesktopView>
+          </>
         )
       ) : (
         <div>loading</div>

@@ -46,9 +46,7 @@ module.exports = function(io, interval = null) {
       // Update state based on event type
       const roomId = Object.entries(socket.rooms)[1][1];
       const state = await getRoom(roomId);
-      console.log(roomId, state);
       const error = validateEvent(state, { type: event, payload: data });
-      console.log(error);
       if (error) {
         socket.emit("ERROR", {
           type: event,

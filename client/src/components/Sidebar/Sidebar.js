@@ -2,7 +2,6 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { Container, HomeIcon, SearchIcon, LibraryIcon } from "./styles";
 export default function Sidebar({ path }) {
-  console.log(path);
   return (
     <Container>
       <Link to={path}>
