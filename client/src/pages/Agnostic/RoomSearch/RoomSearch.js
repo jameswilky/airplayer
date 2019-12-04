@@ -28,10 +28,9 @@ export default function RoomSearch(props) {
       .then(data => setRooms(data));
   }, []);
 
-  // TODO fix _.id being returned
   const JoinButton = item => (
     <Button>
-      <Link to={`/room/${item._id}`}>
+      <Link to={`/room/${item.id}`}>
         <IoIosLogIn></IoIosLogIn>
       </Link>
     </Button>

@@ -1,15 +1,13 @@
 High Priority
 
-1. Remove closure based state referencing on server
-2. add scopes
-3. pass in playlist and default tracks when creating a room
-4. add spinners for loading
-5. correct color issues on front end
-6. correctly implement dark mode toggle
+1. add scopes
+2. pass in playlist and default tracks when creating a room
 
-7. room validation
-8. display users in the room on client side
-9. fix incorrect db room state being passed when searching for room
+3. add spinners for loading
+4. correct color issues on front end
+5. correctly implement dark mode toggle
+6. room validation
+7. display users in the room on client side
 
 Low Priority
 
@@ -21,12 +19,6 @@ Low Priority
 6. change color scheme
 
 // Idea
-
-// Verion 1
-
-- remove links to albums and artists and playlists,
-  only allow direct add to tracks
-
 // Version 2
 
 - Desktop:

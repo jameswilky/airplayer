@@ -36,6 +36,7 @@ export default function RoomView(props) {
     isHost
   } = props;
 
+  console.log(room.state);
   return (
     <Background>
       <Container>

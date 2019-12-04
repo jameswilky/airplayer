@@ -20,7 +20,7 @@ export default function CreateRoomForm() {
       fetch(api + "rooms", { method: "POST", body: JSON.stringify(data) })
         .then(res => res.json())
         .then(json => {
-          setRoomState({ creating: false, created: true, id: json.room._id });
+          setRoomState({ creating: false, created: true, id: json.room.id });
         });
     }
   }, [roomState.creating, data]);
