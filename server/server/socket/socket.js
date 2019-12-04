@@ -24,7 +24,8 @@ module.exports = function(io, interval = null) {
     const handleEvent = async (event, data) => {
       // Update state based on event type
       const roomId = Object.entries(socket.rooms)[1][1];
-      const state = await getRoom(roomId);
+      // const state = await getRoom(roomId);
+      const state = rooms[roomId];
       const error = validateEvent(state, { type: event, payload: data });
       if (error) {
         socket.emit("ERROR", {
@@ -40,6 +41,7 @@ module.exports = function(io, interval = null) {
         });
         // After each update, send updated room to each socket in room
 
+        rooms[roomId] = nextState;
         io.in(nextState.id).emit("ROOM_UPDATED", {
           ...nextState
         });
@@ -69,20 +71,17 @@ module.exports = function(io, interval = null) {
         password
       });
       if (authorized) {
-        // todo turn this into a ADD_MEMBER event
-        // if (userId) {
-        //   subscribers.push({ userId, scope: "HOST" });
-        // }
-        // console.log("subs:", subscribers);
-        // subscribers.push({ userId: "test", scope: "HOST" });
-        if (!socket.subscribers) socket.subscribers = [];
-        socket.subscribers.push(1);
-        console.log(socket.subscribers);
+        const newUser = {
+          userId: userId || "123",
+          socketId: socket.id,
+          scope: "HOST"
+        };
+        users[socket.id] = newUser;
+        rooms[id] = state;
+        rooms[id].subscribers.push(newUser);
 
-        socket.join(state.id);
-        io.in(state.id).emit("ROOM_UPDATED", {
-          ...state
-        });
+        socket.join(id);
+        io.in(id).emit("ROOM_UPDATED", rooms[id]);
       } else {
         socket.emit("ERROR", {
           type: "JOIN_ROOM",
