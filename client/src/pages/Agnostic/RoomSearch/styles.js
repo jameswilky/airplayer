@@ -167,7 +167,7 @@ export const CreateButton = styled.div`
     font-size: 5rem;
     position: absolute;
   }
-  @media (min-width: 667px) {
+  @media (min-width: 668px) {
     display: none;
   }
 `;

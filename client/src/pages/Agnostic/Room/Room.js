@@ -11,6 +11,7 @@ import useLibrary from "../../../hooks/useLibrary";
 import useFind from "../../../hooks/useFind";
 import useBreakpoint from "../../../hooks/useBreakpoint";
 import useRoom from "../../../hooks/useRoom";
+import useProfile from "../../../hooks/useProfile";
 
 export default function Room(props) {
   const accessToken = props.accessToken;
@@ -21,20 +22,25 @@ export default function Room(props) {
   // TODO change to searchQuery
   const { query, setQuery, queryResults } = useSearch(accessToken);
   const [findResult, setFindQuery] = useFind(accessToken);
+  const user = useProfile(accessToken);
 
   const playerReady =
     accessToken &&
     room.state &&
     room.state.currentSong &&
     roomTracks &&
-    roomTracks.currentSong;
+    roomTracks.currentSong &&
+    user;
 
   const { breakpoint } = useBreakpoint();
 
+  // TODO pass user Id
   useEffect(() => {
-    const id = props.location.pathname.split("/")[2];
-    room.controller.joinRoom(id, "");
-  }, []);
+    if (user) {
+      const id = window.location.pathname.split("/")[2];
+      room.controller.joinRoom(id, user.uri, "");
+    }
+  }, [user]);
 
   const [isHost, setIsHost] = useState(false);
 
@@ -55,9 +61,6 @@ export default function Room(props) {
     ...props
   };
 
-  useEffect(() => {
-    console.log(room.state);
-  }, [room.state]);
   return (
     <>
       {room ? (

@@ -50,12 +50,13 @@ module.exports = function(io, interval = null) {
       }
     };
 
-    socket.on("JOIN_ROOM", async ({ id, password = null, userId = null }) => {
+    socket.on("JOIN_ROOM", async ({ id, password = null, userId }) => {
       /**
        * @param {obj} room {id,name,playlist,subscribers,currentSong}
        */
       // todo add check to validate input is a room object
 
+      if (!userId || !id) return false;
       const state = await getRoom(id);
       if (!state) {
         socket.emit("ERROR", {
@@ -72,7 +73,7 @@ module.exports = function(io, interval = null) {
       });
       if (authorized) {
         const newUser = {
-          userId: userId || "123",
+          userId: userId,
           socketId: socket.id,
           scope: "HOST"
         };

@@ -6,6 +6,7 @@ import { IoIosAdd, IoIosLogIn } from "react-icons/io";
 import Modal from "../../../components/Modal/Modal";
 import CreateRoomForm from "../../../components/CreateRoomForm/CreateRoomForm";
 
+import useProfile from "../../../hooks/useProfile";
 import {
   Background,
   Container,
@@ -20,7 +21,8 @@ export default function RoomSearch(props) {
   const api = "http://localhost:8888/api/";
   const [rooms, setRooms] = useState([]);
 
-  const { room, roomSuccess, roomError } = props;
+  const { accessToken } = props;
+  const user = useProfile(accessToken);
 
   useEffect(() => {
     fetch(api + "rooms")
@@ -71,12 +73,7 @@ export default function RoomSearch(props) {
         </CreateButton>
 
         <Modal show={showModal} title="Create a Room" setShow={setShowModal}>
-          <CreateRoomForm
-            history={props.history}
-            room={room}
-            roomSuccess={roomSuccess}
-            roomError={roomError}
-          ></CreateRoomForm>
+          {user && <CreateRoomForm user={user}></CreateRoomForm>}
         </Modal>
       </Container>
     </Background>

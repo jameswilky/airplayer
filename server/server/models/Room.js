@@ -10,7 +10,7 @@ const RoomSchema = new Schema({
     type: Date,
     default: Date.now
   },
-  subscribers: [{ userId: String }],
+  subscribers: [{ userId: String, socketId: String, scope: String }],
   host: { socketId: String },
   password: String
 });
@@ -23,6 +23,10 @@ RoomSchema.method("toClient", function() {
 
   obj.playlist.forEach(track => {
     delete track._id;
+  });
+
+  obj.subscribers.forEach(user => {
+    delete user._id;
   });
 
   if (obj.password) {

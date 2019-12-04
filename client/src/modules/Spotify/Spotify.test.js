@@ -1,10 +1,8 @@
 import Spotify from ".";
 
-const token =
-  "BQDMiSyYh_B083wV7I1Mj1y-xUB8pYCNs_EMAsMeSlG3esI0Ff7seEFKZeOeD05HBMHhFK8aDEojVccfNcJIGHajEXv7GSerrHXgup2jcqKK8fYO4YwVoFb44j8qUp_VLVUyUxnBFb8LFUZY2ObeAcpCLNwDzZ60hhfcHexOHUbN-PP7daV5";
 const api = "https://api.spotify.com/v1/";
 
-const spotify = Spotify(token, false);
+const spotify = Spotify("token", false);
 
 describe("Spotify Web API Module", () => {
   describe("search", () => {

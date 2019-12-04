@@ -4,8 +4,13 @@ import { IoIosKey, IoIosPeople } from "react-icons/io";
 import { GoLocation } from "react-icons/go";
 import { Redirect } from "react-router-dom";
 
-export default function CreateRoomForm() {
-  const initialData = { name: "", password: "", location: "" };
+export default function CreateRoomForm(props) {
+  const initialData = {
+    name: "",
+    password: "",
+    location: "",
+    userId: props.user.uri
+  };
   const api = "http://localhost:8888/api/";
 
   const [data, setData] = useState(initialData);

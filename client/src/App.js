@@ -15,7 +15,6 @@ import RoomSearch from "./pages/Agnostic/RoomSearch/RoomSearch";
 import Room from "./pages/Agnostic/Room/Room";
 
 import useAuth from "./hooks/useAuth";
-
 //Styles
 import "./global.css";
 const prevAuthData = JSON.parse(localStorage.getItem("authData"));
@@ -45,7 +44,9 @@ const App = hot(module)(() => {
         />
         <Route
           path="/roomsearch"
-          component={props => <RoomSearch {...props}></RoomSearch>}
+          component={props => (
+            <RoomSearch accessToken={accessToken}></RoomSearch>
+          )}
         />
 
         <Route

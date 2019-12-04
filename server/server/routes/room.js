@@ -2,11 +2,12 @@
 const mongoose = require("mongoose");
 const Room = require("../models/Room");
 const to = require("../helpers/to");
+const { createHost } = require("../daos/hostDao");
 
 module.exports = {
   getRooms: async (req, res) => {
     const [err, rooms] = await to(Room.find({}));
-    err ? res.send(err) : res.json(rooms);
+    err ? res.send(err) : res.json(rooms.map(room => room.toClient()));
   },
   createRoom: async (req, res) => {
     try {
@@ -18,12 +19,23 @@ module.exports = {
     req.body.playlist.push({ uri: "spotify:track:2W2eaLVKv9NObcLXlYRZZo" });
     req.body.currentSong = { playing: false, uri: req.body.playlist[0].uri };
 
-    if (!req.body.playlist || !req.body.currentSong) return null;
+    if (!req.body.playlist || !req.body.currentSong || !req.body.userId)
+      return null;
+
     const newRoom = new Room(req.body);
     const [err, room] = await to(newRoom.save());
+    const { token } = await createHost({
+      spotifyUserId: req.body.userId,
+      roomId: room._id
+    });
+
     err
       ? res.send(err)
-      : res.json({ message: `Room created`, room: room.toClient() });
+      : res.json({
+          message: `Room created`,
+          room: room.toClient(),
+          token: token
+        });
   },
   getRoom: async (req, res) => {
     const [err, room] = await to(Room.findById(req.params.id));
