@@ -32,8 +32,7 @@ export default function RoomView(props) {
     accessToken,
     match,
     roomSuccess,
-    roomError,
-    isHost
+    roomError
   } = props;
 
   console.log(room.state);
@@ -96,7 +95,7 @@ export default function RoomView(props) {
         </Main>
         <Footer>
           <Message success={roomSuccess} error={roomError}></Message>
-          {playerReady && isHost && (
+          {playerReady && room && room.state.isHost && (
             <SpotifyWebplayer
               token={accessToken}
               room={room}

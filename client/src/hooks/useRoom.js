@@ -37,7 +37,7 @@ export default function useRoom() {
     socket.on("ROOM_UPDATED", nextRoomState => {
       setRoom({
         ...room,
-        state: nextRoomState,
+        state: { ...nextRoomState, isHost: socket.id === nextRoomState.host },
         controller: Controller(socket)
       });
     });

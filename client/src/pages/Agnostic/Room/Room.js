@@ -44,8 +44,6 @@ export default function Room(props) {
     }
   }, [user]);
 
-  const [isHost, setIsHost] = useState(false);
-
   const viewProps = {
     playerReady,
     room,
@@ -59,7 +57,6 @@ export default function Room(props) {
     accessToken,
     roomSuccess,
     roomError,
-    isHost,
     ...props
   };
 
@@ -70,9 +67,6 @@ export default function Room(props) {
           <MobileView {...viewProps}></MobileView>
         ) : (
           <>
-            <button onClick={() => setIsHost(!isHost)}>
-              {isHost ? "hosting" : "client"}
-            </button>
             <DesktopView {...viewProps}></DesktopView>
           </>
         )
