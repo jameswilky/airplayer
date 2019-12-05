@@ -25,6 +25,7 @@ export default function CreateRoomForm(props) {
       fetch(api + "rooms", { method: "POST", body: JSON.stringify(data) })
         .then(res => res.json())
         .then(json => {
+          localStorage.setItem("token", json.token);
           setRoomState({ creating: false, created: true, id: json.room.id });
         });
     }

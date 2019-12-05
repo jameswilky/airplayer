@@ -12,8 +12,8 @@ export default function useRoom() {
     // This function is used to create a new controller to manage the room.
     // It has to recreated to inherit the socket closure after a room as been joined
     return {
-      joinRoom: (id, userId, password = null) =>
-        socket.emit("JOIN_ROOM", { id, userId, password }),
+      joinRoom: (id, userId, password = null, token) =>
+        socket.emit("JOIN_ROOM", { id, userId, password, token }),
       addTrack: id => socket.emit("ADD_TRACK", { uri: id }),
       removeTrack: id => socket.emit("REMOVE_TRACK", { uri: id }),
       updatePlaylist: playlist => socket.emit("UPDATE_PLAYLIST", playlist),

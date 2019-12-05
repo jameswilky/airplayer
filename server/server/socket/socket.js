@@ -81,6 +81,12 @@ module.exports = function(io, interval = null) {
             socketId: socket.id,
             scope: "CLIENT"
           };
+          // TODO find cleaner way of doing this
+          if (rooms[id]) {
+            state.host = rooms[id].host;
+            state.subscribers = rooms[id].subscribers;
+          }
+
           users[socket.id] = newUser;
           rooms[id] = state;
           rooms[id].subscribers.push(newUser);

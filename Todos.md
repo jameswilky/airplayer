@@ -1,13 +1,12 @@
 High Priority
 
-1. add scopes
-2. pass in playlist and default tracks when creating a room
-
-3. add spinners for loading
-4. correct color issues on front end
-5. correctly implement dark mode toggle
-6. room validation
-7. display users in the room on client side
+1. pass in playlist and default tracks when creating a room
+2. add spinners for loading
+3. correct color issues on front end
+4. correctly implement dark mode toggle
+5. room validation
+6. display users in the room on client side
+7. implememt passwords
 
 Low Priority
 
