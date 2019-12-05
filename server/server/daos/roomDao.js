@@ -2,13 +2,15 @@
 const mongoose = require("mongoose");
 const Room = require("../models/Room");
 const to = require("../helpers/to");
+const { createHost } = require("../daos/hostDao");
 
 module.exports = {
   createRoom: async ({
     name,
     playlist = [],
     currentSong = { playing: false, uri: null },
-    password = null
+    password = null,
+    userId = null
   }) => {
     const newRoom = new Room({
       name: name,
@@ -18,8 +20,12 @@ module.exports = {
       password: password,
       requiresPassword: password === null ? false : true
     });
+    const { token } = await createHost({
+      spotifyUserId: userId,
+      roomId: newRoom._id
+    });
     const [err, room] = await to(newRoom.save());
-    return err || room === null ? null : room.toClient();
+    return err || room === null ? null : { room: room.toClient(), token };
   },
   passwordDoesMatch: async ({ roomId, password = null }) => {
     const [err, room] = await to(Room.findById(roomId));

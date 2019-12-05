@@ -75,7 +75,7 @@ describe("Sockets backend", () => {
       expect(johnState).to.eql(undefined);
     });
     it("should join room if the room exists", async () => {
-      const room = await createRoom(birthday);
+      const { room } = await createRoom(birthday);
       const john = await Mocket.connectClient(url);
       let johnState;
       john.emit("JOIN_ROOM", { id: room.id, userId: "john" });
@@ -90,7 +90,7 @@ describe("Sockets backend", () => {
     it("should only allow users to join a room that requires a password if the password given is correct", async () => {
       const privateBirthday = Object.assign({}, birthday);
       privateBirthday.password = "secret";
-      const room = await createRoom(privateBirthday);
+      const { room } = await createRoom(privateBirthday);
       const john = await Mocket.connectClient(url);
       let johnState;
       john.emit("JOIN_ROOM", {
@@ -110,7 +110,7 @@ describe("Sockets backend", () => {
     it("should prevent users from joining a room that requires a password when no password is given", async () => {
       const privateBirthday = Object.assign({}, birthday);
       privateBirthday.password = "secret";
-      const room = await createRoom(privateBirthday);
+      const { room } = await createRoom(privateBirthday);
       const john = await Mocket.connectClient(url);
       let johnState, err;
       john.emit("JOIN_ROOM", {
@@ -131,7 +131,7 @@ describe("Sockets backend", () => {
     });
 
     it("should add the users ID to the subscribers array after joining", async () => {
-      const room = await createRoom(birthday);
+      const { room } = await createRoom(birthday);
       const john = await Mocket.connectClient(url);
       let johnState;
       john.emit("JOIN_ROOM", {
@@ -168,7 +168,7 @@ describe("Sockets backend", () => {
       expect(johnState).to.eql(undefined);
     }); // TODO add after authorization
     it("updates the state for the sender after emiting ADD_TRACK", async () => {
-      const room = await createRoom(birthday);
+      const { room } = await createRoom(birthday);
       const john = await Mocket.connectClient(url);
       let johnState;
 
@@ -186,68 +186,46 @@ describe("Sockets backend", () => {
     });
   });
 
-  // describe("CREATE_ROOM", () => {
-  //   it("should trigger a ROOM_CREATED event with a payload containing a token and a roomId", async () => {
-  //     const john = io.connect(url, options);
-  //     let token,
-  //       roomId,
-  //       err = null;
-  //     john.emit("CREATE_ROOM", "testToken");
-  //     john.on("ROOM_CREATED", payload => {
-  //       token = payload.token;
-  //       roomId = payload.roomId;
-  //     });
-  //     john.on("ERROR", msg => {
-  //       err = msg;
-  //     });
-  //     await waitFor(50);
-
-  //     expect(token).to.be.a("string");
-  //     expect(roomId).to.be.a("string");
-  //     expect(err).to.eql(null);
-  //   });
-  // });
-
   describe("Room Scopes", () => {
-    // it("should return an error if no token is provided when attempting to  perform host actions", async () => {
-    //   const birthdayRoom = await createRoom(birthday);
-    //   const john = io.connect(url, options);
-    //   let johnState;
-    //   let errors = [];
+    it("should return an error if no token is provided when attempting to  perform host actions", async () => {
+      const { room: birthdayRoom } = await createRoom(birthday);
+      const john = io.connect(url, options);
+      let johnState;
+      let errors = [];
+      console.log(birthdayRoom);
+      // john.on("connect", async () => {
+      //   john.emit("JOIN_ROOM", { userId: "john", id: birthdayRoom.id });
+      //   john.on("ROOM_UPDATED", state => {
+      //     johnState = state;
+      //   });
 
-    //   john.on("connect", async () => {
-    //     john.emit("JOIN_ROOM", { userId:'john', id: birthdayRoom.id });
-    //     john.on("ROOM_UPDATED", state => {
-    //       johnState = state;
-    //     });
+      //   await waitFor(10);
+      //   john.emit("PAUSE", null);
 
-    //     await waitFor(10);
-    //     john.emit("PAUSE", null);
+      //   john.emit("PLAY", { uri: "spotify:track:789" });
 
-    //     john.emit("PLAY", { uri: "spotify:track:789" });
+      //   john.emit("UPDATE_PLAYLIST", [{ uri: "spotify:track:101112" }]);
 
-    //     john.emit("UPDATE_PLAYLIST", [{ uri: "spotify:track:101112" }]);
+      //   john.emit("REMOVE_TRACK", { uri: "spotify:track:123" });
+      //   john.on("ERROR", msg => errors.push(msg));
+      // });
 
-    //     john.emit("REMOVE_TRACK", { uri: "spotify:track:123" });
-    //     john.on("ERROR", msg => errors.push(msg));
-    //   });
-
-    //   await waitFor(50);
-    //   expect(johnState.currentSong.playing).to.eql(true);
-    //   expect(errors.length).to.eql(4);
-    //   expect(errors).to.include(
-    //     "PAUSE requires authorization, please provide a token."
-    //   );
-    //   expect(errors).to.include(
-    //     "PLAY requires authorization, please provide a token."
-    //   );
-    //   expect(errors).to.include(
-    //     "UPDATE_PLAYLIST requires authorization, please provide a token."
-    //   );
-    //   expect(errors).to.include(
-    //     "REMOVE_TRACK requires authorization, please provide a token."
-    //   );
-    // });
+      // await waitFor(50);
+      // expect(johnState.currentSong.playing).to.eql(true);
+      // expect(errors.length).to.eql(4);
+      // expect(errors).to.include(
+      //   "PAUSE requires authorization, please provide a token."
+      // );
+      // expect(errors).to.include(
+      //   "PLAY requires authorization, please provide a token."
+      // );
+      // expect(errors).to.include(
+      //   "UPDATE_PLAYLIST requires authorization, please provide a token."
+      // );
+      // expect(errors).to.include(
+      //   "REMOVE_TRACK requires authorization, please provide a token."
+      // );
+    });
     // it("should should require a valid token to perform host actions", async () => {
     //   const birthdayRoom = await createRoom(birthday);
     //   const john = io.connect(url, options);
@@ -297,8 +275,8 @@ describe("Sockets backend", () => {
       let john, alice, mary;
       let johnMsg, aliceMsg, maryMsg;
 
-      const birthdayRoom = await createRoom(birthday);
-      const weddingRoom = await createRoom(wedding);
+      const { room: birthdayRoom } = await createRoom(birthday);
+      const { room: weddingRoom } = await createRoom(wedding);
 
       john = io.connect(url, options);
 
@@ -338,8 +316,8 @@ describe("Sockets backend", () => {
       let john, alice, mary;
       let johnError, aliceError, maryError;
 
-      const birthdayRoom = await createRoom(birthday);
-      const weddingRoom = await createRoom(wedding);
+      const { room: birthdayRoom } = await createRoom(birthday);
+      const { room: weddingRoom } = await createRoom(wedding);
 
       john = io.connect(url, options);
 
@@ -384,7 +362,7 @@ describe("Sockets backend", () => {
       let johnErrors = [];
       let aliceErrors = [];
 
-      const birthdayRoom = await createRoom(birthday);
+      const { room: birthdayRoom } = await createRoom(birthday);
 
       john = io.connect(url, options);
 
@@ -427,8 +405,8 @@ describe("Sockets backend", () => {
       let john, alice, mary;
       let johnState, aliceState, maryState;
 
-      const birthdayRoom = await createRoom(birthday);
-      const weddingRoom = await createRoom(wedding);
+      const { room: birthdayRoom } = await createRoom(birthday);
+      const { room: weddingRoom } = await createRoom(wedding);
 
       john = io.connect(url, options);
 

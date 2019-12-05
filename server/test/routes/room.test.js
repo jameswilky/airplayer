@@ -31,7 +31,7 @@ describe("Room route handlers", () => {
   });
 
   describe("/POST room", () => {
-    it.only("should POST a room", async () => {
+    it("should POST a room", async () => {
       const room = {
         name: "Test",
         userId: "someUser"

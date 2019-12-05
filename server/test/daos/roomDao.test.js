@@ -29,7 +29,7 @@ describe("Room Data Access Object", () => {
 
   describe("createRoom", () => {
     it("should create a new object matching the specified the host and name given to the function", async () => {
-      const room = await createRoom({ name: "test" });
+      const { room } = await createRoom({ name: "test" });
       expect(room).to.be.a("object");
       expect(room.name).to.eql("test");
       expect(room.playlist.length).to.eql(0);
@@ -39,7 +39,7 @@ describe("Room Data Access Object", () => {
 
   describe("getRoom", () => {
     it("should return a room object matching the given id", async () => {
-      const room = await createRoom(birthday);
+      const { room } = await createRoom(birthday);
       const res = await getRoom(room.id);
       expect(res).to.be.a("object");
       expect(res.id).to.eql(room.id);
@@ -56,7 +56,7 @@ describe("Room Data Access Object", () => {
 
   describe("updateRoom", () => {
     it("should return a copy of the newly updated room on success", async () => {
-      const room = await createRoom(birthday);
+      const { room } = await createRoom(birthday);
       room.name = "wedding";
       room.playlist.push({ uri: "789" });
       const res = await updateRoom(room);
@@ -67,7 +67,7 @@ describe("Room Data Access Object", () => {
       expect(res.playlist.length).to.eql(3);
     });
     it("should return null if id is not found in the database", async () => {
-      const room = await createRoom(birthday);
+      const { room } = await createRoom(birthday);
       room.id = 25;
       const res = await updateRoom(room);
       expect(res).to.eql(null);
@@ -77,7 +77,7 @@ describe("Room Data Access Object", () => {
     it("should return true if the password matches the room password specified by the room id", async () => {
       const privateBirthday = Object.assign({}, birthday);
       privateBirthday.password = "secret";
-      const room = await createRoom(privateBirthday);
+      const { room } = await createRoom(privateBirthday);
       const result = await passwordDoesMatch({
         roomId: room.id,
         password: "secret"
@@ -85,7 +85,7 @@ describe("Room Data Access Object", () => {
       expect(result).to.eql(true);
     });
     it("should return true if no password is passed, when the room does not require a password", async () => {
-      const room = await createRoom(birthday);
+      const { room } = await createRoom(birthday);
       const result = await passwordDoesMatch({
         roomId: room.id
       });
@@ -94,7 +94,7 @@ describe("Room Data Access Object", () => {
     it("should return false if the password does not match the room password specified by the room id", async () => {
       const privateBirthday = Object.assign({}, birthday);
       privateBirthday.password = "secret";
-      const room = await createRoom(privateBirthday);
+      const { room } = await createRoom(privateBirthday);
       const result = await passwordDoesMatch({
         roomId: room.id,
         password: "wrongsecret"
@@ -104,7 +104,7 @@ describe("Room Data Access Object", () => {
     it("should return null if an invalid room id is passed", async () => {
       const privateBirthday = Object.assign({}, birthday);
       privateBirthday.password = "secret";
-      const room = await createRoom(privateBirthday);
+      const { room } = await createRoom(privateBirthday);
       const result = await passwordDoesMatch({
         roomId: "wrongID",
         password: "secret"

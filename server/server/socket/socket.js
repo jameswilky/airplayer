@@ -10,12 +10,17 @@ const { ALL, HOST } = require("../actions/scopes");
 const dispatch = require("../reducers/roomReducer");
 const validateEvent = require("../middleware/validateEvent");
 
+// Helpers
+const getRoomId = socket => Object.entries(socket.rooms)[1][1];
+const socketIsHost = socket =>
+  rooms[getRoomId(socket)].host.socketId === socket.id;
 const inARoom = socket => {
   // A socket always has 1 room attached as a room is naturally created on connection
   // So a socket should have 2 rooms if it has joined a user-created room
   return Object.keys(socket.rooms).length > 1;
 };
 
+// Server state
 const rooms = {};
 const users = {};
 
@@ -23,7 +28,7 @@ module.exports = function(io, interval = null) {
   io.on("connection", function(socket) {
     const handleEvent = async (event, data) => {
       // Update state based on event type
-      const roomId = Object.entries(socket.rooms)[1][1];
+      const roomId = getRoomId(socket);
       // const state = await getRoom(roomId);
       const state = rooms[roomId];
       const error = validateEvent(state, { type: event, payload: data });
@@ -35,67 +40,73 @@ module.exports = function(io, interval = null) {
           code: 400
         });
       } else {
-        const nextState = dispatch(state, {
+        // After each update, send updated room to each socket in room
+        rooms[roomId] = dispatch(state, {
           type: event,
           payload: data
         });
-        // After each update, send updated room to each socket in room
 
-        rooms[roomId] = nextState;
-        io.in(nextState.id).emit("ROOM_UPDATED", {
-          ...nextState
-        });
+        // Make sure not to pass token to client
+        const { token, ...nextState } = rooms[roomId];
+        io.in(nextState.id).emit("ROOM_UPDATED", nextState);
         socket.emit("SUCCESS", { type: event, payload: data });
         updateRoom(nextState);
       }
     };
 
-    socket.on("JOIN_ROOM", async ({ id, password = null, userId, token }) => {
-      /**
-       * @param {obj} room {id,name,playlist,subscribers,currentSong}
-       */
-      // todo add check to validate input is a room object
+    socket.on(
+      "JOIN_ROOM",
+      async ({ id, password = null, userId = null, token }) => {
+        /**
+         * @param {obj} room {id,name,playlist,subscribers,currentSong}
+         */
+        // todo add check to validate input is a room object
 
-      if (!userId || !id) return false;
-      const state = await getRoom(id);
-      if (!state) {
-        socket.emit("ERROR", {
-          type: "JOIN_ROOM",
-          payload: { id, userId },
-          message: `join attempt failed, room not found`,
-          code: 404
+        if (!userId || !id) return false;
+        const state = await getRoom(id);
+        if (!state) {
+          socket.emit("ERROR", {
+            type: "JOIN_ROOM",
+            payload: { id, userId },
+            message: `join attempt failed, room not found`,
+            code: 404
+          });
+          return;
+        }
+        const authorized = await passwordDoesMatch({
+          roomId: state.id,
+          password
         });
-        return;
-      }
-      const authorized = await passwordDoesMatch({
-        roomId: state.id,
-        password
-      });
-      if (authorized) {
-        // Check db against token, if it matches set scope to Host
-        // add {socketid, token} field to room
 
-        const newUser = {
-          userId: userId,
-          socketId: socket.id,
-          scope: "HOST"
-        };
-        users[socket.id] = newUser;
-        rooms[id] = state;
-        rooms[id].subscribers.push(newUser);
+        let socketToken = token; // bug? cant access token in below if block
+        if (authorized) {
+          // TODO Check db against token, if it matches set scope to Host
+          // add room[id].host : {socketid, token} field to room
 
-        socket.join(id);
-        const { token, ...nextState } = rooms[id];
-        io.in(id).emit("ROOM_UPDATED", nextState);
-      } else {
-        socket.emit("ERROR", {
-          type: "JOIN_ROOM",
-          payload: { id, userId },
-          message: `join attempt failed, invalid password`,
-          code: 403
-        });
+          console.log(socketToken);
+          const isHost = true;
+          const newUser = {
+            userId: userId,
+            socketId: socket.id,
+            scope: isHost ? "HOST" : "CLIENT"
+          };
+          users[socket.id] = newUser;
+          rooms[id] = state;
+          rooms[id].subscribers.push(newUser);
+
+          socket.join(id);
+          const { token, ...nextState } = rooms[id];
+          io.in(id).emit("ROOM_UPDATED", nextState);
+        } else {
+          socket.emit("ERROR", {
+            type: "JOIN_ROOM",
+            payload: { id, userId },
+            message: `join attempt failed, invalid password`,
+            code: 403
+          });
+        }
       }
-    });
+    );
 
     // Handles events that Clients and Hosts can use
     Object.keys(ALL).forEach(event => {
@@ -116,17 +127,16 @@ module.exports = function(io, interval = null) {
     //Handles events that only hosts can use
     Object.keys(HOST).forEach(event => {
       socket.on(event, data => {
-        // check the incoming socket to see if it matches the token, if so user is host
+        // TODO check the incoming socket to see if it matches the token, if so user is host
 
-        // TODO un comment this after to get authentication working
-        // if (!data || !data.hasOwnProperty("token")) {
-        //   socket.emit(
-        //     "ERROR",
-        //     `${event} requires authorization, please provide a token.`
-        //   );
-        //   return;
-        // }
-        // const isAHost = data.token === host.token;
+        // if (!socketIsHost(socket)) {
+        if (false) {
+          socket.emit(
+            "ERROR",
+            `${event} requires authorization, please provide a token.`
+          );
+          return;
+        }
         const isAHost = true;
         if (inARoom(socket)) {
           if (isAHost) {
@@ -151,36 +161,6 @@ module.exports = function(io, interval = null) {
         }
       });
     });
-
-    // if (interval /*&& inARoom(socket)*/) {
-    //   const prevState = { ...state };
-    //   setInterval(async () => {
-    //     if (inARoom(socket)) {
-    //       // Every *interval* seconds check if state has changed.
-    //       // If it has, sync socket state with database and update all clients
-    //       // if (
-    //       //   // Compare previous and next state, but dont compare passwords
-    //       //   !isEmpty(
-    //       //     diff(
-    //       //       { ...state, password: null },
-    //       //       { ...prevState, password: null }
-    //       //     )
-    //       //   )
-    //       // ) {
-
-    //       // TODO fix diffing
-    //       const room = await updateRoom(state);
-    //       if (!room) return;
-    //       else {
-    //         Object.assign(state, room);
-    //         Object.assign(prevState, state);
-    //         io.in(state.id).emit("ROOM_UPDATED", state);
-    //         // console.log("Room Updated");
-    //       }
-    //       //}
-    //     }
-    //   }, interval);
-    // }
   });
 };
 
