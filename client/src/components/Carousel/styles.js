@@ -1,12 +1,21 @@
 import styled, { css } from "styled-components";
-import { IoIosAdd } from "react-icons/io";
+import { IoIosAdd, IoIosCheckmark } from "react-icons/io";
 
+export const TickIcon = styled(IoIosCheckmark)`
+  position: absolute;
+  font-size: 2.5rem;
+  &:hover {
+    color: ${props => props.theme.transparent4};
+  }
+  color: ${props => props.theme.green};
+`;
 export const AddIcon = styled(IoIosAdd)`
   position: absolute;
   font-size: 2.5rem;
   &:hover {
     color: ${props => props.theme.transparent4};
   }
+  color: ${props => props.theme.white};
 `;
 
 export const IconUnderlay = styled.div`

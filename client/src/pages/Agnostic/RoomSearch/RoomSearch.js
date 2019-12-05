@@ -38,7 +38,7 @@ export default function RoomSearch(props) {
     </Button>
   );
 
-  const [showModal, setShowModal] = useState(false);
+  const [showModal, setShowModal] = useState(true);
   return (
     <Background>
       <h1>Airplayer</h1>
@@ -48,7 +48,7 @@ export default function RoomSearch(props) {
           <input placeholder="Enter a party Name" type="text" />
           <input placeholder="Change your location" type="text" />{" "}
           {/* Desktop only */}
-          <div>
+          <div onClick={() => setShowModal(true)}>
             <IoIosAdd></IoIosAdd>
             <p>Create Room</p>
           </div>
@@ -73,7 +73,12 @@ export default function RoomSearch(props) {
         </CreateButton>
 
         <Modal show={showModal} title="Create a Room" setShow={setShowModal}>
-          {user && <CreateRoomForm user={user}></CreateRoomForm>}
+          {user && (
+            <CreateRoomForm
+              user={user}
+              accessToken={accessToken}
+            ></CreateRoomForm>
+          )}
         </Modal>
       </Container>
     </Background>

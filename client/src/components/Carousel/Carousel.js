@@ -6,14 +6,15 @@ import {
   StyledItemContainer,
   StyledList,
   AddIcon,
+  TickIcon,
   IconUnderlay
 } from "./styles";
 import List from "../List";
 
 export default function Carousel(props) {
-  const { items, height, addTrack } = props;
+  const { items, height, addItem, removeItem, selectedItems } = props;
 
-  const ItemTemplate = ({ src, name, labels, uri }) => {
+  const ItemTemplate = ({ src, name, labels, uri, selected }) => {
     return (
       <StyledItemContainer>
         {" "}
@@ -24,7 +25,11 @@ export default function Carousel(props) {
         </StyledItem>{" "}
         <StyledOverlay>
           <IconUnderlay></IconUnderlay>
-          <AddIcon onClick={() => addTrack(uri)}></AddIcon>
+          {selected ? (
+            <TickIcon onClick={() => removeItem(uri)}></TickIcon>
+          ) : (
+            <AddIcon onClick={() => addItem(uri)}></AddIcon>
+          )}
         </StyledOverlay>
       </StyledItemContainer>
     );
@@ -38,6 +43,9 @@ export default function Carousel(props) {
           name={item => item.name}
           labels={item => item.getLabels()}
           uri={item => item.uri}
+          selected={item =>
+            selectedItems && selectedItems.some(x => x.uri === item.uri)
+          }
         ></ItemTemplate>
       </List>
     </StyledContainer>

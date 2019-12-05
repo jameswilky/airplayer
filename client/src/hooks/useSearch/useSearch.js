@@ -7,7 +7,7 @@ import SpotifyHelper from "../../modules/SpotifyHelper/SpotifyHelper";
 export default function useSearch(accessToken) {
   // Store Access
   // Local State
-  const [query, setQuery] = useState("tobi");
+  const [query, setQuery] = useState("");
   const [queryResults, setQueryResults] = useState({
     tracks: {},
     artists: {},
