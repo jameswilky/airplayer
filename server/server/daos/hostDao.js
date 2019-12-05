@@ -15,6 +15,10 @@ module.exports = {
     const [err, host] = await to(newHost.save());
     return err || host === null ? null : host.toClient();
   },
+  tokenIsValid: async ({ roomId, token }) => {
+    const [err, room] = await to(Host.findOne({ roomId }));
+    return err ? null : room.token === token ? true : false;
+  },
   getHostById: async id => {
     const [err, host] = await to(Host.findById(id));
     return err || host === null ? null : host.toClient();

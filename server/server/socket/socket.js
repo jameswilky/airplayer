@@ -1,19 +1,14 @@
-const {
-  getRoom,
-  updateRoom,
-  createRoom,
-  passwordDoesMatch
-} = require("../daos/roomDao");
-const { createHost } = require("../daos/hostDao");
-
+const { getRoom, updateRoom, passwordDoesMatch } = require("../daos/roomDao");
 const { ALL, HOST } = require("../actions/scopes");
+const { tokenIsValid } = require("../daos/hostDao");
 const dispatch = require("../reducers/roomReducer");
 const validateEvent = require("../middleware/validateEvent");
 
 // Helpers
 const getRoomId = socket => Object.entries(socket.rooms)[1][1];
-const socketIsHost = socket =>
-  rooms[getRoomId(socket)].host.socketId === socket.id;
+const isHost = socket => {
+  return rooms[getRoomId(socket)].host === socket.id;
+};
 const inARoom = socket => {
   // A socket always has 1 room attached as a room is naturally created on connection
   // So a socket should have 2 rooms if it has joined a user-created room
@@ -41,6 +36,7 @@ module.exports = function(io, interval = null) {
         });
       } else {
         // After each update, send updated room to each socket in room
+
         rooms[roomId] = dispatch(state, {
           type: event,
           payload: data
@@ -56,7 +52,7 @@ module.exports = function(io, interval = null) {
 
     socket.on(
       "JOIN_ROOM",
-      async ({ id, password = null, userId = null, token }) => {
+      async ({ id, password = null, userId = null, token = null }) => {
         /**
          * @param {obj} room {id,name,playlist,subscribers,currentSong}
          */
@@ -78,21 +74,27 @@ module.exports = function(io, interval = null) {
           password
         });
 
-        let socketToken = token; // bug? cant access token in below if block
+        let socketToken = token; // node engine bug? cant access token in below if block
         if (authorized) {
-          // TODO Check db against token, if it matches set scope to Host
-          // add room[id].host : {socketid, token} field to room
-
-          console.log(socketToken);
-          const isHost = true;
           const newUser = {
             userId: userId,
             socketId: socket.id,
-            scope: isHost ? "HOST" : "CLIENT"
+            scope: "CLIENT"
           };
           users[socket.id] = newUser;
           rooms[id] = state;
           rooms[id].subscribers.push(newUser);
+
+          if (socketToken) {
+            const tokenMatches = await tokenIsValid({
+              roomId: id,
+              token: socketToken
+            });
+            if (tokenMatches) {
+              rooms[id].host = socket.id;
+              users[socket.id].scope = "HOST";
+            }
+          }
 
           socket.join(id);
           const { token, ...nextState } = rooms[id];
@@ -128,18 +130,8 @@ module.exports = function(io, interval = null) {
     Object.keys(HOST).forEach(event => {
       socket.on(event, data => {
         // TODO check the incoming socket to see if it matches the token, if so user is host
-
-        // if (!socketIsHost(socket)) {
-        if (false) {
-          socket.emit(
-            "ERROR",
-            `${event} requires authorization, please provide a token.`
-          );
-          return;
-        }
-        const isAHost = true;
         if (inARoom(socket)) {
-          if (isAHost) {
+          if (isHost(socket)) {
             handleEvent(event, data);
           }
           // TODO on client side, make sure host will attempt a reconnect after reciving this error

@@ -187,52 +187,51 @@ describe("Sockets backend", () => {
   });
 
   describe("Room Scopes", () => {
-    it("should return an error if no token is provided when attempting to  perform host actions", async () => {
-      const { room: birthdayRoom } = await createRoom(birthday);
-      const john = io.connect(url, options);
-      let johnState;
-      let errors = [];
-      console.log(birthdayRoom);
-      // john.on("connect", async () => {
-      //   john.emit("JOIN_ROOM", { userId: "john", id: birthdayRoom.id });
-      //   john.on("ROOM_UPDATED", state => {
-      //     johnState = state;
-      //   });
+    // it("should return an error if no token is provided when attempting to  perform host actions", async () => {
+    //   const { room: birthdayRoom, token } = await createRoom(birthday);
+    //   const john = io.connect(url, options);
+    //   let johnState;
+    //   let errors = [];
+    //   john.on("connect", async () => {
+    //     john.emit("JOIN_ROOM", { userId: "john", id: birthdayRoom.id });
+    //     john.on("ROOM_UPDATED", state => {
+    //       johnState = state;
+    //     });
 
-      //   await waitFor(10);
-      //   john.emit("PAUSE", null);
+    //     await waitFor(10);
+    //     john.emit("PAUSE", null);
 
-      //   john.emit("PLAY", { uri: "spotify:track:789" });
+    //     john.emit("PLAY", { uri: "spotify:track:789" });
 
-      //   john.emit("UPDATE_PLAYLIST", [{ uri: "spotify:track:101112" }]);
+    //     john.emit("UPDATE_PLAYLIST", [{ uri: "spotify:track:101112" }]);
 
-      //   john.emit("REMOVE_TRACK", { uri: "spotify:track:123" });
-      //   john.on("ERROR", msg => errors.push(msg));
-      // });
+    //     john.emit("REMOVE_TRACK", { uri: "spotify:track:123" });
+    //     john.on("ERROR", msg => errors.push(msg));
+    //   });
 
-      // await waitFor(50);
-      // expect(johnState.currentSong.playing).to.eql(true);
-      // expect(errors.length).to.eql(4);
-      // expect(errors).to.include(
-      //   "PAUSE requires authorization, please provide a token."
-      // );
-      // expect(errors).to.include(
-      //   "PLAY requires authorization, please provide a token."
-      // );
-      // expect(errors).to.include(
-      //   "UPDATE_PLAYLIST requires authorization, please provide a token."
-      // );
-      // expect(errors).to.include(
-      //   "REMOVE_TRACK requires authorization, please provide a token."
-      // );
-    });
+    //   await waitFor(50);
+    //   expect(johnState.currentSong.playing).to.eql(true);
+    //   expect(errors.length).to.eql(4);
+    //   expect(errors).to.include(
+    //     "PAUSE requires authorization, please provide a token."
+    //   );
+    //   expect(errors).to.include(
+    //     "PLAY requires authorization, please provide a token."
+    //   );
+    //   expect(errors).to.include(
+    //     "UPDATE_PLAYLIST requires authorization, please provide a token."
+    //   );
+    //   expect(errors).to.include(
+    //     "REMOVE_TRACK requires authorization, please provide a token."
+    //   );
+    // });
     // it("should should require a valid token to perform host actions", async () => {
-    //   const birthdayRoom = await createRoom(birthday);
+    //   const { room: birthdayRoom, token } = await createRoom(birthday);
     //   const john = io.connect(url, options);
     //   let johnState, error;
 
     //   john.on("connect", async () => {
-    //     john.emit("JOIN_ROOM", { userId:'john', id: birthdayRoom.id });
+    //     john.emit("JOIN_ROOM", { userId: "john", id: birthdayRoom.id });
     //     john.on("ROOM_UPDATED", state => {
     //       johnState = state;
     //     });
@@ -246,30 +245,28 @@ describe("Sockets backend", () => {
     //   expect(johnState.currentSong.playing).to.eql(true);
     //   expect(error).to.eql("PAUSE failed, not authorized");
     // });
-    // it("should allow hosts that provide valid tokens to emit host actions", async () => {
-    //   const john = io.connect(url, options);
-    //   let token,
-    //     johnState = null;
-    //   john.emit("CREATE_ROOM", { name: "testRoom", userId: "testUser" });
-    //   john.on("ROOM_CREATED", payload => {
-    //     token = payload.token;
-    //     john.emit("JOIN_ROOM", { userId:'john', id: payload.roomId });
-    //   });
+    it("should allow hosts that provide valid tokens to emit host actions", async () => {
+      const { room, token } = await createRoom(birthday);
 
-    //   john.on("ROOM_UPDATED", state => {
-    //     johnState = state;
-    //   });
-    //   await waitFor(50);
+      const john = io.connect(url, options);
+      let johnState = null;
 
-    //   john.emit("PLAY", { token: token, uri: "spotify:track:123" });
-    //   await waitFor(50);
+      john.emit("JOIN_ROOM", { userId: "john", id: room.id, token });
 
-    //   expect(token).to.be.a("string");
-    //   expect(johnState).to.be.a("object");
-    //   expect(johnState.currentSong.uri).to.eql("spotify:track:123");
-    //   expect(johnState.currentSong.playing).to.eql(true);
-    //   expect(token).to.be.a("string");
-    // });
+      john.on("ROOM_UPDATED", state => {
+        johnState = state;
+      });
+      await waitFor(50);
+
+      john.emit("PAUSE", { uri: "spotify:track:123" });
+      await waitFor(50);
+
+      expect(token).to.be.a("string");
+      expect(johnState).to.be.a("object");
+      expect(johnState.currentSong.uri).to.eql("spotify:track:123");
+      expect(johnState.currentSong.playing).to.eql(false);
+      expect(token).to.be.a("string");
+    });
 
     it("should only pass success messages to the user that attempted the action", async () => {
       let john, alice, mary;
@@ -362,7 +359,7 @@ describe("Sockets backend", () => {
       let johnErrors = [];
       let aliceErrors = [];
 
-      const { room: birthdayRoom } = await createRoom(birthday);
+      const { room: birthdayRoom, token } = await createRoom(birthday);
 
       john = io.connect(url, options);
 
@@ -370,14 +367,18 @@ describe("Sockets backend", () => {
         john.emit("JOIN_ROOM", { userId: "john", id: birthdayRoom.id });
 
         alice = io.connect(url, options);
-        alice.emit("JOIN_ROOM", { id: birthdayRoom.id, userId: "alice" });
+        alice.emit("JOIN_ROOM", {
+          id: birthdayRoom.id,
+          userId: "alice",
+          token
+        });
 
         alice.on("connect", async function() {
           await waitFor(100);
           john.emit("ADD_TRACK", {
             uri: "spotify:track:test"
           });
-          await waitFor(200);
+          await waitFor(300);
           alice.emit("REMOVE_TRACK", {
             uri: "spotify:track:test"
           });
