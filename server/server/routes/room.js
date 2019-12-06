@@ -15,12 +15,10 @@ module.exports = {
     } catch (err) {}
 
     // Temp pass this in on request or use roomdao
-    if (!req.body.playlist) req.body.playlist = [];
-    req.body.playlist.push({ uri: "spotify:track:2W2eaLVKv9NObcLXlYRZZo" });
+    if (!req.body.playlist) res.send({ error: "No playlist was passed" });
     req.body.currentSong = { playing: false, uri: req.body.playlist[0].uri };
 
-    if (!req.body.playlist || !req.body.currentSong || !req.body.userId)
-      res.send(null);
+    if (!req.body.userId) res.send({ error: "user id required" });
     const newRoom = new Room(req.body);
     const [err, room] = await to(newRoom.save());
     const { token } = await createHost({

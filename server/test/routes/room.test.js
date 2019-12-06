@@ -34,7 +34,8 @@ describe("Room route handlers", () => {
     it("should POST a room", async () => {
       const room = {
         name: "Test",
-        userId: "someUser"
+        userId: "someUser",
+        playlist: [{ uri: "spotify:track:123" }]
       };
       const [err, res] = await to(
         chai
