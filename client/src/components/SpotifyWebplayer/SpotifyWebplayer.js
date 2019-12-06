@@ -58,7 +58,11 @@ export default function SpotifyWebplayer({
               />
               <div>
                 <h3>{roomTracks.currentSong.getArtists()[0].name}</h3>
-                <p>{roomTracks.currentSong.getLabels()}</p>
+                <p>
+                  {roomTracks.currentSong
+                    .getArtists()
+                    .map(artist => artist.name)}
+                </p>
               </div>
             </Left>
             <MusicController

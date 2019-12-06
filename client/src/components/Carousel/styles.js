@@ -40,7 +40,7 @@ export const StyledList = styled.ul`
 `;
 
 export const StyledContainer = styled.div`
-  height: ${props => 25 * props.theme.unit + "px"};
+  height: ${props => 28 * props.theme.unit + "px"};
   overflow-x: scroll;
   overflow-y: hidden;
   scrollbar-width: none;

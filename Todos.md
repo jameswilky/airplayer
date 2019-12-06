@@ -1,8 +1,7 @@
 High Priority
 
-1. correctly implement dark mode toggle
-2. implememt passwords
-3. send user to search page if then enter a query
+1. implememt passwords
+2. send user to search page if entering a query
 
 Low Priority
 

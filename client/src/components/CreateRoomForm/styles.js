@@ -1,11 +1,13 @@
 import styled from "styled-components";
 
 export const Container = styled.div`
-  color: ${props => props.theme.black};
   text-align: center;
+  color: ${props =>
+    props.theme.mode === "dark" ? props.theme.white : props.theme.black};
 `;
 
 export const SearchForm = styled.div`
+  overflow: hidden !important;
   display: grid;
   grid-gap: 24px;
   height: 100%;
@@ -26,13 +28,17 @@ export const SearchForm = styled.div`
       top: 8px;
       margin-left: -40px;
 
-      color: ${props => props.theme.primary};
+      color: ${props =>
+        props.theme.mode === "dark" ? props.theme.white : props.theme.black};
     }
   }
 `;
 export const CreateForm = styled.form`
   & > p {
-    color: ${props => props.theme.transparentBlack};
+    color: ${props =>
+      props.theme.mode === "dark"
+        ? props.theme.white
+        : props.theme.transparentBlack};
   }
 
   & > input {
@@ -52,15 +58,20 @@ export const CreateForm = styled.form`
     font-size: 2rem;
     margin-left: -340px;
     margin-top: 16px;
-    color: ${props => props.theme.primary};
+    color: ${props =>
+      props.theme.mode === "dark" ? props.theme.white : props.theme.primary};
   }
 `;
 export const CreateButton = styled.button`
   display: block;
   margin: ${props => 2 * props.theme.unit + "px"} auto;
-  color: ${props => props.theme.white};
+  color: ${props =>
+    props.theme.mode === "dark" ? props.theme.black : props.theme.white};
   padding: 8px 32px;
-  background: ${props => props.theme.primary};
+  background: ${props =>
+    props.theme.mode === "dark"
+      ? props.theme.transparent3
+      : props.theme.primary};
   border-radius: 1rem;
   font-size: 1.5rem;
   box-shadow: 2px 2px

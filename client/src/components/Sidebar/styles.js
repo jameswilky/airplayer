@@ -35,6 +35,7 @@ export const Container = styled.nav`
     align-self: flex-end;
 
     & button {
+      cursor: pointer;
       padding: 8px;
       border: none;
       border-radius: 90px;

@@ -39,6 +39,22 @@ export default function RoomSearch(props) {
   );
 
   const [showModal, setShowModal] = useState(false);
+
+  const getTimeSince = start => {
+    const minutesSince = Math.round(
+      (Date.now() - new Date(start).getTime()) / 1000 / 60
+    );
+
+    if (minutesSince < 2) {
+      return "a few seconds ago";
+    }
+    if (minutesSince > 2 && minutesSince < 60) {
+      return `${minutesSince} minutes ago`;
+    } else {
+      return `${Math.round(minutesSince / 60)} hours ago`;
+    }
+  };
+
   return (
     <Background>
       <h1>Airplayer</h1>
@@ -50,7 +66,7 @@ export default function RoomSearch(props) {
           {/* Desktop only */}
           <div onClick={() => setShowModal(true)}>
             <IoIosAdd></IoIosAdd>
-            <p>Create Room</p>
+            <p>Create</p>
           </div>
         </Head>
         <Body>
@@ -61,7 +77,10 @@ export default function RoomSearch(props) {
               src={item =>
                 "https://i.scdn.co/image/f5990a4c6059df42ae7b39b8524cd6ecce334995"
               }
-              labels={item => [item.location, item.createdAt]}
+              labels={item => [
+                `Created ${getTimeSince(item.createdAt)} in `,
+                item.location
+              ]}
               button={item => JoinButton(item)}
             ></ListItem>
           </List>

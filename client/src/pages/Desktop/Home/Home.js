@@ -31,7 +31,7 @@ export default function Home({ room, roomTracks, topTracks, setStartAudio }) {
             Style={StyledListItem}
             src={item => item.getImages().default.url}
             name={item => item.name}
-            labels={item => item.getLabels()}
+            labels={item => item.getArtists().map(artist => artist.name)}
             filter={item =>
               item.uri === roomTracks.currentSong.uri ? "1" : ""
             }

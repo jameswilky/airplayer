@@ -1,7 +1,8 @@
 import styled from "styled-components";
 
 export const Container = styled.div`
-  background-color: ${props => props.theme.white};
+  background: ${props =>
+    props.theme.mode === "dark" ? props.theme.gradient : props.theme.white};
   border-radius: ${props => (props.show ? "0" : "2rem")};
   width: ${props => (props.show ? "100%" : "0%")};
   height: ${props => (props.show ? "100%" : "0%")};
@@ -36,6 +37,10 @@ export const Title = styled.p`
   text-align: center;
   padding: 1rem;
   font-size: 2rem;
+  color: ${props =>
+    props.theme.mode === "dark"
+      ? props.theme.white
+      : props.theme.transparentBlack};
 `;
 export const Body = styled.div`
   width: 90%;

@@ -36,7 +36,9 @@ export default function Result({
         <ListItem
           src={item => item.getImages().default.url}
           name={item => item.name}
-          labels={item => item.getLabels().map(label => `${label} `)}
+          labels={item =>
+            item.getLabels().map(label => (label ? `${label} ` : ""))
+          }
           Style={StyledListItem}
           button={actions ? item => <Button item={item}></Button> : null}
           onClick={handleItemClick ? handleItemClick : () => {}}

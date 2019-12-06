@@ -68,6 +68,12 @@ export const Head = styled.div`
   grid-template-columns: 2fr 1fr 1fr;
 
   & > input {
+    &::placeholder {
+      color: ${props =>
+        props.theme.mode === "dark"
+          ? props.theme.transparentBlack
+          : props.theme.transparent4};
+    }
     padding: ${props => 2 * props.theme.unit + "px"};
     border: none;
     border-right: 1px solid ${props => props.theme.transparentBlack4};
@@ -125,6 +131,7 @@ export const ExtendedStyledListItem = styled(StyledListItem)`
     width: ${props => 10 * props.theme.unit + "px"};
     height: ${props => 5 * props.theme.unit + "px"};
   }
+
   padding: 0 ${props => 2 * props.theme.unit + "px"};
   @media (max-width: 320px) {
     width: 90%;

@@ -14,6 +14,9 @@ export const StyledList = styled.ul`
   font-size: 1rem;
   padding-top: ${props => 2 * props.theme.unit + "px"};
   & li {
+    & button {
+      cursor: pointer;
+    }
     list-style: none;
     & p {
       text-transform: capitalize;

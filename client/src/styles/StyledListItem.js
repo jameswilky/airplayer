@@ -25,7 +25,6 @@ export default styled.li`
       display: inline;
       color: ${props => props.theme.transparent4};
       font-weight: 100;
-      text-transform: capitalize;
     }
   }
 

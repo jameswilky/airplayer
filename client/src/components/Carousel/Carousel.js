@@ -41,7 +41,7 @@ export default function Carousel(props) {
         <ItemTemplate
           src={item => item.getImages().default.url}
           name={item => item.name}
-          labels={item => item.getLabels()}
+          labels={item => item.getArtists().map(artist => artist.name)}
           uri={item => item.uri}
           selected={item =>
             selectedItems && selectedItems.some(obj => obj.uri === item.uri)
