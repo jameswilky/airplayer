@@ -15,8 +15,17 @@ export const StyledList = styled.ul`
   padding-top: ${props => 2 * props.theme.unit + "px"};
   & li {
     list-style: none;
-    background-color: ${props =>
-      props.theme.mode === "dark" ? "" : props.theme.transparent3};
+    & p {
+      text-transform: capitalize;
+      color: ${props => props.theme.transparent4};
+
+      @media (max-width: 667px) {
+        color: ${props =>
+          props.theme.mode === "dark"
+            ? props.theme.transparent4
+            : props.theme.transparentBlack};
+      }
+    }
   }
 `;
 

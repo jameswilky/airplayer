@@ -57,11 +57,15 @@ export const StyledItem = styled.li`
   font-size: 0.8rem;
   & p {
     display: inline;
-    color: ${props =>
-      props.theme.mode === "dark"
-        ? props.theme.transparent4
-        : props.theme.transparentBlack};
     text-transform: capitalize;
+    color: ${props => props.theme.transparent4};
+
+    @media (max-width: 667px) {
+      color: ${props =>
+        props.theme.mode === "dark"
+          ? props.theme.transparent4
+          : props.theme.transparentBlack};
+    }
   }
 `;
 

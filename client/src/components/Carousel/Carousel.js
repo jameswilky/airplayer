@@ -44,7 +44,7 @@ export default function Carousel(props) {
           labels={item => item.getLabels()}
           uri={item => item.uri}
           selected={item =>
-            selectedItems && selectedItems.some(x => x.uri === item.uri)
+            selectedItems && selectedItems.some(obj => obj.uri === item.uri)
           }
         ></ItemTemplate>
       </List>

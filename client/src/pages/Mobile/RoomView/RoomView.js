@@ -8,6 +8,16 @@ import Footer from "../../../components/MobileMenu";
 import styled from "styled-components";
 
 const Container = styled.div`
+  animation: fadeIn 1s;
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
   color: ${props =>
     props.theme.mode === "dark" ? props.theme.white : props.theme.black};
 
@@ -70,6 +80,7 @@ export default function RoomView(props) {
             addTrack={room.controller.addTrack}
             removeTrack={room.controller.removeTrack}
             foundTracksName={findResult.name}
+            selectedTracks={roomTracks.playlist}
           ></Library>
         )}
       ></Route>

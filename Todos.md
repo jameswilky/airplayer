@@ -1,12 +1,8 @@
 High Priority
 
-1. pass in playlist and default tracks when creating a room
-2. add spinners for loading
-3. correct color issues on front end
-4. correctly implement dark mode toggle
-5. room validation
-6. display users in the room on client side
-7. implememt passwords
+1. correctly implement dark mode toggle
+2. implememt passwords
+3. send user to search page if then enter a query
 
 Low Priority
 
@@ -16,6 +12,7 @@ Low Priority
 4. enter geo-location feature
 5. tweak gray colors
 6. change color scheme
+7. display users in the room on client side
 
 // Idea
 // Version 2

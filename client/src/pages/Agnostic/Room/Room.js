@@ -38,13 +38,26 @@ export default function Room(props) {
   useEffect(() => {
     if (user) {
       const token = localStorage.getItem("token");
-      console.log(token);
       const id = window.location.pathname.split("/")[2];
       room.controller.joinRoom(id, user.uri, "", token ? token : null);
     }
   }, [user]);
+  const loaded =
+    room &&
+    room.state &&
+    room.state.currentSong &&
+    room.state.currentSong.uri &&
+    roomTracks &&
+    roomTracks.currentSong &&
+    roomTracks.currentSong.uri &&
+    libraryResults &&
+    (libraryResults.tracks ||
+      libraryResults.artists ||
+      libraryResults.albums ||
+      libraryResults.playlists);
 
   const viewProps = {
+    loaded,
     playerReady,
     room,
     roomTracks,
@@ -62,16 +75,12 @@ export default function Room(props) {
 
   return (
     <>
-      {room ? (
-        breakpoint === "mobile" ? (
-          <MobileView {...viewProps}></MobileView>
-        ) : (
-          <>
-            <DesktopView {...viewProps}></DesktopView>
-          </>
-        )
+      {breakpoint === "mobile" ? (
+        <MobileView {...viewProps}></MobileView>
       ) : (
-        <div>loading</div>
+        <>
+          <DesktopView {...viewProps}></DesktopView>
+        </>
       )}
     </>
   );

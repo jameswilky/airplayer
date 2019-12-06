@@ -1,5 +1,5 @@
 import React from "react";
-import { Container } from "./styles";
+import { Container, NoQuery } from "./styles";
 import Result from "../Result/Result";
 
 function isEmpty(obj) {
@@ -17,32 +17,36 @@ export default function Results(props) {
 
   return (
     <Container>
-      {query === ""
-        ? `Please enter a query`
-        : noResults()
-        ? `No results matching ${query}`
-        : results &&
-          results.map(
-            (result, i) =>
-              (filter == "" || filter === result.title) &&
-              result.items.length > 1 && (
-                <Result
-                  title={result.title}
-                  items={result.items}
-                  filter={filter}
-                  limit={limit}
-                  key={i}
-                  actions={result.actions}
-                  path={props.path}
-                  handleItemClick={
-                    result.onItemClick ? result.onItemClick : () => {}
-                  }
-                  handleHeaderClick={
-                    result.onHeaderClick ? result.onHeaderClick : () => {}
-                  }
-                ></Result>
-              )
-          )}
+      {query === "" ? (
+        <NoQuery>
+          <p>Please enter a query</p>
+        </NoQuery>
+      ) : noResults() ? (
+        `No results matching ${query}`
+      ) : (
+        results &&
+        results.map(
+          (result, i) =>
+            (filter == "" || filter === result.title) &&
+            result.items.length > 1 && (
+              <Result
+                title={result.title}
+                items={result.items}
+                filter={filter}
+                limit={limit}
+                key={i}
+                actions={result.actions}
+                path={props.path}
+                handleItemClick={
+                  result.onItemClick ? result.onItemClick : () => {}
+                }
+                handleHeaderClick={
+                  result.onHeaderClick ? result.onHeaderClick : () => {}
+                }
+              ></Result>
+            )
+        )
+      )}
     </Container>
   );
 }

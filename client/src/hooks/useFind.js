@@ -28,7 +28,6 @@ export default function useFind(accessToken) {
       // e.g spotify:albums:123abc => [albums, 123abc]
       const [type, uri] = findQuery.uri.split(":").slice(-2);
       getTracks(type, uri).then(tracks => {
-        console.log(findQuery.name);
         setFindResult({ tracks: tracks, name: findQuery.name });
       });
     } else {

@@ -1,21 +1,27 @@
 import React from "react";
-import { Link } from "react-router-dom";
-import { Container, HomeIcon, SearchIcon, LibraryIcon } from "./styles";
+import {
+  Container,
+  HomeIcon,
+  SearchIcon,
+  LibraryIcon,
+  StyledLink
+} from "./styles";
 export default function Sidebar({ path }) {
+  const route = window.location.pathname.split("/")[3];
   return (
     <Container>
-      <Link to={path}>
+      <StyledLink to={path}>
         <HomeIcon></HomeIcon>
         <p>Home</p>
-      </Link>
-      <Link to={`${path}/search`}>
+      </StyledLink>
+      <StyledLink to={`${path}/search`}>
         <SearchIcon></SearchIcon>
         <p>Search</p>{" "}
-      </Link>
-      <Link to={`${path}/library`}>
+      </StyledLink>
+      <StyledLink to={`${path}/library`}>
         <LibraryIcon></LibraryIcon>
         <p>Library</p>
-      </Link>
+      </StyledLink>
     </Container>
   );
 }

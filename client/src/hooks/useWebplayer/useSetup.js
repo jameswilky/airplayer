@@ -5,20 +5,29 @@ export default function useSetup(token, setLoadScript, setRemaining, dispatch) {
   // Set up webplayer
   useEffect(() => {
     // Assign event to listen for script to load
-    window.onSpotifyWebPlaybackSDKReady = () => {
-      const player = new window.Spotify.Player({
-        name: "Web Playback SDK Quick Start Player",
-        getOAuthToken: cb => {
-          cb(token);
-        }
-      });
-      player.connect().then(success => {
-        success ? setPlayer(player) : setPlayer({ error: "Failed to connect" });
-      });
-    };
-    // Start loading script
-    setLoadScript(true);
+    if (!window.onSpotifyWebPlaybackSDKReady) {
+      window.onSpotifyWebPlaybackSDKReady = () => {
+        const player = new window.Spotify.Player({
+          name: "Web Playback SDK Quick Start Player",
+          getOAuthToken: cb => {
+            cb(token);
+          }
+        });
+        player.connect().then(success => {
+          success
+            ? setPlayer(player)
+            : setPlayer({ error: "Failed to connect" });
+        });
+      };
+      // Start loading script
+      setLoadScript(true);
+    }
   }, [player, window.Spotify]);
+
+  useEffect(() => {
+    if (!player) {
+    }
+  }, [player]);
 
   //Player Events
   useEffect(() => {

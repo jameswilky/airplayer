@@ -17,6 +17,7 @@ import Room from "./pages/Agnostic/Room/Room";
 import useAuth from "./hooks/useAuth";
 //Styles
 import "./global.css";
+import { StyledItem } from "./components/Carousel/styles";
 const prevAuthData = JSON.parse(localStorage.getItem("authData"));
 
 const App = hot(module)(() => {
@@ -24,10 +25,20 @@ const App = hot(module)(() => {
     prevAuthData
   );
 
-  const [activeTheme, setActiveTheme] = useState(theme);
+  const activeTheme = localStorage.getItem("theme");
+  const toggleTheme = () => {
+    localStorage.setItem("theme", activeTheme === "light" ? "dark" : "light");
+    window.location.reload();
+  };
 
   return (
-    <ThemeProvider theme={activeTheme}>
+    <ThemeProvider
+      theme={
+        activeTheme === "light" || activeTheme === null
+          ? theme
+          : { ...theme, mode: "dark" }
+      }
+    >
       <Router>
         <Route
           exact
@@ -54,9 +65,8 @@ const App = hot(module)(() => {
           component={props => (
             <Room
               {...props}
+              toggleTheme={toggleTheme}
               accessToken={accessToken}
-              setActiveTheme={setActiveTheme}
-              activeTheme={activeTheme}
             ></Room>
           )}
         />

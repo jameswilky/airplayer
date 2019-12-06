@@ -38,7 +38,7 @@ export default function RoomSearch(props) {
     </Button>
   );
 
-  const [showModal, setShowModal] = useState(true);
+  const [showModal, setShowModal] = useState(false);
   return (
     <Background>
       <h1>Airplayer</h1>

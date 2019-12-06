@@ -2,10 +2,8 @@ import React from "react";
 import CurrentTrack from "../../../components/CurrentTrack/CurrentTrack";
 import List from "../../../components/List";
 import AudioVisualizer from "../../../components/AudioVisualizer";
-import { gameOvaImg } from "../../../images";
-import { Container } from "../../../styles/Container";
-import useSearch from "../../../hooks/useSearch/useSearch";
-import { StyledItem, StyledList } from "./styles";
+import { Container, StyledItem, StyledList, Spinner } from "./styles";
+import theme from "../../../theme";
 
 // TODO use paralax https://www.youtube.com/watch?v=P5zGTEGPpu4
 export default function Home(props) {
@@ -56,7 +54,7 @@ export default function Home(props) {
           </List>
         </>
       ) : (
-        <div>Please Select as song</div>
+        <Spinner type="Bars" color={theme.white}></Spinner>
       )}
     </Container>
   );

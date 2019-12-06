@@ -7,7 +7,8 @@ import Search from "../../Agnostic/Search/Search";
 import Library from "../../Agnostic/Library/Library";
 
 // Styles
-import { Background, Container, Footer, Main } from "./styles";
+import { Background, Container, Footer, Main, Spinner } from "./styles";
+import theme from "../../../theme";
 
 // Components
 import SpotifyWebplayer from "../../../components/SpotifyWebplayer/SpotifyWebplayer";
@@ -32,10 +33,10 @@ export default function RoomView(props) {
     accessToken,
     match,
     roomSuccess,
-    roomError
+    roomError,
+    loaded
   } = props;
 
-  console.log(room.state);
   return (
     <Background>
       <Container>
@@ -46,56 +47,62 @@ export default function RoomView(props) {
           query={query}
           setQuery={setQuery}
         ></DesktopHeader>
-        <Main>
-          <>
-            <Route
-              exact
-              path={`${match.path}`}
-              component={() => (
-                <Home
-                  room={room}
-                  setStartAudio={setStartAudio}
-                  roomTracks={roomTracks}
-                  topTracks={libraryResults.topTracks}
-                ></Home>
-              )}
-            ></Route>
-            <Route
-              path={`${match.path}/search`}
-              component={() => (
-                <Search
-                  results={queryResults}
-                  filter={filter}
-                  setFilter={setFilter}
-                  addTrack={room.controller.addTrack}
-                  removeTrack={room.controller.removeTrack}
-                  query={query}
-                  foundTracksName={findResult.name}
-                  foundTracks={findResult.tracks}
-                  setFindQuery={setFindQuery}
-                ></Search>
-              )}
-            ></Route>
-            <Route
-              path={`${match.path}/library`}
-              component={() => (
-                <Library
-                  filter={filter}
-                  setFilter={setFilter}
-                  results={libraryResults}
-                  foundTracks={findResult.tracks}
-                  setFindQuery={setFindQuery}
-                  addTrack={room.controller.addTrack}
-                  removeTrack={room.controller.removeTrack}
-                  foundTracksName={findResult.name}
-                ></Library>
-              )}
-            ></Route>
-          </>
-        </Main>
+        {loaded ? (
+          <Main>
+            <>
+              <Route
+                exact
+                path={`${match.path}`}
+                component={() => (
+                  <Home
+                    room={room}
+                    setStartAudio={setStartAudio}
+                    roomTracks={roomTracks}
+                    topTracks={libraryResults.topTracks}
+                  ></Home>
+                )}
+              ></Route>
+              <Route
+                path={`${match.path}/search`}
+                component={() => (
+                  <Search
+                    results={queryResults}
+                    filter={filter}
+                    setFilter={setFilter}
+                    addTrack={room.controller.addTrack}
+                    removeTrack={room.controller.removeTrack}
+                    query={query}
+                    foundTracksName={findResult.name}
+                    foundTracks={findResult.tracks}
+                    setFindQuery={setFindQuery}
+                  ></Search>
+                )}
+              ></Route>
+              <Route
+                path={`${match.path}/library`}
+                component={() => (
+                  <Library
+                    filter={filter}
+                    setFilter={setFilter}
+                    results={libraryResults}
+                    foundTracks={findResult.tracks}
+                    setFindQuery={setFindQuery}
+                    addTrack={room.controller.addTrack}
+                    removeTrack={room.controller.removeTrack}
+                    foundTracksName={findResult.name}
+                    selectedTracks={roomTracks.playlist}
+                  ></Library>
+                )}
+              ></Route>
+            </>
+          </Main>
+        ) : (
+          <Spinner type="Bars" color={theme.white}></Spinner>
+        )}
+
         <Footer>
           <Message success={roomSuccess} error={roomError}></Message>
-          {playerReady && room && room.state.isHost && (
+          {playerReady && room && room.state.isHost && loaded && (
             <SpotifyWebplayer
               token={accessToken}
               room={room}

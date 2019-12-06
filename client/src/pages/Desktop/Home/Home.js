@@ -17,7 +17,12 @@ export default function Home({ room, roomTracks, topTracks, setStartAudio }) {
   return (
     <Container>
       <h2>Recommended Tracks</h2>
-      <Carousel items={topTracks} addItem={room.controller.addTrack}></Carousel>
+      <Carousel
+        items={topTracks}
+        addItem={room.controller.addTrack}
+        removeItem={room.controller.removeTrack}
+        selectedItems={roomTracks.playlist}
+      ></Carousel>
 
       <h2>What's up Next</h2>
       {roomTracks.playlist && (

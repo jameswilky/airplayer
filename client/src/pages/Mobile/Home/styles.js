@@ -1,13 +1,18 @@
 import styled from "styled-components";
-
-export const StyledList = styled.ul`
-  /* background-color: ${props =>
-    props.theme.mode === "dark" ? props.theme.black : props.theme.white};
-
-  background-image: ${props => props.theme.gradient}; */
-  padding: 0 ${props => 2 * props.theme.unit + "px"};
+import Loader from "react-loader-spinner";
+export const Container = styled.div`
+  height: calc(100vh - 50px);
+  position: relative;
+  display: grid;
 `;
 
+export const StyledList = styled.ul`
+  padding: 0 ${props => 2 * props.theme.unit + "px"};
+`;
+export const Spinner = styled(Loader)`
+  justify-self: center;
+  align-self: center;
+`;
 export const StyledItem = styled.li`
   font-size: 0.8rem;
   display: grid;

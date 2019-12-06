@@ -23,10 +23,7 @@ export default styled.li`
     }
     & p {
       display: inline;
-      color: ${props =>
-        props.theme.mode === "dark"
-          ? props.theme.transparent4
-          : props.theme.transparentBlack};
+      color: ${props => props.theme.transparent4};
       font-weight: 100;
       text-transform: capitalize;
     }

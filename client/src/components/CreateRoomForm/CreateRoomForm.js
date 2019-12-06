@@ -32,7 +32,6 @@ export default function CreateRoomForm(props) {
   useEffect(() => {
     // Stage 3
     if (roomState.tracksSelected) {
-      console.log("sending");
       fetch(api + "rooms", { method: "POST", body: JSON.stringify(data) })
         .then(res => res.json())
         .then(json => {
@@ -54,7 +53,6 @@ export default function CreateRoomForm(props) {
       playlist: data.playlist.filter(track => track.uri !== uri)
     });
 
-  console.log(roomState);
   return (
     <>
       {roomState.done ? (
