@@ -14,8 +14,11 @@ Low Priority
 6. change color scheme
 7. display users in the room on client side
 
-// Idea
-// Version 2
+Known issues
+
+1. Carousel position resets when changing room state
+   // Idea
+   // Version 2
 
 - Desktop:
   Clicking track creates a drop down with more options

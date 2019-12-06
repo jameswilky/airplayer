@@ -23,12 +23,28 @@ export const Container = styled.nav`
   display: grid;
   justify-content: center;
   grid-gap: ${props => 1 * props.theme.unit + "px"};
-  align-content: flex-start;
   padding: ${props => 4 * props.theme.unit + "px"};
+  grid-template-rows: 40px 40px 40px 1fr;
 
   & p {
     padding-top: 5px;
     font-size: 1.2rem;
+  }
+
+  & div {
+    align-self: flex-end;
+
+    & button {
+      padding: 8px;
+      border: none;
+      border-radius: 90px;
+      background: ${props =>
+        props.theme.mode === "dark"
+          ? props.theme.gradient
+          : props.theme.transparentBlack4};
+      color: ${props =>
+        props.theme.mode === "dark" ? props.theme.white : props.theme.primary};
+    }
   }
 `;
 

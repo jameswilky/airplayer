@@ -4,6 +4,8 @@ import { IoIosAdd, IoIosCheckmark } from "react-icons/io";
 export const TickIcon = styled(IoIosCheckmark)`
   position: absolute;
   font-size: 2.5rem;
+  transition: none;
+
   &:hover {
     color: ${props => props.theme.transparent4};
   }
@@ -12,6 +14,8 @@ export const TickIcon = styled(IoIosCheckmark)`
 export const AddIcon = styled(IoIosAdd)`
   position: absolute;
   font-size: 2.5rem;
+  transition: none;
+
   &:hover {
     color: ${props => props.theme.transparent4};
   }
@@ -38,6 +42,7 @@ export const StyledList = styled.ul`
 export const StyledContainer = styled.div`
   height: ${props => 25 * props.theme.unit + "px"};
   overflow-x: scroll;
+  overflow-y: hidden;
   scrollbar-width: none;
   ::-webkit-scrollbar {
     width: 0px; /* Remove scrollbar space */

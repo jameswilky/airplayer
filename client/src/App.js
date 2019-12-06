@@ -55,9 +55,7 @@ const App = hot(module)(() => {
         />
         <Route
           path="/roomsearch"
-          component={props => (
-            <RoomSearch accessToken={accessToken}></RoomSearch>
-          )}
+          component={() => <RoomSearch accessToken={accessToken}></RoomSearch>}
         />
 
         <Route

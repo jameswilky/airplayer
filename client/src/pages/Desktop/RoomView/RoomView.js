@@ -34,13 +34,14 @@ export default function RoomView(props) {
     match,
     roomSuccess,
     roomError,
-    loaded
+    loaded,
+    toggleTheme
   } = props;
 
   return (
     <Background>
       <Container>
-        <Sidebar path={match.url}></Sidebar>
+        <Sidebar path={match.url} toggleTheme={toggleTheme}></Sidebar>
         <DesktopHeader
           filter={filter}
           setFilter={setFilter}
