@@ -4,7 +4,7 @@ const cors = require("cors");
 
 module.exports = function(app) {
   // Room api
-  app.get("/api/rooms", room.getRooms);
+  app.get("/api/rooms", () => console.log("GET ROOMS SENT TO SERVER"));
   app.post("/api/rooms", room.createRoom);
   app.get("/api/room/:id", room.getRoom);
   app.delete("/api/room/:id", room.deleteRoom);
