@@ -17,11 +17,11 @@ import Room from "./pages/Agnostic/Room/Room";
 import useAuth from "./hooks/useAuth";
 //Styles
 import "./global.css";
-console.log(process.env);
 const prevAuthData = JSON.parse(localStorage.getItem("authData"));
 
-const App = hot(module)(() => {
-  const { accessToken, login, logout, setAuthData, isAuthenticated } = useAuth(
+// const App = hot(module)(() => { // For development, effects styled components
+const App = () => {
+  const { accessToken, logout, setAuthData, isAuthenticated } = useAuth(
     prevAuthData
   );
 
@@ -46,7 +46,6 @@ const App = hot(module)(() => {
           component={props => (
             <Landing
               {...props}
-              login={login}
               logout={logout}
               accessToken={accessToken}
               isAuthenticated={isAuthenticated}
@@ -78,6 +77,8 @@ const App = hot(module)(() => {
       </Router>
     </ThemeProvider>
   );
-});
+};
+//   );
+// });
 
 export default App;

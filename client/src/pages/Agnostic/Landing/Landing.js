@@ -13,8 +13,12 @@ import {
   Button
 } from "./styles";
 
+// process.env.NODE_ENV === "production"
+//         ? "https://airplayer.herokuapp.com/auth/login"
+//         : "http://localhost:8888/auth/login";
+
 export default function Landing(props) {
-  const { login, logout, isAuthenticated } = props;
+  const { logout, isAuthenticated } = props;
 
   return (
     <Background>
@@ -36,9 +40,17 @@ export default function Landing(props) {
             <p onClick={logout}>or click here to logout</p>
           </>
         ) : (
-          <Button onClick={login}>
+          <Button>
             <img src={spotifyLogo} alt="" />
-            <p>Login With Spotify</p>
+            <a
+              href={
+                process.env.NODE_ENV === "production"
+                  ? "https://airplayer.herokuapp.com/auth/login"
+                  : "http://localhost:8888/auth/login"
+              }
+            >
+              Login With Spotify
+            </a>
           </Button>
         )}
       </Body>

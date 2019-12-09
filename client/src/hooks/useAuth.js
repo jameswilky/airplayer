@@ -47,13 +47,6 @@ export default function useAuth(auth) {
       : 5000
   );
 
-  const login = () => {
-    window.location.href =
-      process.env.NODE_ENV === "production"
-        ? "https://airplayer.herokuapp.com/auth/login"
-        : "http://localhost:8888/auth/login";
-  };
-
   const logout = () => {
     const url = "https://www.spotify.com/logout/";
     const spotifyWindow = window.open(
@@ -70,7 +63,6 @@ export default function useAuth(auth) {
     }, 2000);
   };
   return {
-    login,
     logout,
     authData,
     setAuthData,
