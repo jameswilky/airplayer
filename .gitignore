@@ -1,4 +1,4 @@
 node_modules/
 client/
 
-server/config/prod.js
+.prod
