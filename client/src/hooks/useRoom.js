@@ -2,7 +2,10 @@ import { useState, useEffect } from "react";
 import io from "socket.io-client";
 
 export default function useRoom() {
-  const url = "http://localhost:8888";
+  const url =
+    process.env.NODE_ENV === "production"
+      ? "https://airplayer.herokuapp.com"
+      : "http://localhost:8888";
   const socket = io.connect(url);
 
   const [error, setError] = useState("");

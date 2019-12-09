@@ -18,7 +18,10 @@ import {
 } from "./styles";
 
 export default function RoomSearch(props) {
-  const api = "http://localhost:8888/api/";
+  const api =
+    process.env.NODE_ENV === "production"
+      ? "https://airplayer.herokuapp.com"
+      : "http://localhost:8888";
   const [rooms, setRooms] = useState([]);
 
   const { accessToken } = props;

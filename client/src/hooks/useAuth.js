@@ -19,7 +19,10 @@ export default function useAuth(auth) {
       : initialState
   );
 
-  const server = "http://localhost:8888";
+  const server =
+    process.env.NODE_ENV === "production"
+      ? "https://airplayer.herokuapp.com"
+      : "http://localhost:8888";
 
   // pushed into App.js, test later
   //Check local storage for authentication data

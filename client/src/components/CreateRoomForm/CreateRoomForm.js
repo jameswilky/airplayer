@@ -14,7 +14,10 @@ export default function CreateRoomForm(props) {
     userId: props.user.uri,
     playlist: []
   };
-  const api = "http://localhost:8888/api/";
+  const api =
+    process.env.NODE_ENV === "production"
+      ? "https://airplayer.herokuapp.com/api/"
+      : "http://localhost:8888/api/";
 
   const [data, setData] = useState(initialData);
   const [roomState, setRoomState] = useState({
