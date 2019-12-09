@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "/static/css/main.f9fbf225.chunk.css",
-    "main.js": "/static/js/main.0eb02b29.chunk.js",
-    "main.js.map": "/static/js/main.0eb02b29.chunk.js.map",
+    "main.js": "/static/js/main.dcaf709e.chunk.js",
+    "main.js.map": "/static/js/main.dcaf709e.chunk.js.map",
     "runtime~main.js": "/static/js/runtime~main.a8a9905a.js",
     "runtime~main.js.map": "/static/js/runtime~main.a8a9905a.js.map",
     "static/js/2.ab954329.chunk.js": "/static/js/2.ab954329.chunk.js",
     "static/js/2.ab954329.chunk.js.map": "/static/js/2.ab954329.chunk.js.map",
     "index.html": "/index.html",
-    "precache-manifest.92c224367add7f70e648d1e1c04c5d65.js": "/precache-manifest.92c224367add7f70e648d1e1c04c5d65.js",
+    "precache-manifest.a29c6d4c9a356c761eddea5e2b55cd0e.js": "/precache-manifest.a29c6d4c9a356c761eddea5e2b55cd0e.js",
     "service-worker.js": "/service-worker.js",
     "static/css/main.f9fbf225.chunk.css.map": "/static/css/main.f9fbf225.chunk.css.map",
     "static/media/spotifyLogo.png": "/static/media/spotifyLogo.ddd851ef.png"
