@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { Redirect } from "react-router-dom";
 
 const getHashParams = () => {
   let hashParams = {};
@@ -14,7 +15,7 @@ const getHashParams = () => {
 };
 
 export default function Callback(props) {
-  const { setAuthData } = props;
+  const { setAuthData, isAuthenticated } = props;
 
   useEffect(() => {
     const nextAuthData = {
@@ -26,8 +27,11 @@ export default function Callback(props) {
     localStorage.setItem("authData", JSON.stringify(nextAuthData));
 
     setAuthData({ ...nextAuthData, isAuthenticated: true });
-    props.history.go(-1);
   });
 
-  return <div />;
+  return isAuthenticated ? (
+    <Redirect to={`/`}></Redirect>
+  ) : (
+    <div>Logging in to spotify Please wait...</div>
+  );
 }

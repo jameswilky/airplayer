@@ -24,10 +24,12 @@ const App = () => {
   const { accessToken, logout, setAuthData, isAuthenticated } = useAuth(
     prevAuthData
   );
-
   const activeTheme = localStorage.getItem("theme");
   const toggleTheme = () => {
-    localStorage.setItem("theme", activeTheme === "light" ? "dark" : "light");
+    localStorage.setItem(
+      "theme",
+      activeTheme === "light" || activeTheme === null ? "dark" : "light"
+    );
     window.location.reload();
   };
 
@@ -71,7 +73,11 @@ const App = () => {
         <Route
           path="/auth/callback"
           component={props => (
-            <Callback {...props} setAuthData={setAuthData}></Callback>
+            <Callback
+              {...props}
+              isAuthenticated={isAuthenticated}
+              setAuthData={setAuthData}
+            ></Callback>
           )}
         />
       </Router>

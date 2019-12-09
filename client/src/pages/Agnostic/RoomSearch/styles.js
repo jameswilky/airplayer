@@ -69,7 +69,10 @@ export const Head = styled.div`
 
   & > input {
     &::placeholder {
-      color: ${props => props.theme.transparentBlack};
+      color: ${props =>
+        props.theme.mode === "dark"
+          ? props.theme.transparent4
+          : props.theme.transparentBlack};
     }
     padding: ${props => 2 * props.theme.unit + "px"};
     border: none;

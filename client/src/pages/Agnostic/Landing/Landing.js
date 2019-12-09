@@ -19,7 +19,6 @@ import {
 
 export default function Landing(props) {
   const { logout, isAuthenticated } = props;
-
   return (
     <Background>
       <Head>
