@@ -15,7 +15,7 @@ const getHashParams = () => {
 };
 
 export default function Callback(props) {
-  const { setAuthData, isAuthenticated } = props;
+  const { setAuthData } = props;
 
   useEffect(() => {
     const nextAuthData = {
@@ -27,11 +27,7 @@ export default function Callback(props) {
     localStorage.setItem("authData", JSON.stringify(nextAuthData));
 
     setAuthData({ ...nextAuthData, isAuthenticated: true });
-  });
-
-  return isAuthenticated ? (
-    <Redirect to={`/`}></Redirect>
-  ) : (
-    <div>Logging in to spotify Please wait...</div>
-  );
+    window.location.href = "/";
+  }, []);
+  return <div></div>;
 }
