@@ -18,17 +18,13 @@ import {
 } from "./styles";
 
 export default function RoomSearch(props) {
-  const api =
-    process.env.NODE_ENV === "production"
-      ? "https://airplayer.herokuapp.com"
-      : "http://localhost:8888";
   const [rooms, setRooms] = useState([]);
 
   const { accessToken } = props;
   const user = useProfile(accessToken);
 
   useEffect(() => {
-    fetch(api + "rooms")
+    fetch("/api/rooms")
       .then(res => res.json())
       .then(data => setRooms(data));
   }, []);

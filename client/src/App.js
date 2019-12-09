@@ -17,6 +17,7 @@ import Room from "./pages/Agnostic/Room/Room";
 import useAuth from "./hooks/useAuth";
 //Styles
 import "./global.css";
+console.log(process.env);
 const prevAuthData = JSON.parse(localStorage.getItem("authData"));
 
 const App = hot(module)(() => {

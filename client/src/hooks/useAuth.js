@@ -19,11 +19,6 @@ export default function useAuth(auth) {
       : initialState
   );
 
-  const server =
-    process.env.NODE_ENV === "production"
-      ? "https://airplayer.herokuapp.com"
-      : "http://localhost:8888";
-
   // pushed into App.js, test later
   //Check local storage for authentication data
   // useEffect(() => {
@@ -32,7 +27,7 @@ export default function useAuth(auth) {
   // }, []);
 
   const refreshToken = () =>
-    fetch(`${server}/auth/refreshToken?refresh_token=${authData.refreshToken}`)
+    fetch(`/auth/refreshToken?refresh_token=${authData.refreshToken}`)
       .then(res => res.json())
       .then(data => {
         const nextAuthData = {
@@ -53,7 +48,10 @@ export default function useAuth(auth) {
   );
 
   const login = () => {
-    window.location.href = server + "/auth/login";
+    window.location.href =
+      process.env.NODE_ENV === "production"
+        ? "https://airplayer.herokuapp.com/auth/login"
+        : "http://localhost:8888/auth/login";
   };
 
   const logout = () => {

@@ -33,7 +33,7 @@ module.exports = function(app, express, io) {
     if (process.env.NODE_ENV === "production") {
       res.setHeader(
         "Access-Control-Allow-Origin",
-        "https://airplayer.herokuapp.com/"
+        "https://airplayer.herokuapp.com"
       );
     } else {
       res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");

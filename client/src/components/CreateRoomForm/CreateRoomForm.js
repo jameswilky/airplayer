@@ -14,10 +14,6 @@ export default function CreateRoomForm(props) {
     userId: props.user.uri,
     playlist: []
   };
-  const api =
-    process.env.NODE_ENV === "production"
-      ? "https://airplayer.herokuapp.com/api/"
-      : "http://localhost:8888/api/";
 
   const [data, setData] = useState(initialData);
   const [roomState, setRoomState] = useState({
@@ -35,7 +31,7 @@ export default function CreateRoomForm(props) {
   useEffect(() => {
     // Stage 3
     if (roomState.tracksSelected) {
-      fetch(api + "rooms", { method: "POST", body: JSON.stringify(data) })
+      fetch("/api/rooms", { method: "POST", body: JSON.stringify(data) })
         .then(res => res.json())
         .then(json => {
           localStorage.setItem("token", json.token);
