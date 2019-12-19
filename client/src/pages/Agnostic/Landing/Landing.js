@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 import spotifyLogo from "../../../images/spotifyLogo.png";
@@ -18,7 +18,6 @@ import {
 //         : "http://localhost:8888/auth/login";
 
 export default function Landing(props) {
-  const { logout, isAuthenticated } = props;
   return (
     <Background>
       <Head>
@@ -27,16 +26,17 @@ export default function Landing(props) {
         <p>Connect to parties in your area</p>
       </Head>
       <Body>
-        {isAuthenticated ? (
+        {props.auth.accessToken ? (
           <>
-            <ShadowWrapper>
-              <Input type="text" placeholder="Enter your location..."></Input>
-              <Submit>
-                <Link to="/roomsearch">Go</Link>
-              </Submit>
-            </ShadowWrapper>
+            {/* TODO un comment when location tracking is implemented */}
+            {/* <ShadowWrapper> */}
+            {/* <Input type="text" placeholder="Enter your location..."></Input> */}
+            <Submit>
+              <Link to="/roomsearch">Go</Link>
+            </Submit>
+            {/* </ShadowWrapper> */}
 
-            <p onClick={logout}>or click here to logout</p>
+            <p onClick={() => props.auth.logout()}>or click here to logout</p>
           </>
         ) : (
           <Button>

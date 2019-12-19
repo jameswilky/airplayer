@@ -4,6 +4,7 @@ import { hot } from "react-hot-loader"; // used to fix hot reload issues with st
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import { ThemeProvider } from "styled-components";
 import theme from "./theme";
+import auth from "./modules/Auth";
 
 //Routes
 import Landing from "./pages/Agnostic/Landing/Landing";
@@ -19,11 +20,9 @@ import useAuth from "./hooks/useAuth";
 import "./global.css";
 const prevAuthData = JSON.parse(localStorage.getItem("authData"));
 
+auth.init();
 // const App = hot(module)(() => { // For development, effects styled components
 const App = () => {
-  const { accessToken, logout, setAuthData, isAuthenticated } = useAuth(
-    prevAuthData
-  );
   const activeTheme = localStorage.getItem("theme");
   const toggleTheme = () => {
     localStorage.setItem(
@@ -45,16 +44,10 @@ const App = () => {
         <Route
           exact
           path="/"
-          component={props => (
-            <Landing
-              {...props}
-              logout={logout}
-              accessToken={accessToken}
-              isAuthenticated={isAuthenticated}
-            ></Landing>
-          )}
+          component={props => <Landing {...props} auth={auth}></Landing>}
         />
-        <Route
+        {
+          /* <Route
           path="/roomsearch"
           component={() => <RoomSearch accessToken={accessToken}></RoomSearch>}
         />
@@ -69,17 +62,12 @@ const App = () => {
             ></Room>
           )}
         />
-
-        <Route
-          path="/auth/callback"
-          component={props => (
-            <Callback
-              {...props}
-              isAuthenticated={isAuthenticated}
-              setAuthData={setAuthData}
-            ></Callback>
-          )}
-        />
+*/
+          <Route
+            path="/auth/callback"
+            component={props => <Callback {...props} auth={auth}></Callback>}
+          />
+        }
       </Router>
     </ThemeProvider>
   );
