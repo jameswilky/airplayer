@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 
 import DesktopView from "../../Desktop/RoomView/RoomView";
 import MobileView from "../../Mobile/RoomView/RoomView";
-import io from "socket.io-client";
 
 // Hooks
 import useRoomTracks from "../../../hooks/useRoomTracks";
