@@ -16,7 +16,7 @@ export default function useRoom() {
     // It has to recreated to inherit the socket closure after a room as been joined
     return {
       joinRoom: (id, userId, password = null, token) =>
-        socket.emit("JOIN_ROOM", { id, userId, password, token }),
+        socket.emit("JOIN_ROOM", { id, userId, password: null, token }),
       addTrack: id => socket.emit("ADD_TRACK", { uri: id }),
       removeTrack: id => socket.emit("REMOVE_TRACK", { uri: id }),
       updatePlaylist: playlist => socket.emit("UPDATE_PLAYLIST", playlist),

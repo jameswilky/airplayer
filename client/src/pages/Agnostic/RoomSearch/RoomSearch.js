@@ -59,7 +59,7 @@ export default function RoomSearch(props) {
       <Container>
         <Head>
           <input placeholder="Enter a party Name" type="text" />
-          <input placeholder="Change your location" type="text" />{" "}
+          {/* <input placeholder="Change your location" type="text" />{" "} */}
           {/* Desktop only */}
           <div onClick={() => setShowModal(true)}>
             <IoIosAdd></IoIosAdd>
@@ -82,18 +82,15 @@ export default function RoomSearch(props) {
             ></ListItem>
           </List>
         </Body>
-        {/* Mobile only */}
-        <CreateButton show={!showModal} onClick={() => setShowModal(true)}>
+        {/* Mobile only imolement later*/}
+        {/* <CreateButton show={!showModal} onClick={() => setShowModal(true)}>
           <div type="circle"></div>
           <IoIosAdd type="icon"></IoIosAdd>
-        </CreateButton>
+        </CreateButton> */}
 
         <Modal show={showModal} title="Create a Room" setShow={setShowModal}>
           {user && (
-            <CreateRoomForm
-              user={user}
-              accessToken={props.auth.accessToken}
-            ></CreateRoomForm>
+            <CreateRoomForm user={user} auth={props.auth}></CreateRoomForm>
           )}
         </Modal>
       </Container>

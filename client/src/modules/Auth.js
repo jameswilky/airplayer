@@ -44,7 +44,7 @@ export default {
     this.refreshTimer = setInterval(() => {
       this.refreshAccessToken();
       this.cacheAuthData();
-    }, this.accessTokenCreationTime - Date.now() + anHour);
+    }, this.accessTokenCreationTime - Date.now() + anHour / 2);
   },
   init: function() {
     this.cacheAuthData();

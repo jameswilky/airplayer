@@ -65,7 +65,9 @@ export const Head = styled.div`
   display: grid;
   width: 100%;
 
-  grid-template-columns: 2fr 1fr 1fr;
+  /* use this when location input is implemented*/
+  /* grid-template-columns: 2fr 1fr 1fr; */
+  grid-template-columns: 3fr 1fr;
 
   & > input {
     &::placeholder {
