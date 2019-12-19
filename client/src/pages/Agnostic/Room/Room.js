@@ -15,17 +15,6 @@ import useRoom from "../../../hooks/useRoom";
 import useProfile from "../../../hooks/useProfile";
 
 export default function Room(props) {
-  let socket;
-
-  const connect = () => {
-    socket = io.connect(
-      process.env.NODE_ENV === "production"
-        ? "https://airplayer.herokuapp.com"
-        : "http://localhost:8888"
-    );
-  };
-  connect();
-
   const { room, roomSuccess, roomError } = useRoom();
   const { roomTracks } = useRoomTracks(props.auth, room);
 
@@ -90,7 +79,6 @@ export default function Room(props) {
         <MobileView {...viewProps}></MobileView>
       ) : (
         <>
-          <button onClick={() => connect()}>Reconnect</button>
           <DesktopView {...viewProps}></DesktopView>
         </>
       )}
