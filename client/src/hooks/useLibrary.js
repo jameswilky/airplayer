@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import Spotify from "../modules/Spotify";
 import { ItemPrototype } from "../modules/SpotifyHelper/SpotifyHelper";
 
-export default function useLibrary(accessToken) {
+export default function useLibrary(auth) {
   // Store Access
 
   const [libraryResults, setQueryResults] = useState({
@@ -14,7 +14,7 @@ export default function useLibrary(accessToken) {
   });
 
   // Local Variables
-  const spotify = Spotify(accessToken);
+  const spotify = Spotify(auth.accessToken);
 
   // Search Handler
   useEffect(() => {
@@ -67,12 +67,12 @@ export default function useLibrary(accessToken) {
         })
       );
     };
-    if (accessToken) {
+    if (auth.accessToken) {
       getQueries().then(nextResults => {
         setQueryResults(nextResults);
       });
     }
-  }, [accessToken]);
+  }, [auth.accessToken]);
 
   return {
     libraryResults

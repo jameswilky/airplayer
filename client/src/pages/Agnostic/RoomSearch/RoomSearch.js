@@ -19,9 +19,7 @@ import {
 
 export default function RoomSearch(props) {
   const [rooms, setRooms] = useState([]);
-
-  const { accessToken } = props;
-  const user = useProfile(accessToken);
+  const user = useProfile(props.auth);
 
   useEffect(() => {
     fetch("/api/rooms")
@@ -94,7 +92,7 @@ export default function RoomSearch(props) {
           {user && (
             <CreateRoomForm
               user={user}
-              accessToken={accessToken}
+              accessToken={props.auth.accessToken}
             ></CreateRoomForm>
           )}
         </Modal>

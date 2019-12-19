@@ -30,7 +30,7 @@ export default function RoomView(props) {
     findResult,
     setFindQuery,
     playerReady,
-    accessToken,
+    auth,
     match,
     roomSuccess,
     roomError,
@@ -105,7 +105,7 @@ export default function RoomView(props) {
           <Message success={roomSuccess} error={roomError}></Message>
           {playerReady && room && room.state.isHost && loaded && (
             <SpotifyWebplayer
-              token={accessToken}
+              auth={auth}
               room={room}
               roomTracks={roomTracks}
               start={startAudio}

@@ -46,28 +46,21 @@ const App = () => {
           path="/"
           component={props => <Landing {...props} auth={auth}></Landing>}
         />
-        {
-          /* <Route
+
+        <Route
           path="/roomsearch"
-          component={() => <RoomSearch accessToken={accessToken}></RoomSearch>}
+          component={() => <RoomSearch auth={auth}></RoomSearch>}
         />
 
         <Route
           path="/room/:roomid"
-          component={props => (
-            <Room
-              {...props}
-              toggleTheme={toggleTheme}
-              accessToken={accessToken}
-            ></Room>
-          )}
+          component={props => <Room {...props} auth={auth}></Room>}
         />
-*/
-          <Route
-            path="/auth/callback"
-            component={props => <Callback {...props} auth={auth}></Callback>}
-          />
-        }
+
+        <Route
+          path="/auth/callback"
+          component={props => <Callback {...props} auth={auth}></Callback>}
+        />
       </Router>
     </ThemeProvider>
   );

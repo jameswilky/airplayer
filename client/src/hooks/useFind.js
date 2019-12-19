@@ -2,11 +2,11 @@ import React, { useState, useEffect } from "react";
 import Spotify from "../modules/Spotify";
 import { ItemPrototype } from "../modules/SpotifyHelper/SpotifyHelper";
 
-export default function useFind(accessToken) {
+export default function useFind(auth) {
   const [findQuery, setFindQuery] = useState({ uri: "", name: "" });
   const [findResult, setFindResult] = useState({ tracks: [], name: "" });
 
-  const spotify = Spotify(accessToken);
+  const spotify = Spotify(auth.accessToken);
 
   useEffect(() => {
     const getTracks = async (type, uri) => {
