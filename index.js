@@ -5,7 +5,6 @@ const io = require("socket.io")(http);
 
 // configure our server with all the middleware and and routing
 require("./server/server.js")(app, express, io);
-
 // if (process.env.NODE_ENV === "production") {
 //   // Express will serve up production assets
 //   // like our main js file or main.css file

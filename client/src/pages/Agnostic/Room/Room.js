@@ -14,18 +14,17 @@ import useRoom from "../../../hooks/useRoom";
 import useProfile from "../../../hooks/useProfile";
 
 export default function Room(props) {
-  const accessToken = props.accessToken;
   const { room, roomSuccess, roomError } = useRoom();
-  const { roomTracks } = useRoomTracks(accessToken, room);
+  const { roomTracks } = useRoomTracks(props.auth, room);
 
-  const { libraryResults } = useLibrary(accessToken);
+  const { libraryResults } = useLibrary(props.auth);
   // TODO change to searchQuery
-  const { query, setQuery, queryResults } = useSearch(accessToken);
-  const [findResult, setFindQuery] = useFind(accessToken);
-  const user = useProfile(accessToken);
+  const { query, setQuery, queryResults } = useSearch(props.auth);
+  const [findResult, setFindQuery] = useFind(props.auth);
+  const user = useProfile(props.auth);
 
   const playerReady =
-    accessToken &&
+    props.auth.accessToken &&
     room.state &&
     room.state.currentSong &&
     roomTracks &&
@@ -67,7 +66,7 @@ export default function Room(props) {
     setQuery,
     queryResults,
     libraryResults,
-    accessToken,
+    auth: props.auth,
     roomSuccess,
     roomError,
     ...props

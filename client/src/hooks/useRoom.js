@@ -2,8 +2,11 @@ import { useState, useEffect } from "react";
 import io from "socket.io-client";
 
 export default function useRoom() {
-  const url = "http://localhost:8888";
-  const socket = io.connect(url);
+  const socket = io.connect(
+    process.env.NODE_ENV === "production"
+      ? "https://airplayer.herokuapp.com"
+      : "http://localhost:8888"
+  );
 
   const [error, setError] = useState("");
   const [success, setSuccess] = useState({ type: "", payload: "" });
@@ -13,7 +16,7 @@ export default function useRoom() {
     // It has to recreated to inherit the socket closure after a room as been joined
     return {
       joinRoom: (id, userId, password = null, token) =>
-        socket.emit("JOIN_ROOM", { id, userId, password, token }),
+        socket.emit("JOIN_ROOM", { id, userId, password: null, token }),
       addTrack: id => socket.emit("ADD_TRACK", { uri: id }),
       removeTrack: id => socket.emit("REMOVE_TRACK", { uri: id }),
       updatePlaylist: playlist => socket.emit("UPDATE_PLAYLIST", playlist),

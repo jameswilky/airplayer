@@ -9,7 +9,7 @@ import useTogglePause from "./useTogglePause";
 import useVolume from "./useVolume";
 
 // This webplayer will control the player by reading state from the room
-export default function useWebplayer(token, room, start, duration) {
+export default function useWebplayer(auth, room, start, duration) {
   const [deviceState, dispatch] = useReducer(reducer, {
     id: null,
     currentSong: null,
@@ -25,7 +25,12 @@ export default function useWebplayer(token, room, start, duration) {
   const { setRemaining, queTrack } = useQue(deviceState, room.controller);
 
   // connect player and set up events
-  const { player } = useSetup(token, setLoadScript, setRemaining, dispatch);
+  const { player } = useSetup(
+    auth.accessToken,
+    setLoadScript,
+    setRemaining,
+    dispatch
+  );
 
   // Change volume
   const { volume, setVolume } = useVolume(player);
@@ -34,7 +39,7 @@ export default function useWebplayer(token, room, start, duration) {
   useSeek(deviceState, duration, player);
 
   // Play loaded track
-  usePlay(deviceState, start, room, token);
+  usePlay(deviceState, start, room, auth.accessToken);
 
   // Pause/Resume loaded Track
   useTogglePause(deviceState, player);

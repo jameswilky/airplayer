@@ -65,14 +65,16 @@ export const Head = styled.div`
   display: grid;
   width: 100%;
 
-  grid-template-columns: 2fr 1fr 1fr;
+  /* use this when location input is implemented*/
+  /* grid-template-columns: 2fr 1fr 1fr; */
+  grid-template-columns: 3fr 1fr;
 
   & > input {
     &::placeholder {
       color: ${props =>
         props.theme.mode === "dark"
-          ? props.theme.transparentBlack
-          : props.theme.transparent4};
+          ? props.theme.transparent4
+          : props.theme.transparentBlack};
     }
     padding: ${props => 2 * props.theme.unit + "px"};
     border: none;

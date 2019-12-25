@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import Spotify from "../modules/Spotify";
 import { ItemPrototype } from "../modules/SpotifyHelper/SpotifyHelper";
 
-export default function useRoomTracks(accessToken, room) {
+export default function useRoomTracks(auth, room) {
   // Store Access
   // Local State
 
@@ -11,7 +11,7 @@ export default function useRoomTracks(accessToken, room) {
     currentSong: null,
     playlist: null
   });
-  const spotify = Spotify(accessToken);
+  const spotify = Spotify(auth.accessToken);
 
   useEffect(() => {
     if (room && room.state && room.state.currentSong && room.state.playlist) {

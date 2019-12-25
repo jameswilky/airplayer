@@ -19,8 +19,6 @@ export default function useAuth(auth) {
       : initialState
   );
 
-  const server = "http://localhost:8888";
-
   // pushed into App.js, test later
   //Check local storage for authentication data
   // useEffect(() => {
@@ -29,7 +27,7 @@ export default function useAuth(auth) {
   // }, []);
 
   const refreshToken = () =>
-    fetch(`${server}/auth/refreshToken?refresh_token=${authData.refreshToken}`)
+    fetch(`/auth/refreshToken?refresh_token=${authData.refreshToken}`)
       .then(res => res.json())
       .then(data => {
         const nextAuthData = {
@@ -49,10 +47,6 @@ export default function useAuth(auth) {
       : 5000
   );
 
-  const login = () => {
-    window.location.href = server + "/auth/login";
-  };
-
   const logout = () => {
     const url = "https://www.spotify.com/logout/";
     const spotifyWindow = window.open(
@@ -69,7 +63,6 @@ export default function useAuth(auth) {
     }, 2000);
   };
   return {
-    login,
     logout,
     authData,
     setAuthData,

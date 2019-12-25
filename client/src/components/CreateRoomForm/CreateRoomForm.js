@@ -14,7 +14,6 @@ export default function CreateRoomForm(props) {
     userId: props.user.uri,
     playlist: []
   };
-  const api = "http://localhost:8888/api/";
 
   const [data, setData] = useState(initialData);
   const [roomState, setRoomState] = useState({
@@ -24,7 +23,7 @@ export default function CreateRoomForm(props) {
     id: null
   });
 
-  const { query, setQuery, queryResults } = useSearch(props.accessToken);
+  const { query, setQuery, queryResults } = useSearch(props.auth);
 
   //                stage 1   =>   stage 2        stage 3                  stage 4
   // Form Stages : Enter data =>   created   =>   tracksSelected    =>     done
@@ -32,7 +31,11 @@ export default function CreateRoomForm(props) {
   useEffect(() => {
     // Stage 3
     if (roomState.tracksSelected) {
-      fetch(api + "rooms", { method: "POST", body: JSON.stringify(data) })
+      const { password, ...dataWithoutPassword } = data;
+      fetch("/api/rooms", {
+        method: "POST",
+        body: JSON.stringify(dataWithoutPassword)
+      })
         .then(res => res.json())
         .then(json => {
           localStorage.setItem("token", json.token);

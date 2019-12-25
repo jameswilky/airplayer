@@ -135,7 +135,7 @@ export const Button = styled.button`
     color: inherit;
   }
 
-  & > p {
+  & > a {
     margin-top: ${props => 1 * props.theme.unit + "px"};
   }
 

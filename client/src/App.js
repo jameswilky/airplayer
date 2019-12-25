@@ -4,6 +4,7 @@ import { hot } from "react-hot-loader"; // used to fix hot reload issues with st
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import { ThemeProvider } from "styled-components";
 import theme from "./theme";
+import auth from "./modules/Auth";
 
 //Routes
 import Landing from "./pages/Agnostic/Landing/Landing";
@@ -17,17 +18,17 @@ import Room from "./pages/Agnostic/Room/Room";
 import useAuth from "./hooks/useAuth";
 //Styles
 import "./global.css";
-import { StyledItem } from "./components/Carousel/styles";
 const prevAuthData = JSON.parse(localStorage.getItem("authData"));
 
-const App = hot(module)(() => {
-  const { accessToken, login, logout, setAuthData, isAuthenticated } = useAuth(
-    prevAuthData
-  );
-
+auth.init();
+// const App = hot(module)(() => { // For development, effects styled components
+const App = () => {
   const activeTheme = localStorage.getItem("theme");
   const toggleTheme = () => {
-    localStorage.setItem("theme", activeTheme === "light" ? "dark" : "light");
+    localStorage.setItem(
+      "theme",
+      activeTheme === "light" || activeTheme === null ? "dark" : "light"
+    );
     window.location.reload();
   };
 
@@ -43,41 +44,28 @@ const App = hot(module)(() => {
         <Route
           exact
           path="/"
-          component={props => (
-            <Landing
-              {...props}
-              login={login}
-              logout={logout}
-              accessToken={accessToken}
-              isAuthenticated={isAuthenticated}
-            ></Landing>
-          )}
+          component={props => <Landing {...props} auth={auth}></Landing>}
         />
+
         <Route
           path="/roomsearch"
-          component={() => <RoomSearch accessToken={accessToken}></RoomSearch>}
+          component={() => <RoomSearch auth={auth}></RoomSearch>}
         />
 
         <Route
           path="/room/:roomid"
-          component={props => (
-            <Room
-              {...props}
-              toggleTheme={toggleTheme}
-              accessToken={accessToken}
-            ></Room>
-          )}
+          component={props => <Room {...props} auth={auth}></Room>}
         />
 
         <Route
           path="/auth/callback"
-          component={props => (
-            <Callback {...props} setAuthData={setAuthData}></Callback>
-          )}
+          component={props => <Callback {...props} auth={auth}></Callback>}
         />
       </Router>
     </ThemeProvider>
   );
-});
+};
+//   );
+// });
 
 export default App;

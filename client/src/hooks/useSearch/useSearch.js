@@ -4,7 +4,7 @@ import useDebounce from "../useDebounce";
 import { getKey } from "../../helpers/ObjectUtils";
 import SpotifyHelper from "../../modules/SpotifyHelper/SpotifyHelper";
 
-export default function useSearch(accessToken) {
+export default function useSearch(auth) {
   // Store Access
   // Local State
   const [query, setQuery] = useState("");
@@ -16,7 +16,7 @@ export default function useSearch(accessToken) {
   });
 
   // Local Variables
-  const spotify = Spotify(accessToken);
+  const spotify = Spotify(auth.accessToken);
 
   const getQueries = useCallback(
     async query => {
@@ -40,14 +40,14 @@ export default function useSearch(accessToken) {
   // Search handler, triggers when query updates, with 200 millisecond delay, and using the latest query to send
   useDebounce(
     () => {
-      if (query !== "" && accessToken) {
+      if (query !== "" && auth.accessToken) {
         getQueries(query).then(nextResults => {
           setQueryResults(nextResults);
         });
       }
     },
     200,
-    [query, accessToken]
+    [query, auth.accessToken]
   );
 
   return {

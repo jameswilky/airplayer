@@ -10,7 +10,7 @@ import { Container, Body, Left, Right, Spinner } from "./styles";
 import MusicController from "../MusicController";
 
 export default function SpotifyWebplayer({
-  token,
+  auth,
   room,
   roomTracks,
   start,
@@ -23,7 +23,7 @@ export default function SpotifyWebplayer({
   const duration = roomTracks.currentSong.duration_ms;
 
   const { loadScript, deviceState, queTrack, volume, setVolume } = useWebplayer(
-    token,
+    auth,
     room,
     start,
     duration
@@ -57,7 +57,7 @@ export default function SpotifyWebplayer({
                 alt=""
               />
               <div>
-                <h3>{roomTracks.currentSong.getArtists()[0].name}</h3>
+                <h3>{roomTracks.currentSong.name}</h3>
                 <p>
                   {roomTracks.currentSong
                     .getArtists()

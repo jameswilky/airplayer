@@ -1,6 +1,6 @@
 if (process.env.NODE_ENV === "production") {
   // we are in production
-  module.exports = require("./prod");
+  module.exports = require("./production");
 } else if (process.env.NODE_ENV === "test") {
   module.exports = require("./test");
 } else {
