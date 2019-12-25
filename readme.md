@@ -76,8 +76,6 @@ Hosts are users that are able to create rooms and have more control over the roo
 5. The **first time** a host-only action is attempted, the server checks the database to see if given token is valid. If it is, a reference is made in the `users` array for that socket id to be treated as a host.
 6. Subsequent host actions will save time by not checking the database and simply checking the in-memory `users` array.
 
----
-
 #### Database
 
 The database was created with MongoDB. Its a very simple schema with 2 collections, `hosts` and `rooms`. The host model looks like this:
@@ -108,8 +106,6 @@ And the room model looks like this:
 
 <!-- explain models -->
 
----
-
 #### Spotify Web API
 
 The Spotify Web API is used to fetch music data which can be referenced using a `uri`. On the server, to save memory, only the `uri` is passed around the room, and the track information is retrieved from Spotify when it is needed.
@@ -119,8 +115,6 @@ The Spotify Web API is used to fetch music data which can be referenced using a 
 Spotify uses the [OAuth2](https://oauth.net/articles/authentication/) protocol for handling authentication. Spotify offers a [multiple ways of authenticating](https://developer.spotify.com/documentation/general/guides/authorization-guide/), of which this application uses the 'Authorization Code Flow' method. This requires storing access and refresh tokens on the client side, as well as a API secret key on server side. This method of authentication allows the user to have long running sessions without having to log back in every hour.
 
 ![enter image description here](https://i.ibb.co/Xtmn6Y4/oauthflow.jpg)
-
----
 
 #### Spotify Device
 
