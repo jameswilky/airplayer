@@ -24,7 +24,7 @@ export default function RoomSearch(props) {
   useEffect(() => {
     fetch("/api/rooms")
       .then(res => res.json())
-      .then(data => setRooms(data));
+      .then(data => setRooms(data.reverse()));
   }, []);
 
   const JoinButton = item => (
