@@ -21,22 +21,6 @@ export default function RoomSearch(props) {
   const [rooms, setRooms] = useState([]);
   const user = useProfile(props.auth);
 
-  useEffect(() => {
-    fetch("/api/rooms")
-      .then(res => res.json())
-      .then(data => setRooms(data.reverse()));
-  }, []);
-
-  const JoinButton = item => (
-    <Button>
-      <Link to={`/room/${item.id}`}>
-        <IoIosLogIn></IoIosLogIn>
-      </Link>
-    </Button>
-  );
-
-  const [showModal, setShowModal] = useState(false);
-
   const getTimeSince = start => {
     const minutesSince = Math.round(
       (Date.now() - new Date(start).getTime()) / 1000 / 60
@@ -51,6 +35,30 @@ export default function RoomSearch(props) {
       return `${Math.round(minutesSince / 60)} hours ago`;
     }
   };
+
+  useEffect(() => {
+    fetch("/api/rooms")
+      .then(res => res.json())
+      .then(data => {
+        setRooms(
+          data
+            .reverse()
+            .filter(
+              room => Number(getTimeSince(room.createdAt).split(" ")[0]) < 48
+            )
+        );
+      });
+  }, []);
+
+  const JoinButton = item => (
+    <Button>
+      <Link to={`/room/${item.id}`}>
+        <IoIosLogIn></IoIosLogIn>
+      </Link>
+    </Button>
+  );
+
+  const [showModal, setShowModal] = useState(false);
 
   return (
     <Background>
