@@ -49,6 +49,7 @@ export default function RoomSearch(props) {
         );
       });
   }, []);
+  console.log(rooms);
 
   const JoinButton = item => (
     <Button>
