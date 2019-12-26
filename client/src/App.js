@@ -54,7 +54,9 @@ const App = () => {
 
         <Route
           path="/room/:roomid"
-          component={props => <Room {...props} auth={auth}></Room>}
+          component={props => (
+            <Room {...props} auth={auth} toggleTheme={toggleTheme}></Room>
+          )}
         />
 
         <Route

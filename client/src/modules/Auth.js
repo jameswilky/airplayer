@@ -1,5 +1,3 @@
-import { throws } from "assert";
-
 const anHour = 3600000; // in milliseconds
 
 const getHashParams = () => {

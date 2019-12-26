@@ -57,8 +57,6 @@ When a room is created it is added to the array of rooms, and all users in that 
 
 This design pattern has worked out to be very extensible, as creating new actions is as trivial as adding a new case to the reducer. However there are obvious scalability issues with storing all the users and rooms in an array on the server, as this will eventually cause it to crash once the arrays hit a certain size. See the Future Plans section for more information
 
----
-
 #### User
 
 The front end is created using React. Users are subscribed to room changes from the server and update the application state to reflect the given state. The WebSocket server can be thought of as a Redux Store which is at the top of the application. When a user dispatches an action it is sent to the server, as as that state updates, all users in the subscribed room will receive that state update.

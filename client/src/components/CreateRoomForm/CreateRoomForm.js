@@ -115,7 +115,7 @@ export default function CreateRoomForm(props) {
                 required
               />
               <IoIosPeople type="icon"></IoIosPeople>
-              <p>Password</p>
+              {/* <p>Password</p>
               <input
                 type="text"
                 placeholder="Enter a room password"
@@ -131,7 +131,7 @@ export default function CreateRoomForm(props) {
                 value={data.location}
                 onChange={e => setData({ ...data, location: e.target.value })}
               />
-              <GoLocation type="icon"></GoLocation>
+              <GoLocation type="icon"></GoLocation> */}
               <CreateButton
                 type="submit"
                 onClick={() => setRoomState({ ...roomState, created: true })}

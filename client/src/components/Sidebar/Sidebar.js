@@ -7,7 +7,6 @@ import {
   StyledLink
 } from "./styles";
 export default function Sidebar({ path, toggleTheme }) {
-  const route = window.location.pathname.split("/")[3];
   return (
     <Container>
       <StyledLink to={path}>
