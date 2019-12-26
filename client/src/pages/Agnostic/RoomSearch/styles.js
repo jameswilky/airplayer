@@ -70,6 +70,7 @@ export const Head = styled.div`
   grid-template-columns: 3fr 1fr;
 
   & > input {
+    width: 100%;
     &::placeholder {
       color: ${props =>
         props.theme.mode === "dark"
@@ -101,7 +102,8 @@ export const Head = styled.div`
   }
 
   @media (max-width: 667px) {
-    grid-template-columns: 2fr 1fr;
+    /* grid-template-columns: 2fr 1fr; */
+    grid-template-columns: 1fr;
 
     & > div {
       display: none;
