@@ -38,7 +38,11 @@ export default function CreateRoomForm(props) {
       })
         .then(res => res.json())
         .then(json => {
-          localStorage.setItem("token", json.token);
+          const tokens = JSON.parse(localStorage.getItem("tokens")) || {};
+          console.log(tokens);
+          tokens[json.room.id] = json.token;
+          console.log(tokens);
+          localStorage.setItem("tokens", JSON.stringify(tokens));
           setRoomState({
             done: true,
             id: json.room.id

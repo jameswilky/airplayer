@@ -36,8 +36,9 @@ export default function Room(props) {
   // TODO pass user Id
   useEffect(() => {
     if (user) {
-      const token = localStorage.getItem("token");
       const id = window.location.pathname.split("/")[2];
+      const tokens = JSON.parse(localStorage.getItem("tokens"));
+      const token = tokens[id];
       room.controller.joinRoom(id, user.uri, "", token ? token : null);
     }
   }, [user]);
