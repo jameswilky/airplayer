@@ -57,6 +57,8 @@ When a room is created it is added to the array of rooms, and all users in that 
 
 This design pattern has worked out to be very extensible, as creating new actions is as trivial as adding a new case to the reducer. However there are obvious scalability issues with storing all the users and rooms in an array on the server, as this will eventually cause it to crash once the arrays hit a certain size. See the Future Plans section for more information
 
+---
+
 #### User
 
 The front end is created using React. Users are subscribed to room changes from the server and update the application state to reflect the given state. The WebSocket server can be thought of as a Redux Store which is at the top of the application. When a user dispatches an action it is sent to the server, as as that state updates, all users in the subscribed room will receive that state update.
@@ -139,7 +141,7 @@ describe flows for actions and how all the entities are effected. -->
 
 - Search functionality not working on mobile, may be due to Debouncing of requests to Spotify API. Fixable
 - Footer not showing on chrome mobile due to view-port issues. Fixable.
-- If hosts joins another room they can no longer host the previous room as their token is overridden in local storage. Fixable.
+- ~~if hosts joins another room they can no longer host the previous room as their token is overridden in local storage.~~ Fixed
 - Music can randomly start playing after being paused for a while. Not sure why this is happening.
 - Device state can be out of sync with room state. There are work arounds to this issue, but it breaks the [Unidrectional Dataflow](https://en.wikipedia.org/wiki/Unidirectional_Data_Flow_%28computer_science%29) of the application. A fix involves allowing the host directly changing the device state and then have that reflected in the room state, rather than changing the room state and having that reflected in the device state. This would also make interactions appear faster, and prevents some other race conditions, but adds complications if in the future clients will be able to pause/play tracks.
 - Room updates will reset carousel. Pretty common react issue, should be fixable.
