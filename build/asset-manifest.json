@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "/static/css/main.8d32b4c9.chunk.css",
-    "main.js": "/static/js/main.9ba3c0ea.chunk.js",
-    "main.js.map": "/static/js/main.9ba3c0ea.chunk.js.map",
+    "main.js": "/static/js/main.9dc59dc3.chunk.js",
+    "main.js.map": "/static/js/main.9dc59dc3.chunk.js.map",
     "runtime~main.js": "/static/js/runtime~main.a8a9905a.js",
     "runtime~main.js.map": "/static/js/runtime~main.a8a9905a.js.map",
-    "static/js/2.1faf1aca.chunk.js": "/static/js/2.1faf1aca.chunk.js",
-    "static/js/2.1faf1aca.chunk.js.map": "/static/js/2.1faf1aca.chunk.js.map",
+    "static/js/2.06423edf.chunk.js": "/static/js/2.06423edf.chunk.js",
+    "static/js/2.06423edf.chunk.js.map": "/static/js/2.06423edf.chunk.js.map",
     "index.html": "/index.html",
-    "precache-manifest.4899ea22b292e410bb948b842d3dda86.js": "/precache-manifest.4899ea22b292e410bb948b842d3dda86.js",
+    "precache-manifest.56acaf41be963fdb12c4dc6625f6abca.js": "/precache-manifest.56acaf41be963fdb12c4dc6625f6abca.js",
     "service-worker.js": "/service-worker.js",
     "static/css/main.8d32b4c9.chunk.css.map": "/static/css/main.8d32b4c9.chunk.css.map",
     "static/media/spotifyLogo.png": "/static/media/spotifyLogo.ddd851ef.png"
