@@ -1,8 +1,12 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import useInterval from "./useInterval";
 
-export default function useDebounce(callback, delay, dependencies) {
+export default function useDebounce(cb, delay, dependencies) {
   const [updated, setUpdated] = useState(false);
+
+  const callback = useCallback(() => {
+    cb();
+  }, [dependencies]);
 
   useInterval(
     () => {

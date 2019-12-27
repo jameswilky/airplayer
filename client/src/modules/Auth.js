@@ -39,10 +39,17 @@ export default {
     if (this.refreshTimer) {
       clearInterval(this.refreshTimer);
     }
-    this.refreshTimer = setInterval(() => {
+    // Make sure timer doesn't have a negative value
+    const timeSinceLastLogin = this.accessTokenCreationTime - Date.now();
+    if (timeSinceLastLogin > 2000 || this.accessTokenCreationTime === null) {
+      this.refreshTimer = setInterval(() => {
+        this.refreshAccessToken();
+        this.cacheAuthData();
+      }, this.accessTokenCreationTime - Date.now() + anHour / 2);
+    } else {
       this.refreshAccessToken();
       this.cacheAuthData();
-    }, this.accessTokenCreationTime - Date.now() + anHour / 2);
+    }
   },
   init: function() {
     this.cacheAuthData();
