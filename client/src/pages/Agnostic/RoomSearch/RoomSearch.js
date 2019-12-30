@@ -40,10 +40,11 @@ export default function RoomSearch(props) {
       .then(res => res.json())
       .then(data => {
         setRooms(
-          data.reverse()
-          // .filter(
-          //   room => Number(getTimeSince(room.createdAt).split(" ")[0]) < 48
-          // )
+          data
+            .reverse()
+            .filter(
+              room => Number(getTimeSince(room.createdAt).split(" ")[0]) < 48
+            )
         );
       });
   }, []);
