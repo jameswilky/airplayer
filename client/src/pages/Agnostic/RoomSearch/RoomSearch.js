@@ -21,10 +21,11 @@ export default function RoomSearch(props) {
   const [rooms, setRooms] = useState([]);
   const user = useProfile(props.auth);
 
+  const getMinutesSince = start =>
+    Math.round((Date.now() - new Date(start).getTime()) / 1000 / 60);
   const getTimeSince = start => {
-    const minutesSince = Math.round(
-      (Date.now() - new Date(start).getTime()) / 1000 / 60
-    );
+    const minutesSince = getMinutesSince(start);
+
     if (minutesSince < 2) {
       return "a few seconds ago";
     }
@@ -42,9 +43,7 @@ export default function RoomSearch(props) {
         setRooms(
           data
             .reverse()
-            .filter(
-              room => Number(getTimeSince(room.createdAt).split(" ")[0]) < 48
-            )
+            .filter(room => getMinutesSince(room.createdAt) < 60 * 48)
         );
       });
   }, []);
