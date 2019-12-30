@@ -25,7 +25,6 @@ export default function RoomSearch(props) {
     const minutesSince = Math.round(
       (Date.now() - new Date(start).getTime()) / 1000 / 60
     );
-
     if (minutesSince < 2) {
       return "a few seconds ago";
     }
@@ -41,15 +40,17 @@ export default function RoomSearch(props) {
       .then(res => res.json())
       .then(data => {
         setRooms(
-          data
-            .reverse()
-            .filter(
-              room => Number(getTimeSince(room.createdAt).split(" ")[0]) < 48
-            )
+          data.reverse()
+          // .filter(
+          //   room => Number(getTimeSince(room.createdAt).split(" ")[0]) < 48
+          // )
         );
       });
   }, []);
-  console.log(rooms);
+
+  const [resultFilter, setResultFilter] = useState("");
+
+  console.log(resultFilter);
 
   const JoinButton = item => (
     <Button>
@@ -67,7 +68,12 @@ export default function RoomSearch(props) {
       <p>Join a room or create your own</p>
       <Container>
         <Head>
-          <input placeholder="Enter a party Name" type="text" />
+          <input
+            placeholder="Enter a party Name"
+            type="text"
+            value={resultFilter}
+            onChange={e => setResultFilter(e.target.value)}
+          />
           {/* <input placeholder="Change your location" type="text" />{" "} */}
           {/* Desktop only */}
           <div onClick={() => setShowModal(true)}>
@@ -76,7 +82,7 @@ export default function RoomSearch(props) {
           </div>
         </Head>
         <Body>
-          <List items={rooms}>
+          <List items={rooms.filter(room => room.name.includes(resultFilter))}>
             <ListItem
               Style={ExtendedStyledListItem}
               name={item => item.name}
