@@ -46,7 +46,7 @@ export default function RoomView(props) {
   } = props;
 
   return (
-    <Container key={123}>
+    <Container>
       <Route
         exact
         path={`${match.path}`}
@@ -56,16 +56,13 @@ export default function RoomView(props) {
         path={`${match.path}/search`}
         component={() => (
           <Search
+            style={{ height: "90vh" }}
             results={queryResults}
             filter={filter}
             setFilter={setFilter}
             addTrack={room.controller.addTrack}
             removeTrack={room.controller.removeTrack}
-            query={query}
-            foundTracksName={findResult.name}
-            foundTracks={findResult.tracks}
-            setFindQuery={setFindQuery}
-            setSearchQuery={setQuery}
+            auth={auth}
           ></Search>
         )}
       ></Route>

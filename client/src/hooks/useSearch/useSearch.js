@@ -38,34 +38,30 @@ export default function useSearch(auth) {
     [query, queryResults]
   );
 
-  // **Desktop only** Search handler, triggers when query updates, with 200 millisecond delay, and using the latest query to send
-  // useDebounce(
-  //   () => {
-  //     if (query !== "" && auth.accessToken && !isMobile()) {
-  //       getQueries(query).then(nextResults => {
-  //         setQueryResults(nextResults);
-  //       });
-  //     }
-  //   },
-  //   200,
-  //   [query, auth.accessToken]
-  // );
+  // Search handler, triggers when query updates, with 200 millisecond delay, and using the latest query to send
+  useDebounce(
+    () => {
+      if (query !== "" && auth.accessToken) {
+        getQueries(query).then(nextResults => {
+          setQueryResults(nextResults);
+        });
+      }
+    },
+    200,
+    [query, auth.accessToken]
+  );
 
-  // Search handling for mobile devices
+  // Hide input box after clicking a button
   useEffect(() => {
     const handler = e => {
-      if (e.key === "enter") {
-        if (query !== "" && auth.accessToken) {
-          getQueries(query).then(nextResults => {
-            setQueryResults(nextResults);
-          });
-        }
+      if (e.key === "Enter") {
+        document.activeElement.blur();
       }
     };
     document.addEventListener("keypress", handler);
 
     return () => document.removeEventListener("keypress", handler);
-  }, [query, auth.accessToken]);
+  }, []);
 
   return {
     query,

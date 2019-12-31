@@ -12,6 +12,7 @@ import useFind from "../../../hooks/useFind";
 import useBreakpoint from "../../../hooks/useBreakpoint";
 import useRoom from "../../../hooks/useRoom";
 import useProfile from "../../../hooks/useProfile";
+import { Background } from "../../Desktop/RoomView/styles";
 
 export default function Room(props) {
   const { room, roomSuccess, roomError } = useRoom();
