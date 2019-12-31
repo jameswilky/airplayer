@@ -1,39 +1,24 @@
 import React, { useState } from "react";
 
-import Results from "../../../components/Results/Results";
-
-import useSearch from "../../../hooks/useSearch/useSearch";
-
-import { Container } from "../../../styles/Container";
 import SearchBar from "../../../components/SearchBar/SearchBar";
-export default function Search() {
-  // Local State
-  const { query, setQuery, queryResults } = useSearch("tobi");
-  const { albums, tracks, artists, playlists } = queryResults;
-  const [filter, setFilter] = useState("");
-
+import SongList from "../../../components/SongList";
+import styled from "styled-components";
+import isChromeMobile from "../../../modules/isChromeMobile";
+export default function Search(props) {
+  const Container = styled.div`
+    height: ${() =>
+      isChromeMobile() ? `calc(92vh - 56px)` : "calc(100vh - 56px)"};
+    position: relative;
+  `;
   return (
     <Container>
       <SearchBar
-        query={query}
-        setQuery={setQuery}
-        filter={filter}
-        setFilter={setFilter}
+        query={props.query}
+        setQuery={props.setSearchQuery}
+        filter={props.filter}
+        setFilter={props.setFilter}
       ></SearchBar>
-      <Results
-        {...{
-          query,
-          filter,
-          setFilter,
-
-          results: [
-            { title: "Albums", items: albums },
-            { title: "Artists", items: artists },
-            { title: "Playlists", items: playlists },
-            { title: "Tracks", items: tracks }
-          ]
-        }}
-      ></Results>
+      <SongList {...props}></SongList>
     </Container>
   );
 }

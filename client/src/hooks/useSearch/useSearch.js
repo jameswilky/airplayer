@@ -3,6 +3,7 @@ import Spotify from "../../modules/Spotify";
 import useDebounce from "../useDebounce";
 import { getKey } from "../../helpers/ObjectUtils";
 import SpotifyHelper from "../../modules/SpotifyHelper/SpotifyHelper";
+import isMobile from "../../modules/isMobile";
 
 export default function useSearch(auth) {
   // Store Access
@@ -37,18 +38,34 @@ export default function useSearch(auth) {
     [query, queryResults]
   );
 
-  // Search handler, triggers when query updates, with 200 millisecond delay, and using the latest query to send
-  useDebounce(
-    () => {
-      if (query !== "" && auth.accessToken) {
-        getQueries(query).then(nextResults => {
-          setQueryResults(nextResults);
-        });
+  // **Desktop only** Search handler, triggers when query updates, with 200 millisecond delay, and using the latest query to send
+  // useDebounce(
+  //   () => {
+  //     if (query !== "" && auth.accessToken && !isMobile()) {
+  //       getQueries(query).then(nextResults => {
+  //         setQueryResults(nextResults);
+  //       });
+  //     }
+  //   },
+  //   200,
+  //   [query, auth.accessToken]
+  // );
+
+  // Search handling for mobile devices
+  useEffect(() => {
+    const handler = e => {
+      if (e.key === "enter") {
+        if (query !== "" && auth.accessToken) {
+          getQueries(query).then(nextResults => {
+            setQueryResults(nextResults);
+          });
+        }
       }
-    },
-    200,
-    [query, auth.accessToken]
-  );
+    };
+    document.addEventListener("keypress", handler);
+
+    return () => document.removeEventListener("keypress", handler);
+  }, [query, auth.accessToken]);
 
   return {
     query,

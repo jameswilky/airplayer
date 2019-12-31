@@ -41,12 +41,12 @@ export default function RoomView(props) {
     findResult,
     setFindQuery,
     playerReady,
-    accessToken,
+    auth,
     match
   } = props;
 
   return (
-    <Container>
+    <Container key={123}>
       <Route
         exact
         path={`${match.path}`}
@@ -65,6 +65,7 @@ export default function RoomView(props) {
             foundTracksName={findResult.name}
             foundTracks={findResult.tracks}
             setFindQuery={setFindQuery}
+            setSearchQuery={setQuery}
           ></Search>
         )}
       ></Route>

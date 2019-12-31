@@ -1,7 +1,10 @@
 import styled from "styled-components";
 import Loader from "react-loader-spinner";
+import isChromeMobile from "../../../modules/isChromeMobile";
+
 export const Container = styled.div`
-  height: calc(100vh - 50px);
+  height: ${props =>
+    isChromeMobile() ? `calc(92vh - 56px)` : "calc(100vh - 56px)"};
   position: relative;
   display: grid;
 `;

@@ -16,6 +16,15 @@ export const StyledList = styled.ul`
   & li {
     & button {
       cursor: pointer;
+      display: grid;
+      justify-self: end;
+
+      @media (max-width: 667px) {
+        color: ${props =>
+          props.theme.mode === "dark"
+            ? props.theme.white
+            : props.theme.primary};
+      }
     }
     list-style: none;
     & p {
