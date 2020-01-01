@@ -139,8 +139,8 @@ describe flows for actions and how all the entities are effected. -->
 
 ## Known Issues
 
-- Search functionality not working on mobile, may be due to Debouncing of requests to Spotify API. Fixable
-- Footer not showing on chrome mobile due to view-port issues. Fixable.
+- ~~Search functionality not working on mobile, may be due to Debouncing of requests to Spotify API.~~ Fixed
+- ~~Footer not showing on chrome mobile due to view-port issues.~~ Fixed on safari and chrome.
 - ~~if hosts joins another room they can no longer host the previous room as their token is overridden in local storage.~~ Fixed
 - Music can randomly start playing after being paused for a while. Not sure why this is happening.
 - Device state can be out of sync with room state. There are work arounds to this issue, but it breaks the [Unidrectional Dataflow](https://en.wikipedia.org/wiki/Unidirectional_Data_Flow_%28computer_science%29) of the application. A fix involves allowing the host directly changing the device state and then have that reflected in the room state, rather than changing the room state and having that reflected in the device state. This would also make interactions appear faster, and prevents some other race conditions, but adds complications if in the future clients will be able to pause/play tracks.

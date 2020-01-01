@@ -42,6 +42,7 @@ export default styled.li`
   & li {
     display: inline;
     text-transform: capitalize;
+    cursor: pointer;
   }
   & li:first-child::after {
     content: "•";
