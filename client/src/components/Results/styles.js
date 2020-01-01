@@ -9,8 +9,5 @@ export const NoQuery = styled.div`
   display: grid;
   justify-items: center;
   position: relative;
-
-  @media (min-width: 668px) {
-    margin-top: 200px;
-  }
+  padding-top: 200px;
 `;

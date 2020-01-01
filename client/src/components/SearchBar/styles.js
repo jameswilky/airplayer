@@ -2,6 +2,7 @@ import styled from "styled-components";
 
 export const Wrapper = styled.div`
   padding-bottom: ${props => 20 * props.theme.unit + "px"};
+  background-color: ${props => props.theme.white};
 `;
 export const Container = styled.div`
   width: 100%;
@@ -26,7 +27,7 @@ export const Container = styled.div`
     padding: ${props => 2 * props.theme.unit + "px"};
 
     &::placeholder {
-      color: ${props => props.theme.white};
+      color: ${props => props.theme.transparent4};
     }
   }
 `;

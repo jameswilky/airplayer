@@ -90,8 +90,8 @@ export default function Room(props) {
               <SearchBar
                 query={query}
                 setQuery={setQuery}
-                // filter={props.filter}
-                // setFilter={props.setFilter}
+                filter={filter}
+                setFilter={setFilter}
               ></SearchBar>
             )}
           ></Route>
