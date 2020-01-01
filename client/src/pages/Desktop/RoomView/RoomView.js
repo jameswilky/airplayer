@@ -73,6 +73,7 @@ export default function RoomView(props) {
                     addTrack={room.controller.addTrack}
                     removeTrack={room.controller.removeTrack}
                     query={query}
+                    setQuery={setQuery}
                     foundTracksName={findResult.name}
                     foundTracks={findResult.tracks}
                     setFindQuery={setFindQuery}

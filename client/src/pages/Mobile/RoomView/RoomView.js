@@ -29,8 +29,6 @@ const Container = styled.div`
 `;
 
 export default function RoomView(props) {
-  const [filter, setFilter] = useState("");
-
   const {
     query,
     setQuery,
@@ -42,7 +40,9 @@ export default function RoomView(props) {
     setFindQuery,
     playerReady,
     auth,
-    match
+    match,
+    filter,
+    setFilter
   } = props;
 
   return (
@@ -56,13 +56,16 @@ export default function RoomView(props) {
         path={`${match.path}/search`}
         component={() => (
           <Search
-            style={{ height: "90vh" }}
             results={queryResults}
             filter={filter}
             setFilter={setFilter}
             addTrack={room.controller.addTrack}
             removeTrack={room.controller.removeTrack}
-            auth={auth}
+            query={query}
+            foundTracksName={findResult.name}
+            foundTracks={findResult.tracks}
+            setFindQuery={setFindQuery}
+            setQuery={setQuery}
           ></Search>
         )}
       ></Route>

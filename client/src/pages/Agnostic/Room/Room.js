@@ -1,5 +1,6 @@
 // Deps
 import React, { useEffect, useState } from "react";
+import { Route } from "react-router-dom";
 
 import DesktopView from "../../Desktop/RoomView/RoomView";
 import MobileView from "../../Mobile/RoomView/RoomView";
@@ -13,6 +14,7 @@ import useBreakpoint from "../../../hooks/useBreakpoint";
 import useRoom from "../../../hooks/useRoom";
 import useProfile from "../../../hooks/useProfile";
 import { Background } from "../../Desktop/RoomView/styles";
+import SearchBar from "../../../components/SearchBar/SearchBar";
 
 export default function Room(props) {
   const { room, roomSuccess, roomError } = useRoom();
@@ -56,6 +58,7 @@ export default function Room(props) {
       libraryResults.artists ||
       libraryResults.albums ||
       libraryResults.playlists);
+  const [filter, setFilter] = useState("");
 
   const viewProps = {
     loaded,
@@ -71,13 +74,30 @@ export default function Room(props) {
     auth: props.auth,
     roomSuccess,
     roomError,
+    filter,
+    setFilter,
     ...props
   };
 
+  /* hacky solution required with the search bar */
   return (
     <>
       {breakpoint === "mobile" ? (
-        <MobileView {...viewProps}></MobileView>
+        <>
+          <Route
+            path={`${props.match.path}/search`}
+            render={() => (
+              <SearchBar
+                query={query}
+                setQuery={setQuery}
+                // filter={props.filter}
+                // setFilter={props.setFilter}
+              ></SearchBar>
+            )}
+          ></Route>
+
+          <MobileView {...viewProps}></MobileView>
+        </>
       ) : (
         <>
           <DesktopView {...viewProps}></DesktopView>

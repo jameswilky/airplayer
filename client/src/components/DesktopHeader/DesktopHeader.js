@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import SearchFilter from "../SearchFilter/SeachFilter";
 import { Container, Wrapper, SearchBar, ProfileIcon } from "./styles";
 

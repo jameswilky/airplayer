@@ -22,7 +22,11 @@ export const Container = styled.div`
     width: 100%;
     height: ${props => 8 * props.theme.unit + "px"};
     color: ${props => props.theme.white};
-    font-size: 2rem;
+    font-size: 1.75rem;
     padding: ${props => 2 * props.theme.unit + "px"};
+
+    &::placeholder {
+      color: ${props => props.theme.white};
+    }
   }
 `;

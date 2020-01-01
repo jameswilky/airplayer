@@ -5,7 +5,7 @@ export default () => {
     /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile|mobile|CriOS/i.test(
       ua
     ) &&
-    /Chrome/i.test(ua)
+    /Chrome|Safari/i.test(ua)
   )
     return true;
   else return false;

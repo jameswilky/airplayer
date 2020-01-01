@@ -6,7 +6,11 @@ export default function SearchBar({ query, setQuery, filter, setFilter }) {
   return (
     <Wrapper>
       <Container>
-        <input value={query} onChange={e => setQuery(e.target.value)}></input>
+        <input
+          placeholder={"Enter a query"}
+          value={query}
+          onChange={e => setQuery(e.target.value)}
+        ></input>
         <SearchFilter filter={filter} setFilter={setFilter}></SearchFilter>
       </Container>
     </Wrapper>

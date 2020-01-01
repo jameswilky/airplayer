@@ -33,7 +33,6 @@ export default function SongList(props) {
       }}
     ></Result>
   );
-
   return (
     <>
       {foundTracks ? (
