@@ -55,6 +55,12 @@ export default function RoomView(props) {
     }
   }, [props.history.location, redirect]);
 
+  useEffect(() => {
+    // Clear find query on re-route
+    setFindQuery({ uri: "", name: "" });
+  }, [props.history.location]);
+
+  console.log(findResult);
   return (
     <Background>
       <Container>
