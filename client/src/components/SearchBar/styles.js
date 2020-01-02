@@ -2,7 +2,8 @@ import styled from "styled-components";
 
 export const Wrapper = styled.div`
   padding-bottom: ${props => 20 * props.theme.unit + "px"};
-  background-color: ${props => props.theme.white};
+  background-color: ${props =>
+    props.theme.mode === "dark" ? props.theme.black : props.theme.white};
 `;
 export const Container = styled.div`
   width: 100%;

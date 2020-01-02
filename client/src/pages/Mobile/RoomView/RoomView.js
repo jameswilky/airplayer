@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Route } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Route, Redirect } from "react-router-dom";
 
 import Home from "../Home/Home";
 import Search from "../Search/Search";
@@ -45,6 +45,27 @@ export default function RoomView(props) {
     setFilter
   } = props;
 
+  const [redirect, setRedirect] = useState(false);
+  useEffect(() => {
+    //Redirect to search when query is entered
+    if (query) {
+      setRedirect(true);
+    }
+  }, [query]);
+
+  useEffect(() => {
+    const route = props.history.location.pathname.split("/")[3];
+
+    if (route !== "search" && redirect === true) {
+      //Remove redirect after manually changing routes
+      setRedirect(false);
+    }
+  }, [props.history.location, redirect]);
+
+  useEffect(() => {
+    // Clear find query on re-route
+    setFindQuery({ uri: "", name: "" });
+  }, [props.history.location]);
   return (
     <Container>
       <Route
@@ -69,22 +90,26 @@ export default function RoomView(props) {
           ></Search>
         )}
       ></Route>
-      <Route
-        path={`${match.path}/library`}
-        component={() => (
-          <Library
-            filter={filter}
-            setFilter={setFilter}
-            results={libraryResults}
-            foundTracks={findResult.tracks}
-            setFindQuery={setFindQuery}
-            addTrack={room.controller.addTrack}
-            removeTrack={room.controller.removeTrack}
-            foundTracksName={findResult.name}
-            selectedTracks={roomTracks.playlist}
-          ></Library>
-        )}
-      ></Route>
+      {redirect ? (
+        <Redirect to={`/room/${room.state.id}/search`}></Redirect>
+      ) : (
+        <Route
+          path={`${match.path}/library`}
+          component={() => (
+            <Library
+              filter={filter}
+              setFilter={setFilter}
+              results={libraryResults}
+              foundTracks={findResult.tracks}
+              setFindQuery={setFindQuery}
+              addTrack={room.controller.addTrack}
+              removeTrack={room.controller.removeTrack}
+              foundTracksName={findResult.name}
+              selectedTracks={roomTracks.playlist}
+            ></Library>
+          )}
+        ></Route>
+      )}
       <Footer path={match.url} />
     </Container>
   );

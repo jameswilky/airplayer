@@ -60,7 +60,6 @@ export default function RoomView(props) {
     setFindQuery({ uri: "", name: "" });
   }, [props.history.location]);
 
-  console.log(findResult);
   return (
     <Background>
       <Container>
