@@ -8,6 +8,7 @@ export default styled.li`
   margin-bottom: 15px;
   align-items: center;
   width: 100%;
+  cursor: pointer;
 
   & img {
     height: 48px;
@@ -42,7 +43,6 @@ export default styled.li`
   & li {
     display: inline;
     text-transform: capitalize;
-    cursor: pointer;
   }
   & li:first-child::after {
     content: "•";

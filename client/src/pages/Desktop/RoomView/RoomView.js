@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Route } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Route, Redirect } from "react-router-dom";
 
 // Pages
 import Home from "../../Desktop/Home/Home";
@@ -38,6 +38,23 @@ export default function RoomView(props) {
     toggleTheme
   } = props;
 
+  const [redirect, setRedirect] = useState(false);
+  useEffect(() => {
+    //Redirect to search when query is entered
+    if (query) {
+      setRedirect(true);
+    }
+  }, [query]);
+
+  useEffect(() => {
+    const route = props.history.location.pathname.split("/")[3];
+
+    if (route !== "search" && redirect === true) {
+      //Remove redirect after manually changing routes
+      setRedirect(false);
+    }
+  }, [props.history.location, redirect]);
+
   return (
     <Background>
       <Container>
@@ -50,36 +67,38 @@ export default function RoomView(props) {
         ></DesktopHeader>
         {loaded ? (
           <Main>
-            <>
-              <Route
-                exact
-                path={`${match.path}`}
-                component={() => (
-                  <Home
-                    room={room}
-                    setStartAudio={setStartAudio}
-                    roomTracks={roomTracks}
-                    topTracks={libraryResults.topTracks}
-                  ></Home>
-                )}
-              ></Route>
-              <Route
-                path={`${match.path}/search`}
-                component={() => (
-                  <Search
-                    results={queryResults}
-                    filter={filter}
-                    setFilter={setFilter}
-                    addTrack={room.controller.addTrack}
-                    removeTrack={room.controller.removeTrack}
-                    query={query}
-                    setQuery={setQuery}
-                    foundTracksName={findResult.name}
-                    foundTracks={findResult.tracks}
-                    setFindQuery={setFindQuery}
-                  ></Search>
-                )}
-              ></Route>
+            <Route
+              exact
+              path={`${match.path}`}
+              component={() => (
+                <Home
+                  room={room}
+                  setStartAudio={setStartAudio}
+                  roomTracks={roomTracks}
+                  topTracks={libraryResults.topTracks}
+                ></Home>
+              )}
+            ></Route>
+            <Route
+              path={`${match.path}/search`}
+              component={() => (
+                <Search
+                  results={queryResults}
+                  filter={filter}
+                  setFilter={setFilter}
+                  addTrack={room.controller.addTrack}
+                  removeTrack={room.controller.removeTrack}
+                  query={query}
+                  setQuery={setQuery}
+                  foundTracksName={findResult.name}
+                  foundTracks={findResult.tracks}
+                  setFindQuery={setFindQuery}
+                ></Search>
+              )}
+            ></Route>
+            {redirect ? (
+              <Redirect to={`/room/${room.state.id}/search`}></Redirect>
+            ) : (
               <Route
                 path={`${match.path}/library`}
                 component={() => (
@@ -96,7 +115,7 @@ export default function RoomView(props) {
                   ></Library>
                 )}
               ></Route>
-            </>
+            )}
           </Main>
         ) : (
           <Spinner type="Bars" color={theme.white}></Spinner>

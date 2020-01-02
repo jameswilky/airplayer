@@ -1,5 +1,6 @@
 import React from "react";
 import { Container } from "./styles";
+import { Redirect } from "react-router-dom";
 
 // Components
 import Carousel from "../../../components/Carousel/Carousel";
