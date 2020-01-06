@@ -145,7 +145,7 @@ describe flows for actions and how all the entities are effected. -->
 - Music can randomly start playing after being paused for a while. Not sure why this is happening.
 - Device state can be out of sync with room state. There are work arounds to this issue, but it breaks the [Unidrectional Dataflow](https://en.wikipedia.org/wiki/Unidirectional_Data_Flow_%28computer_science%29) of the application. A fix involves allowing the host directly changing the device state and then have that reflected in the room state, rather than changing the room state and having that reflected in the device state. This would also make interactions appear faster, and prevents some other race conditions, but adds complications if in the future clients will be able to pause/play tracks.
 - Room updates will reset carousel. Pretty common react issue, should be fixable.
-- Need to redirect page to search whenever input is entered. Easy to add
+- ~~Need to redirect page to search whenever input is entered.~~ Fixed
 - Changing Dark-mode/ light-mode refreshes the page. This is a workaround as i set my theme provider too high in the component hierarchy, and not refreshing would re run all of the hooks that are only expected to run once. This should be easy to fix after a refactor, but i'm currently looking for a more scale-able solution that doesn't involve adding a theme provider for every component that needs access to the theme.
 
 ## Future Plans
