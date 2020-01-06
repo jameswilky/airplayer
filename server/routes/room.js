@@ -88,9 +88,9 @@ module.exports = {
 };
 
 /* 
-Client Tasks
+Client operations
 
 on creation: initializeVibe, addUserTrack
 on user joined: addUserTracks, updateVibe
-on track added: update vibe
+on track added: update vibe 
 */

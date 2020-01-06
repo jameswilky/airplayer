@@ -60,18 +60,18 @@ describe("Room Data Access Object", () => {
     });
   });
 
-  describe("getRecommendations", () => {
-    it.only("should return a recommendations object", async () => {
-      const { room } = await createRoom(birthday);
-      const recommendations = await getRecommendations(room.id);
-      expect(recommendations).to.have.property("topTracks");
-      expect(recommendations).to.have.property("topArtists");
-      expect(recommendations).to.have.property("topGenres");
-      expect(recommendations).to.have.property("vibe");
-      expect(recommendations).to.have.property("playlist");
-      expect(recommendations.topArtists[0].userId).to.eql("lauren");
-    });
-  });
+  // describe("getRecommendations", () => {
+  //   it.only("should return a recommendations object", async () => {
+  //     const { room } = await createRoom(birthday);
+  //     const recommendations = await getRecommendations(room.id);
+  //     expect(recommendations).to.have.property("topTracks");
+  //     expect(recommendations).to.have.property("topArtists");
+  //     expect(recommendations).to.have.property("topGenres");
+  //     expect(recommendations).to.have.property("vibe");
+  //     expect(recommendations).to.have.property("playlist");
+  //     expect(recommendations.topArtists[0].userId).to.eql("lauren");
+  //   });
+  // });
 
   describe("updateRoom", () => {
     it("should return a copy of the newly updated room on success", async () => {

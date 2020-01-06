@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "mocha --timeout 10000 --recursive -R spec ",
+    "test": "mocha --timeout 10000 --recursive -R spec",
     "start": "node index.js",
     "dev": "SET NODE_ENV=development && node index.js"
   },

@@ -11,6 +11,16 @@ module.exports = {
     // return those tracks
   },
   createVibe: features => {
+    const totals = {};
+
+    features.forEach(feature => {
+      Object.entries(feature).forEach(([k, v]) => {
+        totals[k] =
+          totals[k] === undefined ? 0 : totals[k] + v / features.length;
+      });
+    });
+
+    return totals;
     // features is a list of audio features for spotify tracks
     // finds the average features
     // returns a vibe object
