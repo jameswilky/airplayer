@@ -11,8 +11,7 @@ const {
   getRoom,
   updateRoom,
   createRoom,
-  passwordDoesMatch,
-  getRecommendations
+  passwordDoesMatch
 } = require("../../server/daos/roomDao");
 
 // Mock Data

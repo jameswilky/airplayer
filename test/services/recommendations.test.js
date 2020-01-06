@@ -1,9 +1,69 @@
 const { createVibe } = require("../../server/services/recommendations");
-
+const expect = require("chai").expect;
 describe("recommendations service", () => {
   describe.only("createVibe", () => {
-    it("rejects invalid objects", () => {});
-    it("averages the properties within the vibe object", () => {});
+    it("averages the properties within the vibe object", () => {
+      const features = [
+        {
+          acousticness: 0,
+          danceability: 0,
+          energy: 0,
+          instrumentalness: 0,
+          liveness: 0,
+          speechiness: 0,
+          valence: 0
+        },
+        {
+          acousticness: 1,
+          danceability: 1,
+          energy: 1,
+          instrumentalness: 1,
+          liveness: 1,
+          speechiness: 1,
+          valence: 1
+        }
+      ];
+
+      const { properties } = createVibe(features);
+      Object.entries(properties).forEach(([k, v]) => {
+        expect(v.mean).equals(0.5);
+      });
+
+      const features2 = [
+        {
+          acousticness: 1,
+          danceability: 1,
+          energy: 1,
+          instrumentalness: 1,
+          liveness: 1,
+          speechiness: 1,
+          valence: 1
+        },
+        {
+          acousticness: 3,
+          danceability: 3,
+          energy: 3,
+          instrumentalness: 3,
+          liveness: 3,
+          speechiness: 3,
+          valence: 3
+        },
+        {
+          acousticness: 5,
+          danceability: 5,
+          energy: 5,
+          instrumentalness: 5,
+          liveness: 5,
+          speechiness: 5,
+          valence: 5
+        }
+      ];
+
+      const vibe2 = createVibe(features2);
+      Object.entries(vibe2.properties).forEach(([k, v]) => {
+        expect(v.mean).equals(3);
+      });
+    });
     it("returns a vibe object", () => {
       const features = [
         {
@@ -17,8 +77,10 @@ describe("recommendations service", () => {
         }
       ];
 
-      const vibe = createVibe(features);
-      console.log(vibe);
+      const { properties } = createVibe(features);
+      Object.keys(features[0]).forEach(feature => {
+        expect(properties).has.property(feature);
+      });
     });
   });
 });

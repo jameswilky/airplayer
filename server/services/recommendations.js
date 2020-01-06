@@ -10,7 +10,7 @@ module.exports = {
     // Check spotify api for tracks similar to selected tracks
     // return those tracks
   },
-  createVibe: features => {
+  createVibe: tracks => {
     const validProperties = [
       "acousticness",
       "danceability",
@@ -20,23 +20,46 @@ module.exports = {
       "speechiness",
       "valence"
     ];
-    const totals = {};
+    const properties = {};
 
-    features.forEach(feature => {
+    // Calculate means
+    tracks.forEach(feature => {
       Object.entries(feature)
         .filter(([k]) => validProperties.includes(k))
         .forEach(([k, v]) => {
-          totals[k] =
-            totals[k] === undefined
-              ? Math.abs(v) / features.length
-              : totals[k] + Math.abs(v) / features.length;
+          properties[k] =
+            properties[k] === undefined
+              ? { mean: Math.abs(Number.isNaN(v) ? 0 : v) / tracks.length }
+              : {
+                  mean:
+                    properties[k].mean +
+                    Math.abs(Number.isNaN(v) ? 0 : v) / tracks.length
+                };
         });
     });
 
-    return totals;
-    // features is a list of audio features for spotify tracks
-    // finds the average features
-    // returns a vibe object
+    // Calculate variance and standard deviation
+    tracks.forEach(feature => {
+      Object.entries(feature)
+        .filter(([k]) => validProperties.includes(k))
+        .forEach(([k, v]) => {
+          properties[k].variance =
+            properties[k].variance === undefined
+              ? Math.pow(v - properties[k].mean, 2) / tracks.length
+              : Math.pow(v - properties[k].mean, 2) / tracks.length +
+                properties[k].variance;
+        });
+    });
+    // Calculate standard deviation
+    Object.keys(properties).forEach(k => {
+      properties[k].sd = Math.sqrt(properties[k].variance);
+    });
+
+    console.log(properties);
+    return {
+      properties,
+      n: tracks.length
+    };
   },
   mergeVibe: (vibe, features) => {
     // merges audo features from a list of tracks to update the vibe to be
