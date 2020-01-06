@@ -10,7 +10,14 @@ module.exports = {
     playlist = [],
     currentSong = { playing: false, uri: null },
     password = null,
-    userId = null
+    userId = null,
+    recommendations = {
+      topTracks: [],
+      topArtists: [],
+      topGenres: [],
+      vibe: {},
+      playlist: []
+    }
   }) => {
     const newRoom = new Room({
       name: name,
@@ -18,6 +25,8 @@ module.exports = {
       currentSong: currentSong,
       createdAt: new Date(),
       password: password,
+      history: [],
+      recommendations,
       requiresPassword: password === null ? false : true
     });
     const { token } = await createHost({

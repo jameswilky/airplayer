@@ -12,7 +12,52 @@ const RoomSchema = new Schema({
   },
   subscribers: [{ userId: String, socketId: String, scope: String }],
   host: { socketId: String },
-  password: String
+  password: String,
+  history: [{ uri: String }],
+  recommendations: {
+    topTracks: [
+      {
+        userId: String,
+        tracks: [
+          {
+            uri: String,
+            durationMs: Number,
+            key: Number,
+            mode: Number,
+            timeSignature: Number,
+            acousticness: Number,
+            danceability: Number,
+            energy: Number,
+            instrumentalness: Number,
+            liveness: Number,
+            loudness: Number,
+            speechiness: Number,
+            valence: Number,
+            tempo: Number
+          }
+        ]
+      }
+    ],
+    topArtists: [{ userId: String, artists: [{ uri: String }] }],
+    topGenres: [{ userId: String, genres: [{ uri: String }] }],
+    vibe: {
+      acousticness: { min: Number, max: Number, target: Number },
+      danceability: { min: Number, max: Number, target: Number },
+      duration: { min: Number, max: Number, target: Number },
+      energy: { min: Number, max: Number, target: Number },
+      instrumentalness: { min: Number, max: Number, target: Number },
+      key: { min: Number, max: Number, target: Number },
+      liveness: { min: Number, max: Number, target: Number },
+      loudness: { min: Number, max: Number, target: Number },
+      mode: { min: Number, max: Number, target: Number },
+      popularity: { min: Number, max: Number, target: Number },
+      speechiness: { min: Number, max: Number, target: Number },
+      tempo: { min: Number, max: Number, target: Number },
+      timeSignature: { min: Number, max: Number, target: Number },
+      valence: { min: Number, max: Number, target: Number }
+    },
+    playlist: { selected: [{ uri: String }], generated: [{ uri: String }] }
+  }
 });
 
 RoomSchema.method("toClient", function() {
@@ -33,6 +78,7 @@ RoomSchema.method("toClient", function() {
     delete obj.password;
     obj.requiresPassword = true;
   }
+  delete obj.recommendations;
 
   return obj;
 });

@@ -19,6 +19,7 @@ export default function Home({ room, roomTracks, topTracks, setStartAudio }) {
     <Container>
       <h2>Recommended Tracks</h2>
       <Carousel
+        key={Math.random()}
         items={topTracks}
         addItem={room.controller.addTrack}
         removeItem={room.controller.removeTrack}

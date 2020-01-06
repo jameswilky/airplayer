@@ -11,14 +11,20 @@ const {
   getRoom,
   updateRoom,
   createRoom,
-  passwordDoesMatch
+  passwordDoesMatch,
+  getRecommendations
 } = require("../../server/daos/roomDao");
 
 // Mock Data
 const birthday = {
   name: "birthday",
   playlist: [{ uri: "123" }, { uri: "456" }],
-  currentSong: { playing: true, uri: "123" }
+  currentSong: { playing: true, uri: "123" },
+  recommendations: {
+    topArtists: [
+      { userId: "lauren", artists: [{ uri: "123" }, { uri: "456" }] }
+    ]
+  }
 };
 
 describe("Room Data Access Object", () => {
@@ -51,6 +57,19 @@ describe("Room Data Access Object", () => {
     it("should return null if nothing matches the id", async () => {
       const res = await getRoom("123");
       expect(res).to.eql(null);
+    });
+  });
+
+  describe("getRecommendations", () => {
+    it.only("should return a recommendations object", async () => {
+      const { room } = await createRoom(birthday);
+      const recommendations = await getRecommendations(room.id);
+      expect(recommendations).to.have.property("topTracks");
+      expect(recommendations).to.have.property("topArtists");
+      expect(recommendations).to.have.property("topGenres");
+      expect(recommendations).to.have.property("vibe");
+      expect(recommendations).to.have.property("playlist");
+      expect(recommendations.topArtists[0].userId).to.eql("lauren");
     });
   });
 

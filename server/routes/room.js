@@ -4,6 +4,7 @@ const Room = require("../models/Room");
 const to = require("../helpers/to");
 const { createHost } = require("../daos/hostDao");
 
+// Refactor this to not include and information related to requests and responses
 module.exports = {
   getRooms: async (req, res) => {
     const [err, rooms] = await to(Room.find({}));
@@ -25,7 +26,6 @@ module.exports = {
       spotifyUserId: req.body.userId,
       roomId: room._id
     });
-
     err
       ? res.send(err)
       : res.json({
@@ -34,6 +34,7 @@ module.exports = {
           token: token
         });
   },
+
   getRoom: async (req, res) => {
     const [err, room] = await to(Room.findById(req.params.id));
     err ? res.send(err) : res.json(room.toClient());
@@ -52,5 +53,44 @@ module.exports = {
   deleteRoom: async (req, res) => {
     const [err, result] = await to(Room.deleteOne({ _id: req.params.id }));
     err ? res.send(err) : res.json({ message: "Room deleted", result });
+  },
+
+  initializeVibe: async (req, res) => {
+    // features = await recommendations.getAudioFeatures(req.body.uris)
+    // vibe = recommendations.createVibe(features)
+    // save room to db
+  },
+  updateRecommendations: async () => {
+    // PRIVATE
+    // const {playlist, topTracks, vibe} = await to(Room.findById(req.params.id)).recommendations;
+    // playlist.selected = filterTracksByVibe(topTracks, vibe)
+    // playlist.generated = await recommendTracks(playlist.selected, accessToken)
+    // save recommendations object to db
+  },
+  addUserTracks: async function(req, res) {
+    // top Tracks and are added
+    // Takes in a list of uris, a user id and a room id and an accessToken
+    // const userTopTracks =  await recommendations.getAudioFeatures(req.body.uris)
+    // const currentTopTracks = await roomDao.getTopTracks(id)
+    // currentTopTracks[userid] = userTopTracks
+    // save top tracks to db
+    // this.updateRecommendations()
+  },
+
+  updateVibe: async function(req, res) {
+    // takes in room id and list of tracks
+    // get room from db
+    // cosnt features = getAudioFeatures(tracks)
+    // const nextVibe = mergeVibe(room.vibe,features)
+    // save vibe to db
+    // this.updateRecommendations()
   }
 };
+
+/* 
+Client Tasks
+
+on creation: initializeVibe, addUserTrack
+on user joined: addUserTracks, updateVibe
+on track added: update vibe
+*/
