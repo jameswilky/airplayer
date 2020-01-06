@@ -1,16 +1,20 @@
 const { createVibe } = require("../../server/services/recommendations");
 
 describe("recommendations service", () => {
-  describe("createVibe", () => {
-    it.only("returns a vibe object", () => {
+  describe.only("createVibe", () => {
+    it("rejects invalid objects", () => {});
+    it("averages the properties within the vibe object", () => {});
+    it("returns a vibe object", () => {
       const features = [
-        { a: 0.2, b: 1, c: 0.9 },
-        { a: 0.3, b: 1, c: 0.2 },
-        { a: 0.2, b: 1, c: 0.8 },
-        { a: 0.1, b: 1, c: 0.3 },
-        { a: 0.2, b: 0.1, c: 0.7 },
-        { a: 0.8, b: 0.5, c: 0.3 },
-        { a: 0.9, b: 0.2, c: 0.1 }
+        {
+          acousticness: 0.2,
+          danceability: 1,
+          energy: 0.9,
+          instrumentalness: 0.2,
+          liveness: 0.1,
+          speechiness: 0.6,
+          valence: 0.2
+        }
       ];
 
       const vibe = createVibe(features);

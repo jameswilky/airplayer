@@ -11,13 +11,26 @@ module.exports = {
     // return those tracks
   },
   createVibe: features => {
+    const validProperties = [
+      "acousticness",
+      "danceability",
+      "energy",
+      "instrumentalness",
+      "liveness",
+      "speechiness",
+      "valence"
+    ];
     const totals = {};
 
     features.forEach(feature => {
-      Object.entries(feature).forEach(([k, v]) => {
-        totals[k] =
-          totals[k] === undefined ? 0 : totals[k] + v / features.length;
-      });
+      Object.entries(feature)
+        .filter(([k]) => validProperties.includes(k))
+        .forEach(([k, v]) => {
+          totals[k] =
+            totals[k] === undefined
+              ? Math.abs(v) / features.length
+              : totals[k] + Math.abs(v) / features.length;
+        });
     });
 
     return totals;
