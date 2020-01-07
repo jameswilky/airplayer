@@ -57,7 +57,6 @@ module.exports = {
   },
 
   initializeVibe: async (roomId, accessToken, uris) => {
-    let err = null;
     const [{ audio_features }, [err, room]] = await Promise.all([
       getAudioFeatures(uris, accessToken),
       to(Room.findById(roomId))
