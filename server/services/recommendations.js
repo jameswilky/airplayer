@@ -1,10 +1,21 @@
 //give database access to route that calls this function
 // no database access should be allowed in this
 
+const fetch = require("node-fetch");
+
+const api = "https://api.spotify.com/v1/";
+
 module.exports = {
   getAudioFeatures: async (uris, accessToken) => {
-    // gets an audio features of each track from spotify
-    // returns a list of audio features
+    const query = `audio-features?ids=${uris}`;
+    const res = awaitfetch(`${api}${query}`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        ["Content-type"]: "application/json"
+      },
+      method: "GET"
+    });
+    return await res.json();
   },
   recommendTracks: async (uris, accessToken) => {
     // Check spotify api for tracks similar to selected tracks
@@ -55,7 +66,6 @@ module.exports = {
       properties[k].sd = Math.sqrt(properties[k].variance);
     });
 
-    console.log(properties);
     return {
       properties,
       n: tracks.length

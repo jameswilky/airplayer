@@ -215,5 +215,4 @@ const Spotify = (token, send = true) => {
     player: () => {}
   };
 };
-
 export default Spotify;

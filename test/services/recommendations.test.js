@@ -1,7 +1,18 @@
-const { createVibe } = require("../../server/services/recommendations");
+const {
+  createVibe,
+  getAudioFeatures
+} = require("../../server/services/recommendations");
 const expect = require("chai").expect;
+
+const token =
+  " BQA-dazXSwl_zhyKbrCaalFvNQrDiAkxyEpeU4e-MqSykJolUUmvH4zZ440MVBvd7KAz7CE4SQdrl8LPWoDEt8YRVl3jbHd0DzEW0oBi6Jm4g_LGDoTxZ-wEpyJP-IRd3-BA-w0q5r9sByQmO9Ew7JR_CY5w-0e-AS77kl5lOPtTz5onD-DTE2NVQ4dF4dLcgnEb";
 describe("recommendations service", () => {
-  describe.only("createVibe", () => {
+  describe("getAudioFeatures", () => {
+    it.only("works", () => {
+      getAudioFeatures(["11dFghVXANMlKmJXsNCbNl"], token);
+    });
+  });
+  describe("createVibe", () => {
     it("averages the properties within the vibe object", () => {
       const features = [
         {
