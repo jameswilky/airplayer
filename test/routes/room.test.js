@@ -10,7 +10,8 @@ const chaiHttp = require("chai-http");
 const server = require("../../index");
 const should = chai.should();
 chai.use(chaiHttp);
-
+const token =
+  "BQAvQsanKe3FBnqlDEJDc-2cvO9u55K6M2VYVL0cob_0hYHYwl5JZGwC2qQ8_6ykrPX4_dE-ejnrwQXTRMlh9tOz_MCjip-l-kIKmDL_OvsiJ3XaCQsfPm6QN53wbmnmm4nzojCft9KPMY26ZJcIbxt-imgMzAZaRNYFcXMYYfTwRBv-gwOww_jsdWOkxWPC2yFB";
 describe("Room route handlers", () => {
   let room1, room2;
 
@@ -130,6 +131,35 @@ describe("Room route handlers", () => {
       res.body.should.have.property("message").eql("Room deleted");
       res.body.result.should.have.property("ok").eql(1);
       res.body.result.should.have.property("n").eql(1);
+    });
+  });
+  describe("/POST/:id/vibe", () => {
+    it.only("should POST a room", async () => {
+      let err,
+        res = null;
+      const room = {
+        name: "Test",
+        userId: "someUser",
+        playlist: [{ uri: "spotify:track:123" }]
+      };
+      [err, res] = await to(
+        chai
+          .request(server)
+          .post("/api/rooms")
+          .send(room)
+      );
+
+      const id = res.body.room.id;
+      [err, res] = await to(
+        chai
+          .request(server)
+          .post(`/api/room/${id}/vibe`)
+          .send({
+            roomId: id,
+            accessToken: token,
+            uris: ["11dFghVXANMlKmJXsNCbNl"]
+          })
+      );
     });
   });
 });

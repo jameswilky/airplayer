@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const Room = require("../models/Room");
 const to = require("../helpers/to");
 const { createHost } = require("../daos/hostDao");
+const { getAudioFeatures, createVibe } = require("../services/recommendations");
 
 // Refactor this to not include and information related to requests and responses
 module.exports = {
@@ -55,10 +56,14 @@ module.exports = {
     err ? res.send(err) : res.json({ message: "Room deleted", result });
   },
 
-  initializeVibe: async (req, res) => {
-    // features = await recommendations.getAudioFeatures(req.body.uris)
-    // vibe = recommendations.createVibe(features)
-    // save room to db
+  initializeVibe: async (roomId, accessToken, uris) => {
+    let err = null;
+    const [{ audio_features }, [err, room]] = await Promise.all([
+      getAudioFeatures(uris, accessToken),
+      to(Room.findById(roomId))
+    ]);
+    const vibe = createVibe(audio_features);
+    return [err, vibe];
   },
   updateRecommendations: async () => {
     // PRIVATE

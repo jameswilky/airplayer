@@ -60,7 +60,7 @@ describe("Room Data Access Object", () => {
   });
 
   // describe("getRecommendations", () => {
-  //   it.only("should return a recommendations object", async () => {
+  //   it("should return a recommendations object", async () => {
   //     const { room } = await createRoom(birthday);
   //     const recommendations = await getRecommendations(room.id);
   //     expect(recommendations).to.have.property("topTracks");

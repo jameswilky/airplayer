@@ -8,7 +8,7 @@ const api = "https://api.spotify.com/v1/";
 module.exports = {
   getAudioFeatures: async (uris, accessToken) => {
     const query = `audio-features?ids=${uris}`;
-    const res = awaitfetch(`${api}${query}`, {
+    const res = await fetch(`${api}${query}`, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
         ["Content-type"]: "application/json"
