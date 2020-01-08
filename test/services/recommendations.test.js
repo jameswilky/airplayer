@@ -5,7 +5,7 @@ const {
 const expect = require("chai").expect;
 
 const token =
-  "BQA-dazXSwl_zhyKbrCaalFvNQrDiAkxyEpeU4e-MqSykJolUUmvH4zZ440MVBvd7KAz7CE4SQdrl8LPWoDEt8YRVl3jbHd0DzEW0oBi6Jm4g_LGDoTxZ-wEpyJP-IRd3-BA-w0q5r9sByQmO9Ew7JR_CY5w-0e-AS77kl5lOPtTz5onD-DTE2NVQ4dF4dLcgnEb";
+  "BQCBkSuk7cAVo1ZIUrbyb81EMNdhMhlH7UiPaxvWhUYmE0SP2fmHSBueGA5lmOUMc-zEl8JAlZ1o4f7_GcfB-J7mBpNlwgxIi4_55uMgYxnrfA6N-ftauQdrmHXvZtRoMQ5-sB910Wqs4k5r0M38w1Zg_Rjrg_zBbtxgUMYsuHOWBkx-b6xN_xRIycVHtLAKEGR3";
 describe("recommendations service", () => {
   // describe("getAudioFeatures", () => {
   //   it("works", () => {

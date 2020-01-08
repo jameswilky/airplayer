@@ -41,20 +41,23 @@ const RoomSchema = new Schema({
     topArtists: [{ userId: String, artists: [{ uri: String }] }],
     topGenres: [{ userId: String, genres: [{ uri: String }] }],
     vibe: {
-      acousticness: { min: Number, max: Number, target: Number },
-      danceability: { min: Number, max: Number, target: Number },
-      duration: { min: Number, max: Number, target: Number },
-      energy: { min: Number, max: Number, target: Number },
-      instrumentalness: { min: Number, max: Number, target: Number },
-      key: { min: Number, max: Number, target: Number },
-      liveness: { min: Number, max: Number, target: Number },
-      loudness: { min: Number, max: Number, target: Number },
-      mode: { min: Number, max: Number, target: Number },
-      popularity: { min: Number, max: Number, target: Number },
-      speechiness: { min: Number, max: Number, target: Number },
-      tempo: { min: Number, max: Number, target: Number },
-      timeSignature: { min: Number, max: Number, target: Number },
-      valence: { min: Number, max: Number, target: Number }
+      properties: {
+        acousticness: { sd: Number, variance: Number, mean: Number },
+        danceability: { sd: Number, variance: Number, mean: Number },
+        duration: { sd: Number, variance: Number, mean: Number },
+        energy: { sd: Number, variance: Number, mean: Number },
+        instrumentalness: { sd: Number, variance: Number, mean: Number },
+        key: { sd: Number, variance: Number, mean: Number },
+        liveness: { sd: Number, variance: Number, mean: Number },
+        loudness: { sd: Number, variance: Number, mean: Number },
+        mode: { sd: Number, variance: Number, mean: Number },
+        popularity: { sd: Number, variance: Number, mean: Number },
+        speechiness: { sd: Number, variance: Number, mean: Number },
+        tempo: { sd: Number, variance: Number, mean: Number },
+        timeSignature: { sd: Number, variance: Number, mean: Number },
+        valence: { sd: Number, variance: Number, mean: Number }
+      },
+      n: Number
     },
     playlist: { selected: [{ uri: String }], generated: [{ uri: String }] }
   }

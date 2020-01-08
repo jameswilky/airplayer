@@ -61,8 +61,13 @@ module.exports = {
       getAudioFeatures(uris, accessToken),
       to(Room.findById(roomId))
     ]);
+
+    if (!audio_features || audio_features.error || err)
+      return [err || null, null];
     const vibe = createVibe(audio_features);
-    return [err, vibe];
+    Object.assign(room.recommendations.vibe, vibe);
+    const [dbError, updatedRoom] = await to(room.save());
+    return err || dbError ? null : updatedRoom.recommendations.vibe;
   },
   updateRecommendations: async () => {
     // PRIVATE

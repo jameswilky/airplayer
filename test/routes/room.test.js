@@ -11,7 +11,7 @@ const server = require("../../index");
 const should = chai.should();
 chai.use(chaiHttp);
 const token =
-  "BQAvQsanKe3FBnqlDEJDc-2cvO9u55K6M2VYVL0cob_0hYHYwl5JZGwC2qQ8_6ykrPX4_dE-ejnrwQXTRMlh9tOz_MCjip-l-kIKmDL_OvsiJ3XaCQsfPm6QN53wbmnmm4nzojCft9KPMY26ZJcIbxt-imgMzAZaRNYFcXMYYfTwRBv-gwOww_jsdWOkxWPC2yFB";
+  "BQCBkSuk7cAVo1ZIUrbyb81EMNdhMhlH7UiPaxvWhUYmE0SP2fmHSBueGA5lmOUMc-zEl8JAlZ1o4f7_GcfB-J7mBpNlwgxIi4_55uMgYxnrfA6N-ftauQdrmHXvZtRoMQ5-sB910Wqs4k5r0M38w1Zg_Rjrg_zBbtxgUMYsuHOWBkx-b6xN_xRIycVHtLAKEGR3";
 describe("Room route handlers", () => {
   let room1, room2;
 
@@ -134,7 +134,8 @@ describe("Room route handlers", () => {
     });
   });
   describe("/POST/:id/vibe", () => {
-    it.only("should POST a room", async () => {
+    it("should POST a room", async () => {
+      // if failing, check if token has expired
       let err,
         res = null;
       const room = {
@@ -160,6 +161,11 @@ describe("Room route handlers", () => {
             uris: ["11dFghVXANMlKmJXsNCbNl"]
           })
       );
+
+      const vibe = res.body.properties;
+
+      vibe.danceability.mean.should.eql(0.696);
+      vibe.speechiness.sd.should.eql(0);
     });
   });
 });
