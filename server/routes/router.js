@@ -28,6 +28,23 @@ module.exports = function(app) {
         : res.json(vibe);
     }
   });
+  app.post("/api/room/:id/topTracks", async (req, res) => {
+    try {
+      req.body = JSON.parse(req.body);
+    } catch (err) {}
+    const { accessToken, uris, userId } = req.body;
+    const roomId = req.params.id;
+
+    if (accessToken && uris && roomId && userId) {
+      const [err, topTracks] = await to(
+        room.addUserTracks(roomId, accessToken, uris, userId)
+      );
+      console.log(err);
+      err || topTracks === null
+        ? res.json({ error: "failed to add tracks" })
+        : res.json(topTracks);
+    }
+  });
 
   // Authentication
   app.get("/auth/login", auth.login);

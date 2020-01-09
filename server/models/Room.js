@@ -17,23 +17,23 @@ const RoomSchema = new Schema({
   recommendations: {
     topTracks: [
       {
+        _id: false,
         userId: String,
         tracks: [
           {
+            _id: false,
             uri: String,
-            durationMs: Number,
-            key: Number,
-            mode: Number,
-            timeSignature: Number,
-            acousticness: Number,
-            danceability: Number,
-            energy: Number,
-            instrumentalness: Number,
-            liveness: Number,
-            loudness: Number,
-            speechiness: Number,
-            valence: Number,
-            tempo: Number
+            similarity: Number,
+            properties: {
+              _id: false,
+              acousticness: Number,
+              danceability: Number,
+              energy: Number,
+              instrumentalness: Number,
+              liveness: Number,
+              speechiness: Number,
+              valence: Number
+            }
           }
         ]
       }
@@ -44,23 +44,23 @@ const RoomSchema = new Schema({
       properties: {
         acousticness: { sd: Number, variance: Number, mean: Number },
         danceability: { sd: Number, variance: Number, mean: Number },
-        duration: { sd: Number, variance: Number, mean: Number },
         energy: { sd: Number, variance: Number, mean: Number },
         instrumentalness: { sd: Number, variance: Number, mean: Number },
-        key: { sd: Number, variance: Number, mean: Number },
         liveness: { sd: Number, variance: Number, mean: Number },
-        loudness: { sd: Number, variance: Number, mean: Number },
-        mode: { sd: Number, variance: Number, mean: Number },
-        popularity: { sd: Number, variance: Number, mean: Number },
         speechiness: { sd: Number, variance: Number, mean: Number },
-        tempo: { sd: Number, variance: Number, mean: Number },
-        timeSignature: { sd: Number, variance: Number, mean: Number },
         valence: { sd: Number, variance: Number, mean: Number }
       },
       n: Number
     },
     playlist: { selected: [{ uri: String }], generated: [{ uri: String }] }
   }
+});
+RoomSchema.method("toObj", function() {
+  const obj = this.toObject();
+  obj.recommendations.topTracks.forEach(track => {
+    delete track._id;
+  });
+  return obj;
 });
 
 RoomSchema.method("toClient", function() {
@@ -81,7 +81,9 @@ RoomSchema.method("toClient", function() {
     delete obj.password;
     obj.requiresPassword = true;
   }
-  delete obj.recommendations;
+  delete obj.recommendations.topTracks;
+  delete obj.recommendations.topArtists;
+  delete obj.recommendations.topGenres;
 
   return obj;
 });

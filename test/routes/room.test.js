@@ -10,8 +10,10 @@ const chaiHttp = require("chai-http");
 const server = require("../../index");
 const should = chai.should();
 chai.use(chaiHttp);
+
 const token =
-  "BQCBkSuk7cAVo1ZIUrbyb81EMNdhMhlH7UiPaxvWhUYmE0SP2fmHSBueGA5lmOUMc-zEl8JAlZ1o4f7_GcfB-J7mBpNlwgxIi4_55uMgYxnrfA6N-ftauQdrmHXvZtRoMQ5-sB910Wqs4k5r0M38w1Zg_Rjrg_zBbtxgUMYsuHOWBkx-b6xN_xRIycVHtLAKEGR3";
+  "BQDFZ3CNc5pNfRYmSTuTC2xoE4VLiwPGpaNoEK318019AwAcSCEQHGiQqC1KggRj52oTce7sm6VO3hw9DSJjLKCPv7rP5XTXf8gSYZ1gFpGmHjuz0NSzH3AkhBlg61iPGQ3AvZs5jG_IC23c102Hx0N96gIremzx0e75XaaH_aBF6kQZxHRnkWEZclcBqiCUpdxV";
+
 describe("Room route handlers", () => {
   let room1, room2;
 
@@ -134,7 +136,7 @@ describe("Room route handlers", () => {
     });
   });
   describe("/POST/:id/vibe", () => {
-    it("should POST a room", async () => {
+    it("should return a vibe object for a newly created room", async () => {
       // if failing, check if token has expired
       let err,
         res = null;
@@ -158,14 +160,63 @@ describe("Room route handlers", () => {
           .send({
             roomId: id,
             accessToken: token,
+            uris: [
+              "7ouMYWpwJ422jRcDASZB7P",
+              "4VqPOruhp5EdPBeR92t6lQ",
+              "2takcwOaAZWiXQijPHIx7B"
+            ]
+          })
+      );
+
+      const vibe = res.body;
+      console.log(vibe);
+
+      if (vibe === undefined) console.log("Check if token has expired");
+
+      // vibe.properties.danceability.mean.should.eql(0.696);
+      // vibe.properties.speechiness.sd.should.eql(0);
+    });
+  });
+  describe("/POST/:id/topTracks", () => {
+    it("should return a top Tracks for a room that fit the vibe", async () => {
+      // if failing, check if token has expired
+      let err,
+        res = null;
+      const room = {
+        name: "Test",
+        userId: "someUser",
+        playlist: [{ uri: "spotify:track:123" }]
+      };
+      [err, res] = await to(
+        chai
+          .request(server)
+          .post("/api/rooms")
+          .send(room)
+      );
+
+      const id = res.body.room.id;
+      [err, res] = await to(
+        chai
+          .request(server)
+          .post(`/api/room/${id}/topTracks`)
+          .send({
+            roomId: id,
+            accessToken: token,
+            userId: "james",
             uris: ["11dFghVXANMlKmJXsNCbNl"]
           })
       );
 
-      const vibe = res.body.properties;
+      const topTracks = res.body;
 
-      vibe.danceability.mean.should.eql(0.696);
-      vibe.speechiness.sd.should.eql(0);
+      topTracks[0].userId.should.eql("james");
+      topTracks[0].tracks[0].should.have.property("danceability");
+      topTracks[0].tracks[0].should.have.property("energy");
+      topTracks[0].tracks[0].should.have.property("uri");
+      topTracks[0].tracks[0].should.have.property("acousticness");
+      topTracks[0].tracks[0].should.have.property("tempo");
+      topTracks[0].tracks[0].should.have.property("key");
+      topTracks[0].tracks[0].should.have.property("mode");
     });
   });
 });

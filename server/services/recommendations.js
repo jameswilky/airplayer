@@ -6,8 +6,8 @@ const fetch = require("node-fetch");
 const api = "https://api.spotify.com/v1/";
 
 module.exports = {
-  getAudioFeatures: async (uris, accessToken) => {
-    const query = `audio-features?ids=${uris}`;
+  getAudioFeatures: async (ids, accessToken) => {
+    const query = `audio-features?ids=${ids}`;
     const res = await fetch(`${api}${query}`, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
@@ -15,7 +15,8 @@ module.exports = {
       },
       method: "GET"
     });
-    return await res.json();
+    const data = await res.json();
+    return data;
   },
   recommendTracks: async (uris, accessToken) => {
     // Check spotify api for tracks similar to selected tracks
@@ -75,8 +76,25 @@ module.exports = {
     // merges audo features from a list of tracks to update the vibe to be
     // weighted to include the audio features of the added tracks
   },
+  calculateSimilarity: (topTracks, vibe) => {
+    return topTracks.map(user =>
+      user.tracks.map(track => {
+        const values = Object.entries(track.properties).map(([k, v]) => {
+          // Calculate confidence interval
+          const interval = 2 * vibe.properties[k].sd;
+          const difference = Math.abs(vibe.properties[k].mean - v);
+          if (difference > interval) return 0;
+          else return 1 - difference / interval;
+        });
+        const similarity =
+          values.reduce((total, cur) => (total += cur)) / values.length;
+        return { ...track, similarity: similarity };
+      })
+    );
+  },
   filterTracksByVibe: (topTracks, vibe) => {
     // takes in a hash map of topTracks and their audio features sorted by user ID
     // and returns tracks that are within a certain range of the vibe object
+    return [];
   }
 };

@@ -3,7 +3,29 @@ const mongoose = require("mongoose");
 const Room = require("../models/Room");
 const to = require("../helpers/to");
 const { createHost } = require("../daos/hostDao");
-const { getAudioFeatures, createVibe } = require("../services/recommendations");
+const {
+  getAudioFeatures,
+  createVibe,
+  filterTracksByVibe,
+  calculateSimilarity
+} = require("../services/recommendations");
+
+const vibeIsValid = room => {
+  if (
+    room &&
+    room.recommendations &&
+    room.recommendations.vibe &&
+    room.recommendations.vibe.properties
+  ) {
+    const props = room.recommendations.vibe.properties;
+    return Object.keys(room.recommendations.vibe.properties).some(
+      key =>
+        props[key].hasOwnProperty("mean") &&
+        props[key].hasOwnProperty("variance") &&
+        props[key].hasOwnProperty("sd")
+    );
+  } else return false;
+};
 
 // Refactor this to not include and information related to requests and responses
 module.exports = {
@@ -64,26 +86,53 @@ module.exports = {
 
     if (!audio_features || audio_features.error || err)
       return [err || null, null];
+
+    // TODO fix that only the first element is being passed
     const vibe = createVibe(audio_features);
     Object.assign(room.recommendations.vibe, vibe);
     const [dbError, updatedRoom] = await to(room.save());
     return err || dbError ? null : updatedRoom.recommendations.vibe;
   },
-  updateRecommendations: async () => {
+  updateRecommendations: async (room, accessToken) => {
     // PRIVATE
-    // const {playlist, topTracks, vibe} = await to(Room.findById(req.params.id)).recommendations;
-    // playlist.selected = filterTracksByVibe(topTracks, vibe)
+    const { playlist, topTracks, vibe } = room.recommendations;
+    playlist.selected = filterTracksByVibe(topTracks, vibe);
     // playlist.generated = await recommendTracks(playlist.selected, accessToken)
-    // save recommendations object to db
+    return room;
   },
-  addUserTracks: async function(req, res) {
-    // top Tracks and are added
-    // Takes in a list of uris, a user id and a room id and an accessToken
-    // const userTopTracks =  await recommendations.getAudioFeatures(req.body.uris)
-    // const currentTopTracks = await roomDao.getTopTracks(id)
-    // currentTopTracks[userid] = userTopTracks
-    // save top tracks to db
-    // this.updateRecommendations()
+  addUserTracks: async function(roomId, accessToken, uris, userId) {
+    const [{ audio_features }, [findRoomErr, room]] = await Promise.all([
+      getAudioFeatures(uris, accessToken),
+      to(Room.findById(roomId))
+    ]);
+    if (!audio_features || audio_features.error || findRoomErr)
+      return [findRoomErr || null, null];
+
+    if (room.recommendations.topTracks.length > 0) {
+      Object.assign(
+        room.recommendations.topTracks.find(user => user.userId === userId)
+          .tracks,
+        audio_features
+      );
+    } else {
+      room.recommendations.topTracks.push({ userId, tracks: audio_features });
+    }
+
+    if (vibeIsValid(room)) {
+      Object.assign(
+        room.recommendations.topTracks,
+        calculateSimilarity(
+          room.recommendations.topTracks,
+          room.recommendations.vibe
+        )
+      );
+      Object.assign(room, await this.updateRecommendations(room, accessToken));
+    }
+    const [dbSaveErr, updatedRoom] = await to(room.save());
+
+    return dbSaveErr || updatedRoom === null
+      ? null
+      : updatedRoom.recommendations.topTracks;
   },
 
   updateVibe: async function(req, res) {
@@ -100,6 +149,6 @@ module.exports = {
 Client operations
 
 on creation: initializeVibe, addUserTrack
-on user joined: addUserTracks, updateVibe
+on user joined: addUserTracks
 on track added: update vibe 
 */
