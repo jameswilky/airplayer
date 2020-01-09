@@ -1,7 +1,8 @@
 const {
   createVibe,
   getAudioFeatures,
-  calculateSimilarity
+  calculateSimilarity,
+  getSimilarTracks
 } = require("../../server/services/recommendations");
 const expect = require("chai").expect;
 
@@ -38,7 +39,9 @@ const exampleTopTracks = [
           liveness: 0.1
         }
       }
-    ],
+    ]
+  },
+  {
     userId: "456",
     tracks: [
       {
@@ -124,9 +127,20 @@ describe("recommendations service", () => {
   //     );
   //   });
   // });
+  describe("getSimilarTracks", () => {
+    it.only("returns tracks with the specified similarity rating", () => {
+      const topTracks = calculateSimilarity(exampleTopTracks, exampleVibe);
+
+      const similarTracks = getSimilarTracks(topTracks, 0.2);
+      expect(similarTracks[0].uri).to.eql("2");
+      expect(similarTracks[1].uri).to.eql("3");
+    });
+  });
   describe("calculateSimilarity", () => {
-    it.only("assigns a similarity rating to the top Tracks", () => {
-      calculateSimilarity(exampleTopTracks, exampleVibe);
+    it("assigns a similarity rating to the top Tracks", () => {
+      const topTracks = calculateSimilarity(exampleTopTracks, exampleVibe);
+      expect(topTracks[0].tracks[0].similarity).to.be.within(0.034, 0.1);
+      expect(topTracks[0].tracks[1].similarity).to.eql(0.23765017732671354);
     });
   });
   describe("createVibe", () => {

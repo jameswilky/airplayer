@@ -6,7 +6,7 @@ const { createHost } = require("../daos/hostDao");
 const {
   getAudioFeatures,
   createVibe,
-  filterTracksByVibe,
+  getSimilarTracks,
   calculateSimilarity
 } = require("../services/recommendations");
 
@@ -95,19 +95,31 @@ module.exports = {
   },
   updateRecommendations: async (room, accessToken) => {
     // PRIVATE
-    const { playlist, topTracks, vibe } = room.recommendations;
-    playlist.selected = filterTracksByVibe(topTracks, vibe);
+    Object.assign(
+      room.recommendations.topTracks,
+      calculateSimilarity(
+        room.recommendations.topTracks,
+        room.recommendations.vibe
+      )
+    );
+    roon.recommendations.playlist.selected = getSimilarTracks(
+      room.recommendations.topTracks,
+      0.5
+    );
     // playlist.generated = await recommendTracks(playlist.selected, accessToken)
     return room;
   },
   addUserTracks: async function(roomId, accessToken, uris, userId) {
+    // Get audio features of topTracks from Spotify, and also find room entry in DB
     const [{ audio_features }, [findRoomErr, room]] = await Promise.all([
       getAudioFeatures(uris, accessToken),
       to(Room.findById(roomId))
     ]);
+
     if (!audio_features || audio_features.error || findRoomErr)
       return [findRoomErr || null, null];
 
+    // Add new tracks and audio analysis too room model
     if (room.recommendations.topTracks.length > 0) {
       Object.assign(
         room.recommendations.topTracks.find(user => user.userId === userId)
@@ -118,14 +130,8 @@ module.exports = {
       room.recommendations.topTracks.push({ userId, tracks: audio_features });
     }
 
+    // If vibe has been initialized, update recommendations
     if (vibeIsValid(room)) {
-      Object.assign(
-        room.recommendations.topTracks,
-        calculateSimilarity(
-          room.recommendations.topTracks,
-          room.recommendations.vibe
-        )
-      );
       Object.assign(room, await this.updateRecommendations(room, accessToken));
     }
     const [dbSaveErr, updatedRoom] = await to(room.save());

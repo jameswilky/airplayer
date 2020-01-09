@@ -77,8 +77,8 @@ module.exports = {
     // weighted to include the audio features of the added tracks
   },
   calculateSimilarity: (topTracks, vibe) => {
-    return topTracks.map(user =>
-      user.tracks.map(track => {
+    return topTracks.map(user => {
+      const nextTracks = user.tracks.map(track => {
         const values = Object.entries(track.properties).map(([k, v]) => {
           // Calculate confidence interval
           const interval = 2 * vibe.properties[k].sd;
@@ -89,12 +89,19 @@ module.exports = {
         const similarity =
           values.reduce((total, cur) => (total += cur)) / values.length;
         return { ...track, similarity: similarity };
-      })
-    );
+      });
+
+      return { ...user, tracks: nextTracks };
+    });
   },
-  filterTracksByVibe: (topTracks, vibe) => {
-    // takes in a hash map of topTracks and their audio features sorted by user ID
-    // and returns tracks that are within a certain range of the vibe object
-    return [];
-  }
+  getSimilarTracks: (topTracks, minSimilarity) =>
+    topTracks
+      .map(user =>
+        user.tracks
+          .filter(track => track.similarity > minSimilarity)
+          .map(track => {
+            return { uri: track.uri };
+          })
+      )
+      .reduce((acc, val) => acc.concat(val), [])
 };
