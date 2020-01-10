@@ -4,6 +4,15 @@
 const fetch = require("node-fetch");
 
 const api = "https://api.spotify.com/v1/";
+const validProperties = [
+  "acousticness",
+  "danceability",
+  "energy",
+  "instrumentalness",
+  "liveness",
+  "speechiness",
+  "valence"
+];
 
 module.exports = {
   getAudioFeatures: async (ids, accessToken) => {
@@ -23,15 +32,6 @@ module.exports = {
     // return those tracks
   },
   createVibe: tracks => {
-    const validProperties = [
-      "acousticness",
-      "danceability",
-      "energy",
-      "instrumentalness",
-      "liveness",
-      "speechiness",
-      "valence"
-    ];
     const properties = {};
 
     // Calculate means
@@ -79,13 +79,16 @@ module.exports = {
   calculateSimilarity: (topTracks, vibe) => {
     return topTracks.map(user => {
       const nextTracks = user.tracks.map(track => {
-        const values = Object.entries(track.properties).map(([k, v]) => {
-          // Calculate confidence interval
-          const interval = 2 * vibe.properties[k].sd;
-          const difference = Math.abs(vibe.properties[k].mean - v);
-          if (difference > interval) return 0;
-          else return 1 - difference / interval;
-        });
+        const values = Object.entries(track.properties)
+          .filter(([key, val]) => {
+            return validProperties.includes(key);
+          })
+          .map(([k, v]) => {
+            const interval = 2 * vibe.properties[k].sd;
+            const difference = Math.abs(vibe.properties[k].mean - v);
+            if (difference > interval) return 0;
+            else return 1 - difference / interval;
+          });
         const similarity =
           values.reduce((total, cur) => (total += cur)) / values.length;
         return { ...track, similarity: similarity };
@@ -94,8 +97,8 @@ module.exports = {
       return { ...user, tracks: nextTracks };
     });
   },
-  getSimilarTracks: (topTracks, minSimilarity) =>
-    topTracks
+  getSimilarTracks: (topTracks, minSimilarity) => {
+    return topTracks
       .map(user =>
         user.tracks
           .filter(track => track.similarity > minSimilarity)
@@ -103,5 +106,6 @@ module.exports = {
             return { uri: track.uri };
           })
       )
-      .reduce((acc, val) => acc.concat(val), [])
+      .reduce((acc, val) => acc.concat(val), []);
+  }
 };

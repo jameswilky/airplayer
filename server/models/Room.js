@@ -22,6 +22,7 @@ const RoomSchema = new Schema({
         tracks: [
           {
             _id: false,
+            id: String,
             uri: String,
             similarity: Number,
             properties: {
@@ -52,7 +53,10 @@ const RoomSchema = new Schema({
       },
       n: Number
     },
-    playlist: { selected: [{ uri: String }], generated: [{ uri: String }] }
+    playlist: {
+      selected: [{ _id: false, uri: String }],
+      generated: [{ _id: false, uri: String }]
+    }
   }
 });
 RoomSchema.method("toObj", function() {

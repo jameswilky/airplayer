@@ -16,12 +16,12 @@ module.exports = function(app) {
     try {
       req.body = JSON.parse(req.body);
     } catch (err) {}
-    const { accessToken, uris } = req.body;
+    const { accessToken, tracks } = req.body;
     const roomId = req.params.id;
 
-    if (accessToken && uris && roomId) {
+    if (accessToken && tracks && roomId) {
       const [err, vibe] = await to(
-        room.initializeVibe(roomId, accessToken, uris)
+        room.initializeVibe(roomId, accessToken, tracks)
       );
       err || vibe === null
         ? res.json({ error: "Vibe initialization failed" })
@@ -32,17 +32,16 @@ module.exports = function(app) {
     try {
       req.body = JSON.parse(req.body);
     } catch (err) {}
-    const { accessToken, uris, userId } = req.body;
-    const roomId = req.params.id;
 
-    if (accessToken && uris && roomId && userId) {
-      const [err, topTracks] = await to(
-        room.addUserTracks(roomId, accessToken, uris, userId)
+    const { accessToken, tracks, userId } = req.body;
+    const roomId = req.params.id;
+    if (accessToken && tracks && roomId && userId) {
+      const [err, updatedRoom] = await to(
+        room.addUserTracks(roomId, accessToken, tracks, userId)
       );
-      console.log(err);
-      err || topTracks === null
+      err || updatedRoom === null
         ? res.json({ error: "failed to add tracks" })
-        : res.json(topTracks);
+        : res.json(updatedRoom);
     }
   });
 

@@ -7,7 +7,7 @@ const {
 const expect = require("chai").expect;
 
 const token =
-  "BQB9jpIusj_NYz5b8AtO3k_eVEo0yBop_WH1iSePlypwYE4QT3zIbnBnYPR8IszBiB6mOv6YcNkapETEjnb6_l61MHKqYcfuQ3iD0-JCzqIGq7DCYH1Pog2r-e3sLuzzoQOBQFZz06WEiDBxUEFQXm2JLlapcQceYReJnPCFfSXVolVm4uLwjR5BkX-u_N7ALKUU";
+  "BQDwvSCP1I7UUvYIg6WZ3h11_zbvjIGCRfq0qq5cwZonCHLd0P_SuHf7GsM_E1Y9YeeA3H4g9iQafkBo0Avj8s-OLVDX7pU6PvsxBdwkDAHLI1ZmBrAi3XB2Xf2B9fCCQXgDfDLnpTcw7LQrX4zTij0GnCT-EbnEJNCA_ZlZpgx5hhPvOeKj4agGaez65UBqfvMj";
 
 const exampleTopTracks = [
   {
@@ -128,7 +128,7 @@ describe("recommendations service", () => {
   //   });
   // });
   describe("getSimilarTracks", () => {
-    it.only("returns tracks with the specified similarity rating", () => {
+    it("returns tracks with the specified similarity rating", () => {
       const topTracks = calculateSimilarity(exampleTopTracks, exampleVibe);
 
       const similarTracks = getSimilarTracks(topTracks, 0.2);

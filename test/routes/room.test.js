@@ -12,8 +12,25 @@ const should = chai.should();
 chai.use(chaiHttp);
 
 const token =
-  "BQDFZ3CNc5pNfRYmSTuTC2xoE4VLiwPGpaNoEK318019AwAcSCEQHGiQqC1KggRj52oTce7sm6VO3hw9DSJjLKCPv7rP5XTXf8gSYZ1gFpGmHjuz0NSzH3AkhBlg61iPGQ3AvZs5jG_IC23c102Hx0N96gIremzx0e75XaaH_aBF6kQZxHRnkWEZclcBqiCUpdxV";
-
+  "BQDwvSCP1I7UUvYIg6WZ3h11_zbvjIGCRfq0qq5cwZonCHLd0P_SuHf7GsM_E1Y9YeeA3H4g9iQafkBo0Avj8s-OLVDX7pU6PvsxBdwkDAHLI1ZmBrAi3XB2Xf2B9fCCQXgDfDLnpTcw7LQrX4zTij0GnCT-EbnEJNCA_ZlZpgx5hhPvOeKj4agGaez65UBqfvMj";
+const exampleTracks = {
+  /* Dancy hip hop*/
+  dancyHipHop: [
+    "7iL6o9tox1zgHpKUfh9vuC" /* 50 cent - in da club*/,
+    "5D2mYZuzcgjpchVY1pmTPh" /* 50 cent - candy shop*/,
+    "4nva9EpKntUTs6CRSGBCn9" /* 50 cent - just a lil bit */
+  ],
+  dubstep: [
+    "5q8oybjZelukF4h0CzSUN9" /* Skrillex - scary monsters nice sprites */,
+    "6VRhkROS2SZHGlp0pxndbJ" /* skrillex - bangarang*/,
+    "3FUZpoj9VV0sgc8RqbS3xQ" /* skrillex - kyoto */
+  ],
+  classical: [
+    "6Lg0gTip66HTGCw2x1nAIz" /* Bach - "Brandenburg Concerto No. 1 in F Major, BWV 1046: I. Allegro"*/,
+    "6mqBqrnQof1QzRLu71mRjv" /* Bach - "Orchestral Suite No. 3 in D Major, BWV 1068: II. Air"*/,
+    "5DLqQnaWF2oapXgciUDRuw" /* Bach - "Brandenburg Concerto No. 2 in F Major, BWV 1047: III. Allegro assai"*/
+  ]
+};
 describe("Room route handlers", () => {
   let room1, room2;
 
@@ -160,21 +177,18 @@ describe("Room route handlers", () => {
           .send({
             roomId: id,
             accessToken: token,
-            uris: [
-              "7ouMYWpwJ422jRcDASZB7P",
-              "4VqPOruhp5EdPBeR92t6lQ",
-              "2takcwOaAZWiXQijPHIx7B"
-            ]
+            tracks: exampleTracks.dubstep.map(id => {
+              return { uri: `spotify:track:${id}` };
+            })
           })
       );
 
       const vibe = res.body;
-      console.log(vibe);
 
       if (vibe === undefined) console.log("Check if token has expired");
 
-      // vibe.properties.danceability.mean.should.eql(0.696);
-      // vibe.properties.speechiness.sd.should.eql(0);
+      vibe.properties.danceability.mean.should.eql(0.6163333333333334);
+      vibe.properties.speechiness.sd.should.eql(0.05442893429866957);
     });
   });
   describe("/POST/:id/topTracks", () => {
@@ -203,20 +217,113 @@ describe("Room route handlers", () => {
             roomId: id,
             accessToken: token,
             userId: "james",
-            uris: ["11dFghVXANMlKmJXsNCbNl"]
+            tracks: exampleTracks.dubstep.map(id => {
+              return { uri: `spotify:track:${id}` };
+            })
+          })
+      );
+      const topTracks = res.body.recommendations.topTracks;
+      topTracks[0].userId.should.eql("james");
+      topTracks[0].tracks[0].properties.should.have.property("danceability");
+      topTracks[0].tracks[0].properties.should.have.property("energy");
+      topTracks[0].tracks[0].should.have.property("uri");
+      topTracks[0].tracks[0].properties.should.have.property("acousticness");
+    });
+  });
+  describe("Recommendation pipeline", () => {
+    const testSimilarity = async (initTracks, newTracks) => {
+      let err,
+        res = null;
+      // Create room
+      const room = {
+        name: "Test",
+        userId: "someUser",
+        playlist: initTracks.map(id => {
+          return { uri: `spotify:track:${id}` };
+        })
+      };
+      [err, res] = await to(
+        chai
+          .request(server)
+          .post("/api/rooms")
+          .send(room)
+      );
+      const id = res.body.room.id;
+
+      // Initialize vibe
+      [err, res] = await to(
+        chai
+          .request(server)
+          .post(`/api/room/${id}/vibe`)
+          .send({
+            roomId: id,
+            accessToken: token,
+            tracks: initTracks.map(id => {
+              return { uri: `spotify:track:${id}` };
+            })
+          })
+      );
+      // Add top tracks
+      [err, res] = await to(
+        chai
+          .request(server)
+          .post(`/api/room/${id}/topTracks`)
+          .send({
+            roomId: id,
+            accessToken: token,
+            userId: "james",
+            tracks: newTracks.map(id => {
+              return { uri: `spotify:track:${id}` };
+            })
           })
       );
 
-      const topTracks = res.body;
+      return res.body;
+    };
+    it("given a dancyhiphop vibe it recommend all dancyhiphop tracks", async () => {
+      const room = await testSimilarity(
+        exampleTracks.dancyHipHop,
+        exampleTracks.dancyHipHop
+      );
 
-      topTracks[0].userId.should.eql("james");
-      topTracks[0].tracks[0].should.have.property("danceability");
-      topTracks[0].tracks[0].should.have.property("energy");
-      topTracks[0].tracks[0].should.have.property("uri");
-      topTracks[0].tracks[0].should.have.property("acousticness");
-      topTracks[0].tracks[0].should.have.property("tempo");
-      topTracks[0].tracks[0].should.have.property("key");
-      topTracks[0].tracks[0].should.have.property("mode");
+      const playlist = room.recommendations.playlist.selected;
+      playlist.length.should.eql(3);
+    });
+    it("given a dancyhiphop vibe it recommend no classical tracks", async () => {
+      const room = await testSimilarity(
+        exampleTracks.dancyHipHop,
+        exampleTracks.classical
+      );
+
+      const playlist = room.recommendations.playlist.selected;
+      playlist.length.should.eql(0);
+    });
+    it("given a classical vibe it recommend all classical tracks", async () => {
+      const room = await testSimilarity(
+        exampleTracks.classical,
+        exampleTracks.classical
+      );
+
+      const playlist = room.recommendations.playlist.selected;
+      playlist.length.should.eql(3);
+    });
+    it("given a dubstep vibe it recommend all dubstep tracks", async () => {
+      const room = await testSimilarity(
+        exampleTracks.dubstep,
+        exampleTracks.dubstep
+      );
+
+      const playlist = room.recommendations.playlist.selected;
+      playlist.length.should.eql(3);
+    });
+    it("given a dubstep vibe it recommend no classical tracks", async () => {
+      const room = await testSimilarity(
+        exampleTracks.dubstep,
+        exampleTracks.classical
+      );
+
+      const playlist = room.recommendations.playlist.selected;
+      playlist.length.should.eql(0);
     });
   });
 });
