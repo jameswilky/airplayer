@@ -11,8 +11,7 @@ const server = require("../../index");
 const should = chai.should();
 chai.use(chaiHttp);
 const token =
-  "BQDIQv4nYOEP9N8j7bA9m2f7Q8T0rRU3HkncaEJNsaXG3-7PbAL8C6ipATXEM7Bed-J2wJpi61xxnm34NT7vSC2tKPeZmpNBfJXiLrYuVlti_z7erQpHs2NQ-JTOyyRIM9brmsGQiw8zxTSGh0RQbPZj2Tg4TOkuFx-E7VdPAMtcFS1L9Cf9khNbXR9SEbq9Ts4M";
-
+  "BQD9BSrzj4n18oSBYgLJxjnSCkbh1ffmbjnPiRy8aMhLPFMZikL0ZYRmDfs54VtT7rIz0bPA7eKnT9F8JMIlk9epyGTxYBscqplgROsiLHUpP_CXByVoATdI6BIHcXhu3c-fM9-fojpCFYMoLa4sumOkX2omPPuogdD4bOwBHPR3R26hUNyvbxff-qaV0lSBVcGY";
 const createInitializedRoom = async (initTracks, newTracks) => {
   let err,
     res = null;

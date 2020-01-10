@@ -12,7 +12,7 @@ export default function Library(props) {
 
   return (
     <Container>
-      <h2>Last Played</h2>
+      <h2>Your Favourites</h2>
       <Carousel
         items={topTracks}
         addItem={addTrack}

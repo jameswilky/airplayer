@@ -102,6 +102,7 @@ module.exports = {
       .map(user =>
         user.tracks
           .filter(track => track.similarity > minSimilarity)
+          .sort((a, b) => (a.similarity < b.similarity ? 1 : -1))
           .map(track => {
             return { uri: track.uri };
           })

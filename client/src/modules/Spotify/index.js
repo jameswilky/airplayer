@@ -204,7 +204,7 @@ const Spotify = (token, send = true) => {
             add: query => put(libraryQuery(query), libraryBody(query))
           };
         },
-        top: type => get(`me/top/${pluralize(type)}`),
+        top: type => get(`me/top/${pluralize(type)}?limit=50`),
         me: () => get("me"),
         playlists: () => get("me/playlists"),
         artists: () => get("me/following?type=artist")

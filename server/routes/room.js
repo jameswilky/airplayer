@@ -142,6 +142,11 @@ module.exports = {
     if (audio_features.error || findRoomErr) return [findRoomErr || null, null];
     // Add new tracks and audio analysis too room model
 
+    // if user has already added top tracks, disallow adding more
+    if (room.recommendations.topTracks.some(user => user.userId === userId))
+      return [null, room.toObj()];
+
+    // Otherwise add users tracks to topTracks
     if (room.recommendations.topTracks.length > 0) {
       Object.assign(
         room.recommendations.topTracks.find(user => user.userId === userId)

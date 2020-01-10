@@ -9,12 +9,21 @@ export default function useRoomTracks(auth, room) {
   // Local Variables
   const [roomTracks, setRoomTracks] = useState({
     currentSong: null,
-    playlist: null
+    playlist: null,
+    filtered: null,
+    generated: null
   });
   const spotify = Spotify(auth.accessToken);
 
   useEffect(() => {
-    if (room && room.state && room.state.currentSong && room.state.playlist) {
+    if (
+      room &&
+      room.state &&
+      room.state.currentSong &&
+      room.state.playlist &&
+      room.state.recommendations &&
+      room.state.recommendations.playlist
+    ) {
       const currentSongPromise = spotify.find({
         track: { where: { id: room.state.currentSong.uri.split(":")[2] } }
       });
@@ -25,14 +34,26 @@ export default function useRoomTracks(auth, room) {
           })
         )
       );
-      Promise.all([currentSongPromise, playlistPromise]).then(
-        ([currentSong, playlist]) => {
+      // Tracks that are filtered from toptracks
+      const filteredPromise = Promise.all(
+        room.state.recommendations.playlist.selected.map(track =>
+          spotify.find({
+            track: { where: { id: track.uri.split(":")[2] } }
+          })
+        )
+      );
+      Promise.all([currentSongPromise, playlistPromise, filteredPromise]).then(
+        ([currentSong, playlist, filtered]) => {
           Reflect.setPrototypeOf(currentSong, ItemPrototype());
 
           playlist.map(track => Reflect.setPrototypeOf(track, ItemPrototype()));
+
+          filtered.map(track => Reflect.setPrototypeOf(track, ItemPrototype()));
+
           setRoomTracks({
             currentSong,
-            playlist
+            playlist,
+            filtered
           });
         }
       );

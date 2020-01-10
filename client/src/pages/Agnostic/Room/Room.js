@@ -24,7 +24,6 @@ export default function Room(props) {
   const { query, setQuery, queryResults } = useSearch(props.auth);
   const [findResult, setFindQuery] = useFind(props.auth);
   const user = useProfile(props.auth);
-  console.log(room);
   const playerReady =
     props.auth.accessToken &&
     room.state &&
@@ -44,6 +43,33 @@ export default function Room(props) {
       room.controller.joinRoom(id, user.uri, "", token ? token : null);
     }
   }, [user]);
+
+  useEffect(() => {
+    if (
+      room.state &&
+      room.state.id &&
+      libraryResults &&
+      libraryResults.topTracks.length > 0 &&
+      user &&
+      user.id &&
+      props.auth.accessToken
+    ) {
+      const topTracks = libraryResults.topTracks.map(track => {
+        return { uri: track.uri };
+      });
+      fetch(`/api/room/${room.state.id}/topTracks`, {
+        method: "POST",
+        body: JSON.stringify({
+          accessToken: props.auth.accessToken,
+          tracks: topTracks,
+          userId: user.id
+        })
+      }).then(res => res.json());
+      // Then trigger a research for rooms
+      // .then(json => console.log(json));
+    }
+  }, [room, libraryResults, user, props.auth]);
+  console.log(roomTracks);
   const loaded =
     room &&
     room.state &&

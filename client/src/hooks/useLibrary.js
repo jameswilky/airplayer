@@ -6,11 +6,11 @@ export default function useLibrary(auth) {
   // Store Access
 
   const [libraryResults, setQueryResults] = useState({
-    tracks: {},
-    artists: {},
-    playlists: {},
-    albums: {},
-    topTracks: {}
+    tracks: [],
+    artists: [],
+    playlists: [],
+    albums: [],
+    topTracks: []
   });
 
   // Local Variables
