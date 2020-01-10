@@ -13,7 +13,6 @@ import useFind from "../../../hooks/useFind";
 import useBreakpoint from "../../../hooks/useBreakpoint";
 import useRoom from "../../../hooks/useRoom";
 import useProfile from "../../../hooks/useProfile";
-import { Background } from "../../Desktop/RoomView/styles";
 import SearchBar from "../../../components/SearchBar/SearchBar";
 
 export default function Room(props) {
@@ -25,7 +24,7 @@ export default function Room(props) {
   const { query, setQuery, queryResults } = useSearch(props.auth);
   const [findResult, setFindQuery] = useFind(props.auth);
   const user = useProfile(props.auth);
-
+  console.log(room);
   const playerReady =
     props.auth.accessToken &&
     room.state &&

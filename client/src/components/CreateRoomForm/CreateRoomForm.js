@@ -38,13 +38,27 @@ export default function CreateRoomForm(props) {
       })
         .then(res => res.json())
         .then(json => {
+          const roomId = json.room.id;
+
+          // Save token to local storage
           const tokens = JSON.parse(localStorage.getItem("tokens")) || {};
-          tokens[json.room.id] = json.token;
+          tokens[roomId] = json.token;
           localStorage.setItem("tokens", JSON.stringify(tokens));
-          setRoomState({
-            done: true,
-            id: json.room.id
-          });
+
+          // Intialize vibe
+          fetch(`/api/room/${roomId}/vibe`, {
+            method: "POST",
+            body: JSON.stringify({
+              accessToken: props.auth.accessToken,
+              tracks: data.playlist
+            })
+          }).then(() =>
+            // Complete creation process
+            setRoomState({
+              done: true,
+              id: roomId
+            })
+          );
         });
     }
   }, [roomState.tracksSelected, data]);
@@ -58,6 +72,7 @@ export default function CreateRoomForm(props) {
       playlist: data.playlist.filter(track => track.uri !== uri)
     });
 
+  // Add spinner during stage 3, tracksSelected = true
   return (
     <>
       {roomState.done ? (
