@@ -45,6 +45,13 @@ module.exports = function(app) {
     }
   });
 
+  app.get("/api/room/:id/recommended", async (req, res) => {
+    const [err, playlist] = await room.getRecommendedPlaylist(req.params.id);
+    if (err || playlist === null)
+      res.json({ error: "failed to get recommended tracks" });
+    else res.json(playlist);
+  });
+
   // Authentication
   app.get("/auth/login", auth.login);
   app.get("/auth/callback", auth.callback);

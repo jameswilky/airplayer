@@ -164,6 +164,13 @@ module.exports = {
     return dbSaveErr || updatedRoom === null ? null : updatedRoom.toObj();
   },
 
+  getRecommendedPlaylist: async roomId => {
+    const [err, room] = await to(Room.findById(roomId));
+    if (err) return [err, null];
+    const playlist = room.toObj().recommendations.playlist;
+    return [null, playlist];
+  },
+
   updateVibe: async function(req, res) {
     // takes in room id and list of tracks
     // get room from db

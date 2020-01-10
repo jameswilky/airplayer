@@ -10,9 +10,59 @@ const chaiHttp = require("chai-http");
 const server = require("../../index");
 const should = chai.should();
 chai.use(chaiHttp);
-
 const token =
-  "BQDwvSCP1I7UUvYIg6WZ3h11_zbvjIGCRfq0qq5cwZonCHLd0P_SuHf7GsM_E1Y9YeeA3H4g9iQafkBo0Avj8s-OLVDX7pU6PvsxBdwkDAHLI1ZmBrAi3XB2Xf2B9fCCQXgDfDLnpTcw7LQrX4zTij0GnCT-EbnEJNCA_ZlZpgx5hhPvOeKj4agGaez65UBqfvMj";
+  "BQDIQv4nYOEP9N8j7bA9m2f7Q8T0rRU3HkncaEJNsaXG3-7PbAL8C6ipATXEM7Bed-J2wJpi61xxnm34NT7vSC2tKPeZmpNBfJXiLrYuVlti_z7erQpHs2NQ-JTOyyRIM9brmsGQiw8zxTSGh0RQbPZj2Tg4TOkuFx-E7VdPAMtcFS1L9Cf9khNbXR9SEbq9Ts4M";
+
+const createInitializedRoom = async (initTracks, newTracks) => {
+  let err,
+    res = null;
+  // Create room
+  const room = {
+    name: "Test",
+    userId: "someUser",
+    playlist: initTracks.map(id => {
+      return { uri: `spotify:track:${id}` };
+    })
+  };
+  [err, res] = await to(
+    chai
+      .request(server)
+      .post("/api/rooms")
+      .send(room)
+  );
+  const id = res.body.room.id;
+
+  // Initialize vibe
+  [err, res] = await to(
+    chai
+      .request(server)
+      .post(`/api/room/${id}/vibe`)
+      .send({
+        roomId: id,
+        accessToken: token,
+        tracks: initTracks.map(id => {
+          return { uri: `spotify:track:${id}` };
+        })
+      })
+  );
+  // Add top tracks
+  [err, res] = await to(
+    chai
+      .request(server)
+      .post(`/api/room/${id}/topTracks`)
+      .send({
+        roomId: id,
+        accessToken: token,
+        userId: "james",
+        tracks: newTracks.map(id => {
+          return { uri: `spotify:track:${id}` };
+        })
+      })
+  );
+
+  return res.body;
+};
+
 const exampleTracks = {
   /* Dancy hip hop*/
   dancyHipHop: [
@@ -230,58 +280,22 @@ describe("Room route handlers", () => {
       topTracks[0].tracks[0].properties.should.have.property("acousticness");
     });
   });
+  describe("/GET/:id/recommended", () => {
+    it("should return a recommended playlist", async () => {
+      const room = await createInitializedRoom(
+        exampleTracks.dancyHipHop,
+        exampleTracks.dancyHipHop
+      );
+      const [err, res] = await to(
+        chai.request(server).get(`/api/room/${room._id}/recommended`)
+      );
+
+      res.body.selected.length.should.eql(3);
+    });
+  });
   describe("Recommendation pipeline", () => {
-    const testSimilarity = async (initTracks, newTracks) => {
-      let err,
-        res = null;
-      // Create room
-      const room = {
-        name: "Test",
-        userId: "someUser",
-        playlist: initTracks.map(id => {
-          return { uri: `spotify:track:${id}` };
-        })
-      };
-      [err, res] = await to(
-        chai
-          .request(server)
-          .post("/api/rooms")
-          .send(room)
-      );
-      const id = res.body.room.id;
-
-      // Initialize vibe
-      [err, res] = await to(
-        chai
-          .request(server)
-          .post(`/api/room/${id}/vibe`)
-          .send({
-            roomId: id,
-            accessToken: token,
-            tracks: initTracks.map(id => {
-              return { uri: `spotify:track:${id}` };
-            })
-          })
-      );
-      // Add top tracks
-      [err, res] = await to(
-        chai
-          .request(server)
-          .post(`/api/room/${id}/topTracks`)
-          .send({
-            roomId: id,
-            accessToken: token,
-            userId: "james",
-            tracks: newTracks.map(id => {
-              return { uri: `spotify:track:${id}` };
-            })
-          })
-      );
-
-      return res.body;
-    };
     it("given a dancyhiphop vibe it recommend all dancyhiphop tracks", async () => {
-      const room = await testSimilarity(
+      const room = await createInitializedRoom(
         exampleTracks.dancyHipHop,
         exampleTracks.dancyHipHop
       );
@@ -290,7 +304,7 @@ describe("Room route handlers", () => {
       playlist.length.should.eql(3);
     });
     it("given a dancyhiphop vibe it recommend no classical tracks", async () => {
-      const room = await testSimilarity(
+      const room = await createInitializedRoom(
         exampleTracks.dancyHipHop,
         exampleTracks.classical
       );
@@ -299,7 +313,7 @@ describe("Room route handlers", () => {
       playlist.length.should.eql(0);
     });
     it("given a classical vibe it recommend all classical tracks", async () => {
-      const room = await testSimilarity(
+      const room = await createInitializedRoom(
         exampleTracks.classical,
         exampleTracks.classical
       );
@@ -308,7 +322,7 @@ describe("Room route handlers", () => {
       playlist.length.should.eql(3);
     });
     it("given a dubstep vibe it recommend all dubstep tracks", async () => {
-      const room = await testSimilarity(
+      const room = await createInitializedRoom(
         exampleTracks.dubstep,
         exampleTracks.dubstep
       );
@@ -317,7 +331,7 @@ describe("Room route handlers", () => {
       playlist.length.should.eql(3);
     });
     it("given a dubstep vibe it recommend no classical tracks", async () => {
-      const room = await testSimilarity(
+      const room = await createInitializedRoom(
         exampleTracks.dubstep,
         exampleTracks.classical
       );
