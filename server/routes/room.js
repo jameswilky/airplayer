@@ -127,7 +127,7 @@ module.exports = {
     Object.assign(roomModel.recommendations.topTracks, topTracks);
     roomModel.recommendations.playlist.selected = getSimilarTracks(
       topTracks,
-      0.4
+      0
     );
     return roomModel;
   },

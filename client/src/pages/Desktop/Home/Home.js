@@ -52,7 +52,7 @@ export default function Home({ room, roomTracks, topTracks, setStartAudio }) {
           ></ListItem>
         </List>
       )}
-      <h2>Recommended Tracks</h2>
+      <h2>Room Favourites</h2>
       {roomTracks.filtered && (
         <List items={roomTracks.filtered}>
           <ListItem
@@ -64,17 +64,6 @@ export default function Home({ room, roomTracks, topTracks, setStartAudio }) {
               item.uri === roomTracks.currentSong.uri ? "1" : ""
             }
             onClick={play}
-            button={item => (
-              <button
-                onClick={e => {
-                  e.stopPropagation();
-                  room.controller.removeTrack(item.uri);
-                }}
-              >
-                {" "}
-                x
-              </button>
-            )}
           ></ListItem>
         </List>
       )}

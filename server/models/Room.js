@@ -31,7 +31,6 @@ const RoomSchema = new Schema({
               danceability: Number,
               energy: Number,
               instrumentalness: Number,
-              liveness: Number,
               speechiness: Number,
               valence: Number
             }
@@ -43,13 +42,32 @@ const RoomSchema = new Schema({
     topGenres: [{ userId: String, genres: [{ uri: String }] }],
     vibe: {
       properties: {
-        acousticness: { sd: Number, variance: Number, mean: Number },
-        danceability: { sd: Number, variance: Number, mean: Number },
-        energy: { sd: Number, variance: Number, mean: Number },
-        instrumentalness: { sd: Number, variance: Number, mean: Number },
-        liveness: { sd: Number, variance: Number, mean: Number },
-        speechiness: { sd: Number, variance: Number, mean: Number },
-        valence: { sd: Number, variance: Number, mean: Number }
+        acousticness: {
+          sd: Number,
+          variance: Number,
+          mean: Number,
+          weight: Number
+        },
+        danceability: {
+          sd: Number,
+          variance: Number,
+          mean: Number,
+          weight: Number
+        },
+        energy: { sd: Number, variance: Number, mean: Number, weight: Number },
+        instrumentalness: {
+          sd: Number,
+          variance: Number,
+          mean: Number,
+          weight: Number
+        },
+        speechiness: {
+          sd: Number,
+          variance: Number,
+          mean: Number,
+          weight: Number
+        },
+        valence: { sd: Number, variance: Number, mean: Number, weight: Number }
       },
       n: Number
     },

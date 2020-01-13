@@ -9,10 +9,28 @@ const validProperties = [
   "danceability",
   "energy",
   "instrumentalness",
-  "liveness",
   "speechiness",
   "valence"
 ];
+
+// reference https://www.kaggle.com/zaheenhamidani/ultimate-spotify-tracks-db
+const populationAudioFeatures = {
+  acousticness: {
+    mean: 0.37,
+    sd: 0.35
+  },
+  danceability: {
+    mean: 0.55,
+    sd: 0.19
+  },
+  energy: {
+    mean: 0.57,
+    sd: 0.26
+  },
+  instrumentalness: { mean: 0.15, sd: 0.3 },
+  speechiness: { mean: 0.12, sd: 0.19 },
+  valence: { mean: 0.45, sd: 0.26 } // could be slightly biases to low valence
+};
 
 module.exports = {
   getAudioFeatures: async (ids, accessToken) => {
@@ -67,6 +85,15 @@ module.exports = {
       properties[k].sd = Math.sqrt(properties[k].variance);
     });
 
+    // Add weighting for each property
+    Object.keys(properties).forEach(k => {
+      // Fix this
+      properties[k].weight =
+        Math.abs(populationAudioFeatures[k].mean - properties[k].mean) /
+        populationAudioFeatures[k].sd /
+        validProperties.length;
+    });
+
     return {
       properties,
       n: tracks.length
@@ -83,26 +110,29 @@ module.exports = {
           .filter(([key, val]) => {
             return validProperties.includes(key);
           })
-          .map(([k, v]) => {
-            const interval = 2 * vibe.properties[k].sd;
-            const difference = Math.abs(vibe.properties[k].mean - v);
-            if (difference > interval) return 0;
-            else return 1 - difference / interval;
-          });
-        const similarity =
-          values.reduce((total, cur) => (total += cur)) / values.length;
+          .map(
+            ([k, v]) =>
+              Math.abs(vibe.properties[k].mean - v) * vibe.properties[k].weight
+          );
+        console.log(values);
+        const similarity = 1 - values.reduce((total, cur) => (total += cur));
         return { ...track, similarity: similarity };
       });
 
-      return { ...user, tracks: nextTracks };
+      return {
+        ...user,
+        tracks: nextTracks.sort((a, b) =>
+          a.similarity < b.similarity ? 1 : -1
+        )
+      };
     });
   },
   getSimilarTracks: (topTracks, minSimilarity) => {
+    // instead of searching each track, just stop once we find min sim rating as all tracks are ordered
     return topTracks
       .map(user =>
         user.tracks
           .filter(track => track.similarity > minSimilarity)
-          .sort((a, b) => (a.similarity < b.similarity ? 1 : -1))
           .map(track => {
             return { uri: track.uri };
           })
