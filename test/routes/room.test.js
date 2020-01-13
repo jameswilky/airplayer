@@ -11,7 +11,7 @@ const server = require("../../index");
 const should = chai.should();
 chai.use(chaiHttp);
 const token =
-  "BQAb7xVWGxCBIxoSFARO_u2hBL_MXRAzL6pYQ3zvga-8P3upWJhnprKHllPACYs65TSN0rhKOdoEBKnLLglIjx4My71K41nHTI_jbqvwZnZAdYgu88wgByYyyX2T2WRY6YxtyheSCmR6tPRmzG_TigzSmYVbwcXE8CzYpkK6w1LzAFGuA3hEe-BPXIJcrF5j6Zhp";
+  "BQBk-104O5hMpAFUt8BxDiheSlb0VWSbX9EucYfkE0xP9g7OOH5_Krc07NS7iJvb1G1ynlmMVtsi-o7sJu4yP6tvSdiqc7LCSQvRzpOR4BGyvCQZOXdbp_qPr_TTmNUZ2xiv8Hkn-g-Z5W4HMDZf0Txjx9ue5j7qtAcZnqhA9AeGk6T2vBgWHUqMgn_ky7OPt3-5";
 const createInitializedRoom = async (initTracks, newTracks) => {
   let err,
     res = null;
@@ -292,11 +292,11 @@ describe("Room route handlers", () => {
       res.body.selected.length.should.eql(3);
     });
   });
-  describe("Recommendation pipeline", () => {
+  describe.only("Recommendation pipeline", () => {
     it("given a dubstep vibe it recommend no classical tracks", async () => {
       const room = await createInitializedRoom(
-        [exampleTracks.dancyHipHop[0]],
-        [exampleTracks.classical[1]]
+        [exampleTracks.dancyHipHop[2]],
+        [exampleTracks.dancyHipHop[0]]
       );
       console.log(room.recommendations.topTracks[0]);
       // const playlist = room.recommendations.playlist.selected;

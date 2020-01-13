@@ -87,10 +87,13 @@ module.exports = {
 
     // Add weighting for each property
     Object.keys(properties).forEach(k => {
-      // Fix this
+      // properties[k].weight =
+      //   Math.abs(populationAudioFeatures[k].mean - properties[k].mean) /
+      //   populationAudioFeatures[k].sd /
+      //   validProperties.length;
       properties[k].weight =
         Math.abs(populationAudioFeatures[k].mean - properties[k].mean) /
-        populationAudioFeatures[k].sd /
+        ((populationAudioFeatures[k].sd + properties[k].sd) / 2) /
         validProperties.length;
     });
 
@@ -114,7 +117,6 @@ module.exports = {
             ([k, v]) =>
               Math.abs(vibe.properties[k].mean - v) * vibe.properties[k].weight
           );
-        console.log(values);
         const similarity = 1 - values.reduce((total, cur) => (total += cur));
         return { ...track, similarity: similarity };
       });

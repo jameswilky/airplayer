@@ -24,6 +24,7 @@ const exampleTopTracks = [
       //     energy: 0.5
       //   }
       // },
+      // Manually write this out and find out why similarity it negative
       {
         uri: "2",
         similarity: undefined,
@@ -37,80 +38,38 @@ const exampleTopTracks = [
         }
       }
     ]
-  },
-  {
-    userId: "456",
-    tracks: [
-      {
-        uri: "3",
-        similarity: undefined,
-        properties: {
-          acousticness: 0.8,
-          speechiness: 0.1,
-          instrumentalness: 0.1,
-          valence: 0.2,
-          danceability: 0.1,
-          energy: 0.2
-        }
-      },
-      {
-        uri: "4",
-        similarity: undefined,
-        properties: {
-          acousticness: 0.2,
-          speechiness: 0.5,
-          instrumentalness: 0.7,
-          valence: 0.1,
-          danceability: 0.2,
-          energy: 0.5
-        }
-      }
-    ]
   }
+  // {
+  //   userId: "456",
+  //   tracks: [
+  //     {
+  //       uri: "3",
+  //       similarity: undefined,
+  //       properties: {
+  //         acousticness: 0.8,
+  //         speechiness: 0.1,
+  //         instrumentalness: 0.1,
+  //         valence: 0.2,
+  //         danceability: 0.1,
+  //         energy: 0.2
+  //       }
+  //     },
+  //     {
+  //       uri: "4",
+  //       similarity: undefined,
+  //       properties: {
+  //         acousticness: 0.2,
+  //         speechiness: 0.5,
+  //         instrumentalness: 0.7,
+  //         valence: 0.1,
+  //         danceability: 0.2,
+  //         energy: 0.5
+  //       }
+  //     }
+  //   ]
+  // }
 ];
 
-const exampleVibe = {
-  properties: {
-    acousticness: {
-      mean: 0.0009649999999999999,
-      variance: 0.0000010593526666666666,
-      sd: 0.0010292485932303559,
-      weight: 1
-    },
-    danceability: {
-      mean: 0.5176666666666666,
-      variance: 0.011549555555555554,
-      sd: 0.10746885853844151,
-      weight: 1
-    },
-    energy: {
-      mean: 0.9033333333333333,
-      variance: 0.0024415555555555553,
-      sd: 0.04941209928302536,
-      weight: 1
-    },
-    instrumentalness: {
-      mean: 0.027686666666666665,
-      variance: 0.0006640816888888889,
-      sd: 0.0257697824765536,
-      weight: 1
-    },
-    speechiness: {
-      mean: 0.09169999999999999,
-      variance: 0.0013449799999999997,
-      sd: 0.03667396896982927,
-      weight: 1
-    },
-
-    valence: {
-      mean: 0.35,
-      variance: 0.009708666666666666,
-      sd: 0.09853256652836495,
-      weight: 1
-    }
-  },
-  n: 3
-};
 describe("recommendations service", () => {
   describe("getAudioFeatures", () => {
     it("works", () => {
@@ -131,11 +90,8 @@ describe("recommendations service", () => {
       const similarTracks = getSimilarTracks(topTracks, 0.2);
     });
   });
-  describe.only("calculateSimilarity", () => {
-    it("assigns a similarity rating to the top Tracks", () => {
-      const topTracks = calculateSimilarity(exampleTopTracks, exampleVibe);
-      console.log(topTracks[0].tracks);
-    });
+  describe("calculateSimilarity", () => {
+    it("assigns a similarity rating to the top Tracks", () => {});
   });
   describe("createVibe", () => {
     it("averages the properties within the vibe object", () => {
