@@ -14,12 +14,10 @@ export default function Home(props) {
         <h3>{name}</h3>
         <ul>{labels && labels.map((label, i) => <p key={i}>{label}</p>)}</ul>
       </div>
-
-      <button>{"+"}</button>
     </StyledItem>
   );
 
-  const { playlist, currentSong } = props.roomTracks;
+  const { playlist, currentSong, filtered, generated } = props.roomTracks;
 
   const nextTrack = (playlist &&
     playlist[
@@ -41,6 +39,30 @@ export default function Home(props) {
             nextTrack={{ artist: nextTrack.artist, title: nextTrack.name }}
           ></CurrentTrack>{" "}
           <List items={playlist} Style={StyledList}>
+            <ItemTemplate
+              src={item => item.getImages().default.url}
+              name={item => item.name}
+              labels={item =>
+                item
+                  .getLabels()
+                  .map(label => `${label} `)
+                  .slice(1, 3)
+              }
+            ></ItemTemplate>
+          </List>
+          <List items={filtered} Style={StyledList}>
+            <ItemTemplate
+              src={item => item.getImages().default.url}
+              name={item => item.name}
+              labels={item =>
+                item
+                  .getLabels()
+                  .map(label => `${label} `)
+                  .slice(1, 3)
+              }
+            ></ItemTemplate>
+          </List>{" "}
+          <List items={generated} Style={StyledList}>
             <ItemTemplate
               src={item => item.getImages().default.url}
               name={item => item.name}

@@ -45,7 +45,6 @@ export default function useRoom() {
       setSuccess({ type: "ROOM_CREATED", payload, message: "Room Created" })
     );
     socket.on("ROOM_UPDATED", nextRoomState => {
-      console.log(nextRoomState);
       setRoom({
         ...room,
         state: { ...nextRoomState, isHost: socket.id === nextRoomState.host },

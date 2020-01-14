@@ -145,7 +145,6 @@ module.exports = {
       const sortedTracks = nextTracks.sort((a, b) =>
         a.similarity < b.similarity ? 1 : -1
       );
-      console.log(sortedTracks.map(track => track.similarity));
       return {
         ...user,
         tracks: sortedTracks

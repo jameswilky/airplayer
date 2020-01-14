@@ -50,8 +50,6 @@ export default function RoomSearch(props) {
 
   const [resultFilter, setResultFilter] = useState("");
 
-  console.log(resultFilter);
-
   const JoinButton = item => (
     <Button>
       <Link to={`/room/${item.id}`}>
