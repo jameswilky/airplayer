@@ -59,31 +59,6 @@ export default function Room(props) {
     }
   }, [user, libraryResults, props.auth.accessToken]);
 
-  // useEffect(() => {
-  //   if (
-  //     room.state &&
-  //     room.state.id &&
-  //     libraryResults &&
-  //     libraryResults.topTracks.length > 0 &&
-  //     user &&
-  //     user.id &&
-  //     props.auth.accessToken
-  //   ) {
-  //     const topTracks = libraryResults.topTracks.map(track => {
-  //       return { uri: track.uri };
-  //     });
-  //     fetch(`/api/room/${room.state.id}/topTracks`, {
-  //       method: "POST",
-  //       body: JSON.stringify({
-  //         accessToken: props.auth.accessToken,
-  //         tracks: topTracks,
-  //         userId: user.id
-  //       })
-  //     }).then(res => res.json());
-  //     // Then trigger a re-search for rooms
-  //     // .then(json => console.log(json));
-  //   }
-  // }, [room, libraryResults, user, props.auth]);
   const loaded =
     room &&
     room.state &&

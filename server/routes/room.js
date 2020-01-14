@@ -7,7 +7,8 @@ const {
   getAudioFeatures,
   createVibe,
   getSimilarTracks,
-  calculateSimilarity
+  calculateSimilarity,
+  recommendTracks
 } = require("../services/recommendations");
 
 const getIdsFromTracks = tracks => tracks.map(track => track.uri.split(":")[2]);
@@ -115,9 +116,7 @@ module.exports = {
     const [dbError, updatedRoom] = await to(room.save());
     return err || dbError ? null : updatedRoom.recommendations.vibe;
   },
-  updateRecommendations: (roomModel, accessToken) => {
-    // PRIVATE
-
+  updateRecommendations: async (roomModel, accessToken) => {
     const newRoom = roomModel.toObj();
     const topTracks = calculateSimilarity(
       newRoom.recommendations.topTracks,
@@ -128,7 +127,18 @@ module.exports = {
     Object.assign(roomModel.recommendations.topTracks, topTracks);
     roomModel.recommendations.playlist.selected = getSimilarTracks(
       topTracks,
-      0
+      0.6
+    ).slice(0, 10);
+    // get last 5 elements from playlist
+    const ids = getIdsFromTracks(roomModel.playlist).slice(
+      Math.max(this.length - 5, 1)
+    );
+    const recommendations = await recommendTracks(ids, accessToken);
+
+    roomModel.recommendations.playlist.generated = recommendations.tracks.map(
+      track => {
+        return { uri: track.uri };
+      }
     );
     return roomModel;
   },
@@ -161,7 +171,7 @@ module.exports = {
 
     // If vibe has been initialized, update recommendations
     if (vibeIsValid(room)) {
-      Object.assign(room, this.updateRecommendations(room, accessToken));
+      Object.assign(room, await this.updateRecommendations(room, accessToken));
     }
 
     const [dbSaveErr, updatedRoom] = await to(room.save());

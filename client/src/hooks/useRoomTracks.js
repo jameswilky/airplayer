@@ -42,21 +42,35 @@ export default function useRoomTracks(auth, room) {
           })
         )
       );
-      Promise.all([currentSongPromise, playlistPromise, filteredPromise]).then(
-        ([currentSong, playlist, filtered]) => {
-          Reflect.setPrototypeOf(currentSong, ItemPrototype());
 
-          playlist.map(track => Reflect.setPrototypeOf(track, ItemPrototype()));
-
-          filtered.map(track => Reflect.setPrototypeOf(track, ItemPrototype()));
-
-          setRoomTracks({
-            currentSong,
-            playlist,
-            filtered
-          });
-        }
+      // Tracks recommended by spotify
+      const generatedPromise = Promise.all(
+        room.state.recommendations.playlist.generated.map(track =>
+          spotify.find({
+            track: { where: { id: track.uri.split(":")[2] } }
+          })
+        )
       );
+      Promise.all([
+        currentSongPromise,
+        playlistPromise,
+        filteredPromise,
+        generatedPromise
+      ]).then(([currentSong, playlist, filtered, generated]) => {
+        Reflect.setPrototypeOf(currentSong, ItemPrototype());
+
+        playlist.map(track => Reflect.setPrototypeOf(track, ItemPrototype()));
+
+        filtered.map(track => Reflect.setPrototypeOf(track, ItemPrototype()));
+        generated.map(track => Reflect.setPrototypeOf(track, ItemPrototype()));
+
+        setRoomTracks({
+          currentSong,
+          playlist,
+          filtered,
+          generated
+        });
+      });
     }
   }, [room.state]);
 

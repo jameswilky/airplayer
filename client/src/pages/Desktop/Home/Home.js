@@ -67,6 +67,21 @@ export default function Home({ room, roomTracks, topTracks, setStartAudio }) {
           ></ListItem>
         </List>
       )}
+      <h2>Recommended</h2>
+      {roomTracks.generated && (
+        <List items={roomTracks.generated}>
+          <ListItem
+            Style={StyledListItem}
+            src={item => item.getImages().default.url}
+            name={item => item.name}
+            labels={item => item.getArtists().map(artist => artist.name)}
+            filter={item =>
+              item.uri === roomTracks.currentSong.uri ? "1" : ""
+            }
+            onClick={play}
+          ></ListItem>
+        </List>
+      )}
     </Container>
   );
 }

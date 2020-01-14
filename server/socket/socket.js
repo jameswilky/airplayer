@@ -121,6 +121,7 @@ module.exports = function(io, interval = null) {
               updatedRoom.recommendations.playlist &&
               !err
             ) {
+              // TODO create dispatch
               rooms[id] = {
                 ...rooms[id],
                 recommendations: {

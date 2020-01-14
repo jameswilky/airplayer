@@ -45,9 +45,17 @@ module.exports = {
     const data = await res.json();
     return data;
   },
-  recommendTracks: async (uris, accessToken) => {
-    // Check spotify api for tracks similar to selected tracks
-    // return those tracks
+  recommendTracks: async (ids, accessToken) => {
+    const query = `recommendations?seed_tracks=${ids.slice(0, 5)}`;
+    const res = await fetch(`${api}${query}`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        ["Content-type"]: "application/json"
+      },
+      method: "GET"
+    });
+    const data = await res.json();
+    return data;
   },
   createVibe: tracks => {
     const properties = {};
@@ -87,16 +95,29 @@ module.exports = {
 
     // Add weighting for each property
     Object.keys(properties).forEach(k => {
-      // properties[k].weight =
-      //   Math.abs(populationAudioFeatures[k].mean - properties[k].mean) /
-      //   populationAudioFeatures[k].sd /
-      //   validProperties.length;
       properties[k].weight =
         Math.abs(populationAudioFeatures[k].mean - properties[k].mean) /
-        ((populationAudioFeatures[k].sd + properties[k].sd) / 2) /
+        populationAudioFeatures[k].sd /
         validProperties.length;
+      // properties[k].weight =
+      //   Math.abs(populationAudioFeatures[k].mean - properties[k].mean) /
+      //   ((populationAudioFeatures[k].sd + properties[k].sd) / 2) /
+      //   validProperties.length;
     });
 
+    // Object.keys(properties).forEach(k => {
+    //   properties[k].weight =
+    //     Math.abs(populationAudioFeatures[k].mean - properties[k].mean) /
+    //     populationAudioFeatures[k].sd;
+    // });
+
+    // const totalWeight = Object.keys(properties)
+    //   .map(key => properties[key].weight)
+    //   .reduce((total, cur) => (total += cur));
+
+    // Object.keys(properties).forEach(
+    //   k => (properties[k].weight = properties[k].weight / totalWeight)
+    // );
     return {
       properties,
       n: tracks.length
@@ -118,14 +139,16 @@ module.exports = {
               Math.abs(vibe.properties[k].mean - v) * vibe.properties[k].weight
           );
         const similarity = 1 - values.reduce((total, cur) => (total += cur));
+
         return { ...track, similarity: similarity };
       });
-
+      const sortedTracks = nextTracks.sort((a, b) =>
+        a.similarity < b.similarity ? 1 : -1
+      );
+      console.log(sortedTracks.map(track => track.similarity));
       return {
         ...user,
-        tracks: nextTracks.sort((a, b) =>
-          a.similarity < b.similarity ? 1 : -1
-        )
+        tracks: sortedTracks
       };
     });
   },
