@@ -13,7 +13,13 @@ export default (state, action) => {
         ...state,
         currentSong: roomState.currentSong.uri,
         paused: !roomState.currentSong.playing,
-        playlist: roomState.playlist.map(track => track.uri),
+        playlist: roomState.playlist
+          .map(track => track.uri)
+          .concat(
+            roomState.recommendations.playlist.selected.map(track => track.uri),
+            roomState.recommendations.playlist.generated.map(track => track.uri)
+          ),
+
         lastSeek: roomState.currentSong.lastSeek
       };
     }
