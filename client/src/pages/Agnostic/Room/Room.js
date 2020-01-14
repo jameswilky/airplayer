@@ -34,42 +34,56 @@ export default function Room(props) {
 
   const { breakpoint } = useBreakpoint();
 
-  // TODO pass user Id
   useEffect(() => {
-    if (user) {
+    if (
+      user &&
+      user.id &&
+      libraryResults &&
+      libraryResults.topTracks &&
+      libraryResults.topTracks.length > 0 &&
+      props.auth.accessToken
+    ) {
       const id = window.location.pathname.split("/")[2];
       const tokens = JSON.parse(localStorage.getItem("tokens")) || {};
       const token = tokens[id];
-      room.controller.joinRoom(id, user.uri, "", token ? token : null);
+      room.controller.joinRoom(
+        id,
+        user.uri,
+        "",
+        token ? token : null,
+        libraryResults.topTracks.map(track => {
+          return { uri: track.uri };
+        }),
+        props.auth.accessToken
+      );
     }
-  }, [user]);
+  }, [user, libraryResults, props.auth.accessToken]);
 
-  useEffect(() => {
-    if (
-      room.state &&
-      room.state.id &&
-      libraryResults &&
-      libraryResults.topTracks.length > 0 &&
-      user &&
-      user.id &&
-      props.auth.accessToken
-    ) {
-      const topTracks = libraryResults.topTracks.map(track => {
-        return { uri: track.uri };
-      });
-      fetch(`/api/room/${room.state.id}/topTracks`, {
-        method: "POST",
-        body: JSON.stringify({
-          accessToken: props.auth.accessToken,
-          tracks: topTracks,
-          userId: user.id
-        })
-      }).then(res => res.json());
-      // Then trigger a research for rooms
-      // .then(json => console.log(json));
-    }
-  }, [room, libraryResults, user, props.auth]);
-  console.log(roomTracks);
+  // useEffect(() => {
+  //   if (
+  //     room.state &&
+  //     room.state.id &&
+  //     libraryResults &&
+  //     libraryResults.topTracks.length > 0 &&
+  //     user &&
+  //     user.id &&
+  //     props.auth.accessToken
+  //   ) {
+  //     const topTracks = libraryResults.topTracks.map(track => {
+  //       return { uri: track.uri };
+  //     });
+  //     fetch(`/api/room/${room.state.id}/topTracks`, {
+  //       method: "POST",
+  //       body: JSON.stringify({
+  //         accessToken: props.auth.accessToken,
+  //         tracks: topTracks,
+  //         userId: user.id
+  //       })
+  //     }).then(res => res.json());
+  //     // Then trigger a re-search for rooms
+  //     // .then(json => console.log(json));
+  //   }
+  // }, [room, libraryResults, user, props.auth]);
   const loaded =
     room &&
     room.state &&

@@ -15,8 +15,15 @@ export default function useRoom() {
     // This function is used to create a new controller to manage the room.
     // It has to recreated to inherit the socket closure after a room as been joined
     return {
-      joinRoom: (id, userId, password = null, token) =>
-        socket.emit("JOIN_ROOM", { id, userId, password: null, token }),
+      joinRoom: (id, userId, password = null, token, topTracks, accessToken) =>
+        socket.emit("JOIN_ROOM", {
+          id,
+          userId,
+          password: null,
+          token,
+          topTracks,
+          accessToken
+        }),
       addTrack: id => socket.emit("ADD_TRACK", { uri: id }),
       removeTrack: id => socket.emit("REMOVE_TRACK", { uri: id }),
       updatePlaylist: playlist => socket.emit("UPDATE_PLAYLIST", playlist),
@@ -38,6 +45,7 @@ export default function useRoom() {
       setSuccess({ type: "ROOM_CREATED", payload, message: "Room Created" })
     );
     socket.on("ROOM_UPDATED", nextRoomState => {
+      console.log(nextRoomState);
       setRoom({
         ...room,
         state: { ...nextRoomState, isHost: socket.id === nextRoomState.host },

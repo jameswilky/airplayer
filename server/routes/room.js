@@ -117,6 +117,7 @@ module.exports = {
   },
   updateRecommendations: (roomModel, accessToken) => {
     // PRIVATE
+
     const newRoom = roomModel.toObj();
     const topTracks = calculateSimilarity(
       newRoom.recommendations.topTracks,
@@ -141,11 +142,9 @@ module.exports = {
     if (!audio_features) return [{ error: "invalid token" }, null];
     if (audio_features.error || findRoomErr) return [findRoomErr || null, null];
     // Add new tracks and audio analysis too room model
-
     // if user has already added top tracks, disallow adding more
     if (room.recommendations.topTracks.some(user => user.userId === userId))
       return [null, room.toObj()];
-
     // Otherwise add users tracks to topTracks
     if (room.recommendations.topTracks.length > 0) {
       Object.assign(
@@ -164,8 +163,8 @@ module.exports = {
     if (vibeIsValid(room)) {
       Object.assign(room, this.updateRecommendations(room, accessToken));
     }
-    const [dbSaveErr, updatedRoom] = await to(room.save());
 
+    const [dbSaveErr, updatedRoom] = await to(room.save());
     return dbSaveErr || updatedRoom === null ? null : updatedRoom.toObj();
   },
 

@@ -3,6 +3,8 @@ const { ALL, HOST } = require("../actions/scopes");
 const { tokenIsValid } = require("../daos/hostDao");
 const dispatch = require("../reducers/roomReducer");
 const validateEvent = require("../middleware/validateEvent");
+const Room = require("../routes/room");
+const to = require("../helpers/to");
 
 // Helpers
 const getRoomId = socket => Object.entries(socket.rooms)[1][1];
@@ -36,7 +38,6 @@ module.exports = function(io, interval = null) {
         });
       } else {
         // After each update, send updated room to each socket in room
-
         rooms[roomId] = dispatch(state, {
           type: event,
           payload: data
@@ -52,7 +53,14 @@ module.exports = function(io, interval = null) {
 
     socket.on(
       "JOIN_ROOM",
-      async ({ id, password = null, userId = null, token = null }) => {
+      async ({
+        id,
+        password = null,
+        userId = null,
+        token = null,
+        topTracks = null,
+        accessToken = null
+      }) => {
         /**
          * @param {obj} room {id,name,playlist,subscribers,currentSong}
          */
@@ -102,6 +110,26 @@ module.exports = function(io, interval = null) {
             }
           }
 
+          //Create recommendations
+          if ((accessToken, topTracks, userId)) {
+            const [err, updatedRoom] = await to(
+              Room.addUserTracks(id, accessToken, topTracks, userId)
+            );
+            if (
+              updatedRoom &&
+              updatedRoom.recommendations &&
+              updatedRoom.recommendations.playlist &&
+              !err
+            ) {
+              rooms[id] = {
+                ...rooms[id],
+                recommendations: {
+                  vibe: updatedRoom.recommendations.vibe,
+                  playlist: updatedRoom.recommendations.playlist
+                }
+              };
+            }
+          }
           socket.join(id);
           const { token, ...nextState } = rooms[id];
           io.in(id).emit("ROOM_UPDATED", nextState);
