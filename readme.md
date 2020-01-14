@@ -154,11 +154,11 @@ describe flows for actions and how all the entities are effected. -->
 - Invite users via links
 - Invite users via QR Code
 - Add Google Geo-location API to allow users to search by address and give a room an addressable location
-- Split room playlist in two, one as a queue that holds specific track requests and priorities those tracks, as well as playlist that is generated based on recommended tracks
-- Recommend tracks based on the average musical taste of users in the room, using the [Spotify recommendation API](https://developer.spotify.com/documentation/web-api/reference/browse/get-recommendations/)
+- ~~Split room playlist in two, one as a queue that holds specific track requests and priorities those tracks, as well as playlist that is generated based on recommended tracks~~ Done
+- ~~Recommend tracks based on the average musical taste of users in the room, using the [Spotify recommendation API](https://developer.spotify.com/documentation/web-api/reference/browse/get-recommendations/)~~ Done.
 - Allow hosts to set scopes so that clients are able to use certain actions
 - Integrate with Apple music/YouTube Music/Tidal
-- Allow hosts to set the vibe of a room by filtering out tracks that are too 'dancy'. This is actually not that hard as the Spotify API provides an [audio feature analysis](https://developer.spotify.com/documentation/web-api/reference/tracks/get-audio-features/) for every track on Spotify with features such as 'instrumentness' and 'danceability'
+- ~~Allow hosts to set the vibe of a room by filtering out tracks that are too 'dancy'. This is actually not that hard as the Spotify API provides an [audio feature analysis](https://developer.spotify.com/documentation/web-api/reference/tracks/get-audio-features/) for every track on Spotify with features such as 'instrumentness' and 'danceability'~~ done
 - Add a UI component to see which users are in the room
 - Show the connection status of the client, and add re-join buttons
 - Add audio visualization
